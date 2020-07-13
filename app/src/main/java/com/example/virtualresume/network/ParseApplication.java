@@ -12,12 +12,12 @@ public class ParseApplication extends Application {
         super.onCreate();
 
         //Register your parse models
-        ParseObject.registerSubclass(Post.class);
+        //ParseObject.registerSubclass(Post.class);
 
         //Heroku server accessed
         Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId("edwinparstagram") //APP_ID env variable
+                .applicationId("fbuappvirtualresume") //APP_ID env variable
                 .clientKey(null)
-                .server("https://edwinparstagram.herokuapp.com/parse/").build());
+                .server("https://fbuappvirtualresume.herokuapp.com/parse/").build());
     }
 }
