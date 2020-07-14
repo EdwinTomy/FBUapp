@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.virtualresume.R;
+import com.example.virtualresume.adapters.AchievementsAdapter;
 import com.example.virtualresume.models.Achievement;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -32,7 +33,7 @@ public class NewsfeedFragment extends Fragment {
 
     private RecyclerView rvPosts;
     protected SwipeRefreshLayout swipeContainer;
-    //protected PostsAdapter adapter;
+    protected AchievementsAdapter adapter;
     protected List<Achievement> allAchievements;
     final protected int POST_LIMIT = 20;
     protected int postsLimit = 20;
@@ -60,7 +61,7 @@ public class NewsfeedFragment extends Fragment {
 
         //Create adapter and data source
         allAchievements = new ArrayList<>();
-        adapter = new PostsAdapter(getContext(), allAchievements);
+        adapter = new AchievementsAdapter(getContext(), allAchievements);
         //Create layout for one row in the list
         //Set the adapter on the recycler view
         rvPosts.setAdapter(adapter);
