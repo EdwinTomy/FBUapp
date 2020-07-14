@@ -212,7 +212,8 @@ All the tabs conform the “Home Screen”
    | profileImage         | File     | profile image of user |
    | bio       | String   | quick description of user |
    | location       | Location   | location of user |
-  
+   | skills       | Pointer   | list of skills |
+   | achievements       | Pointer   | list of achievements |
 
 #### Achievement	
 
