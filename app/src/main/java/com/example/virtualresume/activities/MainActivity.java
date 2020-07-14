@@ -11,6 +11,11 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.virtualresume.R;
+import com.example.virtualresume.fragments.ContactsFragment;
+import com.example.virtualresume.fragments.EditFragment;
+import com.example.virtualresume.fragments.MapsFragment;
+import com.example.virtualresume.fragments.NewsfeedFragment;
+import com.example.virtualresume.fragments.ViewFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity{
@@ -34,28 +39,28 @@ public class MainActivity extends AppCompatActivity{
                 Fragment fragment;
                 switch (menuItem.getItemId()) {
                     case R.id.action_newsfeed:
-                        //fragment = new LogoutFragment();
+                        fragment = new NewsfeedFragment();
                         Toast.makeText(MainActivity.this, "1!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_contacts:
-                        //fragment = new PostsFragment();
+                        fragment = new ContactsFragment();
                         Toast.makeText(MainActivity.this, "2!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_edit:
-                        //fragment = new ComposeFragment();
+                        fragment = new EditFragment();
                         Toast.makeText(MainActivity.this, "3!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_map:
-                        //fragment = new ComposeFragment();
+                        fragment = new MapsFragment();
                         Toast.makeText(MainActivity.this, "4!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_view:
                     default:
-                        //fragment = new ProfileFragment();
+                        fragment = new ViewFragment();
                         Toast.makeText(MainActivity.this, "6!", Toast.LENGTH_SHORT).show();
                         break;
                 }
-                //fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
                 return true;
             }
         });
