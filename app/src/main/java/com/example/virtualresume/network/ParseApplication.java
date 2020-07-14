@@ -11,8 +11,8 @@ public class ParseApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        //Register your parse models hello
-        //ParseObject.registerSubclass(Post.class);
+        //Register your parse models
+        //ParseObject.registerSubclass(A.class);
 
         //Heroku server accessed
         Parse.initialize(new Parse.Configuration.Builder(this)
