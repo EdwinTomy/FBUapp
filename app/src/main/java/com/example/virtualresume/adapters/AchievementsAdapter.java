@@ -57,28 +57,30 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView tvUsername;
-        private ImageView ivImage;
-        private TextView tvTime;
-        private TextView tvDescription;
+        private ImageView profileImage;
+        private TextView fullName;
+        private ImageView image;
+        private TextView title;
+        private TextView timePassed;
 
         public ViewHolder(@NonNull View itemView) {
             super((itemView));
-            tvUsername = itemView.findViewById(R.id.tvUsername);
-            ivImage = itemView.findViewById(R.id.ivImage);
-            tvDescription = itemView.findViewById(R.id.tvDescription);
-            tvTime = itemView.findViewById(R.id.tvTime);
-            itemView.setOnClickListener(this);
-            visibleChange();
+            profileImage = itemView.findViewById(R.id.profileImage);
+            fullName = itemView.findViewById(R.id.fullName);
+            image = itemView.findViewById(R.id.image);
+            title = itemView.findViewById(R.id.title);
+            //itemView.setOnClickListener(this);
+            //visibleChange();
         }
 
         public void bind(Achievement achievement) {
             //Bind post data into view elements
             ParseFile image = achievement.getImage();
             if (image != null) {
-                Glide.with(context).load(achievement.getImage().getUrl()).into(ivImage);
+                Glide.with(context).load(achievement.getImage().getUrl()).into(image);
             }
-            tvUsername.setText(achievement.getUser().getUsername());
+            String firstName = achievement.getUser().getU
+            fullName.setText(achievement.getUser().getUsername());
             tvDescription.setText(achievement.getDescription());
             tvTime.setText(getRelativeTimeAgo(achievement.getCreatedAt()));
         }
