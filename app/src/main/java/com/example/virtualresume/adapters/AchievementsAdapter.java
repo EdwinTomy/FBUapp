@@ -69,6 +69,7 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
             fullName = itemView.findViewById(R.id.fullName);
             image = itemView.findViewById(R.id.image);
             title = itemView.findViewById(R.id.title);
+            timePassed = itemView.findViewById(R.id.timePassed);
             //itemView.setOnClickListener(this);
             //visibleChange();
         }
@@ -92,6 +93,7 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
             String lastName = achievement.getUser().get("lastName").toString();
             fullName.setText(firstName + " " + lastName);
 
+            timePassed.setText(getRelativeTimeAgo(achievement.getCreatedAt()));
             title.setText(achievement.getTitle());
         }
 
@@ -138,7 +140,7 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
     //Formatting time passed
     public String getRelativeTimeAgo(Date date) {
 
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         String dateString = dateFormat.format(date);
 
         String relativeDate = "";
