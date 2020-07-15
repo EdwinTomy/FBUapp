@@ -75,14 +75,24 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
 
         public void bind(Achievement achievement) {
             //Bind post data into view elements
-            ParseFile image = achievement.getImage();
-            if (image != null) {
+            ParseFile picture = achievement.getImage();
+            if (picture != null) {
                 Glide.with(context).load(achievement.getImage().getUrl()).into(image);
+            }else{
+                image.setVisibility(View.GONE);
             }
-            String firstName = achievement.getUser().getU
-            fullName.setText(achievement.getUser().getUsername());
-            tvDescription.setText(achievement.getDescription());
-            tvTime.setText(getRelativeTimeAgo(achievement.getCreatedAt()));
+
+            ParseFile profile = achievement.getUser().getParseFile("profileImage");
+            if (profile != null) {
+                Glide.with(context).load(profile.getUrl()).into(profileImage);
+                Log.i(TAG, "Profile Image loaded");
+            }
+
+            String firstName = achievement.getUser().get("firstName").toString();
+            String lastName = achievement.getUser().get("lastName").toString();
+            fullName.setText(firstName + " " + lastName);
+
+            title.setText(achievement.getTitle());
         }
 
         //When post clicked, details appear
@@ -94,10 +104,11 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
             if(position != RecyclerView.NO_POSITION){
                 //Get movie at position
                 Achievement post = achievements.get(position);
-                visibleChange();
+                //visibleChange();
             }
         }
 
+        /*
         //Changes visibility of description and time stamp
         public void visibleChange(){
             if(tvDescription.getVisibility() == View.VISIBLE){
@@ -109,7 +120,7 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
                 tvTime.setVisibility(View.VISIBLE);
                 Log.i(TAG, "again visible");
             }
-        }
+        }*/
     }
 
     // Clean all elements of the recycler
