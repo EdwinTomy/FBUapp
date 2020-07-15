@@ -194,10 +194,8 @@ All the tabs conform the “Home Screen”
 <img src="https://github.com/EdwinTomy/FBUapp/raw/master/AppFlow.jpg" width=800><br>
 
 ### [BONUS] Digital Wireframes & Mockups
-<img src="https://i.imgur.com/lYHn37F.jpg" height=200>
 
 ### [BONUS] Interactive Prototype
-<img src="https://i.imgur.com/AiKfE5g.gif" width=200>
 
 ## Schema 
 ### Models
@@ -212,7 +210,8 @@ All the tabs conform the “Home Screen”
    | profileImage         | File     | profile image of user |
    | bio       | String   | quick description of user |
    | location       | Location   | location of user |
-  
+   | skills       | Pointer   | list of skills |
+   | achievements       | Pointer   | list of achievements |
 
 #### Achievement	
 
