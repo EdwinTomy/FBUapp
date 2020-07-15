@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -17,6 +19,7 @@ import com.example.virtualresume.fragments.MapsFragment;
 import com.example.virtualresume.fragments.NewsfeedFragment;
 import com.example.virtualresume.fragments.ViewFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -68,4 +71,33 @@ public class MainActivity extends AppCompatActivity{
         //Default view before selection
         bottomNavigationView.setSelectedItemId(R.id.action_view);
     }
+
+    //Adding menu option for logout
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //Inflate menu and items present in it
+        getMenuInflater().inflate(R.menu.menu_logout, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        //Menu item clicked
+        if(item.getItemId() == R.id.logout){
+            Toast.makeText(this, TAG, Toast.LENGTH_SHORT).show();
+            ParseUser.logOut();
+            ParseUser currentUser = ParseUser.getCurrentUser();
+            //Navigate to Login Screen
+            goLoginActivity();
+        }
+        return true;
+    }
+
+    //Navigate to LoginActivity
+    private void goLoginActivity() {
+        Intent i = new Intent(this, LoginActivity.class);
+        startActivity(i);
+    }
+
 }
