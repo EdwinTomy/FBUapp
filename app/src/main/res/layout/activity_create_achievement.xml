@@ -6,33 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".activities.CreateAchievement">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="83dp"
-        android:layout_marginTop="134dp"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="55dp" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="67dp"
-        android:layout_marginTop="54dp"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="55dp" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
 </RelativeLayout>

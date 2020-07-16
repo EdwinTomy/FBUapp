@@ -1,6 +1,5 @@
 package com.example.virtualresume.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,7 +25,6 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +78,7 @@ public class ViewFragment extends Fragment {
         queryPosts(POST_LIMIT);
 
         profileImage = view.findViewById(R.id.profileImage);
-        fullName = view.findViewById(R.id.fullName);
+        fullName = view.findViewById(R.id.fullName1);
         username = view.findViewById(R.id.username);
         bio = view.findViewById(R.id.bio);
         home = view.findViewById(R.id.home);

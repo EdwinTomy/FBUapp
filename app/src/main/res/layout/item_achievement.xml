@@ -16,7 +16,7 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/fullName"
+        android:id="@+id/fullName1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/profileImage"
@@ -38,17 +38,17 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/timePassed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/image"
         android:layout_alignStart="@+id/image"
-        android:layout_marginStart="0dp"
+        android:layout_marginStart="2dp"
         android:layout_marginTop="5dp"
         android:text="TextView" />
 
     <TextView
-        android:id="@+id/timePassed"
+        android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/profileImage"

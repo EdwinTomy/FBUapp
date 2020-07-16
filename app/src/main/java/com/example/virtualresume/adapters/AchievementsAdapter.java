@@ -13,10 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.virtualresume.R;
 import com.example.virtualresume.models.Achievement;
-import com.parse.ParseException;
 import com.parse.ParseFile;
 
 import java.text.DateFormat;
@@ -66,9 +64,9 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
         public ViewHolder(@NonNull View itemView) {
             super((itemView));
             profileImage = itemView.findViewById(R.id.profileImage);
-            fullName = itemView.findViewById(R.id.fullName);
+            fullName = itemView.findViewById(R.id.fullName1);
             image = itemView.findViewById(R.id.image);
-            title = itemView.findViewById(R.id.title);
+            title = itemView.findViewById(R.id.fullName1);
             timePassed = itemView.findViewById(R.id.timePassed);
             itemView.setOnClickListener(this);
         }
