@@ -62,9 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "OnClick sign up button");
-                String username = etUsername.getText().toString();
-                String password = etPassword.getText().toString();
-                SignUpUser(username, password);
+                goCreateUserActivity();
             }
         });
 
@@ -88,34 +86,16 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    //Attempting to sign up after onClick
-    private void SignUpUser(String username, String password) {
-        Log.i(TAG, "Attempting to sign up user:" + username);
-        //Create the ParseUser
-        ParseUser user = new ParseUser();
-        //Set core properties
-        user.setUsername(username);
-        user.setPassword(password);
-        //Invoke signUpInBackground
-        user.signUpInBackground(new SignUpCallback() {
-            public void done(ParseException e) {
-                if (e == null) {
-                    //Navigate to MainActivity
-                    Toast.makeText(LoginActivity.this, "Success in sign up!", Toast.LENGTH_SHORT).show();
-                    //Navigate to MainActivity
-                    goMainActivity();
-                    return;
-                }
-                Toast.makeText(LoginActivity.this, "Failed in sign up!", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "Issue with sign up", e);
-                return;
-            }
-        });
-    }
-
     //Navigate to MainActivity
     private void goMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    //Navigate to CreateUserActivity
+    private void goCreateUserActivity() {
+        Intent i = new Intent(this, CreateUserActivity.class);
         startActivity(i);
         finish();
     }

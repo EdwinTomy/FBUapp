@@ -8,13 +8,7 @@
     android:orientation="vertical"
     tools:context=".activities.LoginActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="80dp"
-        android:layout_weight="1"
-        tools:srcCompat="@tools:sample/avatars" />
+
 
     <EditText
         android:id="@+id/etUsername"
