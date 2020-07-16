@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.virtualresume.R;
+import com.example.virtualresume.models.User;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -70,32 +71,37 @@ public class CreateUserActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String firstName = firstNameInput.getText().toString();
+                String username = usernameInput.getText().toString();
+                String lastName = lastNameInput.getText().toString();
+                String password = passwordInput.getText().toString();
+                String bio = bioInput.getText().toString();
+
                 if(firstName.isEmpty()){
-                    Toast.makeText(CreateUserActivity.this, "Failed in sign up", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateUserActivity.this, "Enter first name!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                String lastName = lastNameInput.getText().toString();
                 if(lastName.isEmpty()){
-                    Toast.makeText(CreateUserActivity.this, "Failed in sign up", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateUserActivity.this, "Enter last name!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                String username = usernameInput.getText().toString();
-                String password = passwordInput.getText().toString();
-                SignUpUser(username, password);
+                SignUpUser(username, password, lastName, firstName, bio);
             }
         });
 
     }
 
     //Attempting to sign up after onClick
-    private void SignUpUser(String username, String password) {
+    private void SignUpUser(String username, String password, String lastName, String firstName, String bio) {
         Log.i(TAG, "Attempting to sign up user:" + username);
         //Create the ParseUser
-        ParseUser user = new ParseUser();
+        User user = new User();
         //Set core properties
         user.setUsername(username);
         user.setPassword(password);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setBio(bio);
         //Invoke signUpInBackground
         user.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {
@@ -103,10 +109,12 @@ public class CreateUserActivity extends AppCompatActivity {
                     //Navigate to MainActivity
                     Toast.makeText(CreateUserActivity.this, "Success in sign up!", Toast.LENGTH_SHORT).show();
                     //Navigate to MainActivity
+
+
                     goMainActivity();
                     return;
                 }
-                Toast.makeText(CreateUserActivity.this, "Failed in sign up!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateUserActivity.this, "Enter a password and unique username!", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "Issue with sign up", e);
                 return;
             }

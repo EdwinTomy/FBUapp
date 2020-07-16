@@ -37,7 +37,7 @@ public class User extends ParseUser {
         return getString(KEY_LASTNAME);
     }
 
-    public void seLastName(String lastName){
+    public void setLastName(String lastName){
         put(KEY_LASTNAME, lastName);
     }
 

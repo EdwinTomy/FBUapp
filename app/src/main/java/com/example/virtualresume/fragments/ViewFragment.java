@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
 import com.example.virtualresume.adapters.AchievementsAdapter;
 import com.example.virtualresume.models.Achievement;
+import com.example.virtualresume.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -87,18 +88,20 @@ public class ViewFragment extends Fragment {
         home = view.findViewById(R.id.home);
 
 
-
-        ParseFile profile = ParseUser.getCurrentUser().getParseFile("profileImage");
+        ParseFile profile = User.getCurrentUser().getParseFile("profileImage");
         if (profile != null) {
             Glide.with(getContext()).load(profile.getUrl()).into(profileImage);
             Log.i(TAG, "Profile Image loaded");
         }
 
-        String firstName = ParseUser.getCurrentUser().get("firstName").toString();
-        String lastName = ParseUser.getCurrentUser().get("lastName").toString();
+
+
+        String firstName = User.getCurrentUser().getString("firstName");
+        String lastName = User.getCurrentUser().getString("lastName");
+
         fullName.setText(firstName + " " + lastName);
-        bio.setText(ParseUser.getCurrentUser().getString("bio"));
-        username.setText(ParseUser.getCurrentUser().getString("username"));
+        bio.setText(User.getCurrentUser().getString("bio"));
+        username.setText(User.getCurrentUser().getString("username"));
 
         /*
 
@@ -143,7 +146,7 @@ public class ViewFragment extends Fragment {
         //Object to be queried (Post)
         ParseQuery<Achievement> query = ParseQuery.getQuery(Achievement.class);
         query.include(Achievement.KEY_USER);
-        query.whereEqualTo(Achievement.KEY_USER, ParseUser.getCurrentUser());
+        query.whereEqualTo(Achievement.KEY_USER, User.getCurrentUser());
         query.setLimit(postsLimit);
         query.addDescendingOrder(Achievement.KEY_CREATED_AT);
 

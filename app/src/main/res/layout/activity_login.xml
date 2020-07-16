@@ -8,8 +8,6 @@
     android:orientation="vertical"
     tools:context=".activities.LoginActivity">
 
-
-
     <EditText
         android:id="@+id/etUsername"
         android:layout_width="match_parent"
@@ -47,6 +45,5 @@
         android:text="@string/sign_up"
         android:textColor="#FFFFFF"
         android:textStyle="bold"/>
-
 
 </LinearLayout>
