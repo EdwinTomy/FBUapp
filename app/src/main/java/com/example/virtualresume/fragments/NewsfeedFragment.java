@@ -37,7 +37,6 @@ public class NewsfeedFragment extends Fragment {
     protected List<Achievement> allAchievements;
     final protected int POST_LIMIT = 20;
     protected int postsLimit = 20;
-    //protected EndlessRecyclerViewScrollListener scrollListener;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
     public NewsfeedFragment() {}
@@ -68,23 +67,6 @@ public class NewsfeedFragment extends Fragment {
         //Set the layout manager on the recycler view
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         queryPosts(POST_LIMIT);
-
-        /*
-
-        //Endless scrolling
-        rvPosts.setLayoutManager(linearLayoutManager);
-        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                postsLimit += 10;
-                queryPosts(postsLimit);
-            }
-        };
-        // Adds the scroll listener to RecyclerView
-        rvPosts.addOnScrollListener(scrollListener);
-
-
-         */
     }
 
     //Configuring the container
@@ -108,7 +90,6 @@ public class NewsfeedFragment extends Fragment {
 
     //Retrieving ParseObjects (posts)
     protected void queryPosts(int postsLimit) {
-
         //Object to be queried (Post)
         ParseQuery<Achievement> query = ParseQuery.getQuery(Achievement.class);
         query.include(Achievement.KEY_USER);

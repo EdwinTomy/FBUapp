@@ -61,12 +61,12 @@ public class CreateUserActivity extends AppCompatActivity {
         btnPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.i(TAG, "Clicked");
                 launchCamera();
             }
         });
 
-        //Retrieving ParseObject
-        //queryPosts();
+        //Clicking to create new user
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,9 +108,6 @@ public class CreateUserActivity extends AppCompatActivity {
                 if (e == null) {
                     //Navigate to MainActivity
                     Toast.makeText(CreateUserActivity.this, "Success in sign up!", Toast.LENGTH_SHORT).show();
-                    //Navigate to MainActivity
-
-
                     goMainActivity();
                     return;
                 }
@@ -129,7 +126,7 @@ public class CreateUserActivity extends AppCompatActivity {
         photoFile = getPhotoFileUri(photoFileName);
 
         // wrap File object into a content provider
-        Uri fileProvider = FileProvider.getUriForFile(this, "com.codepath.fileprovider", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(CreateUserActivity.this, "com.virtualresume.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
         if (intent.resolveActivity(this.getPackageManager()) != null) {

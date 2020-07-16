@@ -70,12 +70,11 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
             image = itemView.findViewById(R.id.image);
             title = itemView.findViewById(R.id.title);
             timePassed = itemView.findViewById(R.id.timePassed);
-            //itemView.setOnClickListener(this);
-            //visibleChange();
+            itemView.setOnClickListener(this);
         }
 
         public void bind(Achievement achievement) {
-            //Bind post data into view elements
+            //Bind achievement data into view elements
             ParseFile picture = achievement.getImage();
             if (picture != null) {
                 Glide.with(context).load(achievement.getImage().getUrl()).into(image);
@@ -97,7 +96,7 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
             title.setText(achievement.getTitle());
         }
 
-        //When post clicked, details appear
+        // :TODO When post clicked, details appear
         @Override
         public void onClick(View view) {
             //item position
@@ -106,23 +105,8 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
             if(position != RecyclerView.NO_POSITION){
                 //Get movie at position
                 Achievement post = achievements.get(position);
-                //visibleChange();
             }
         }
-
-        /*
-        //Changes visibility of description and time stamp
-        public void visibleChange(){
-            if(tvDescription.getVisibility() == View.VISIBLE){
-                tvDescription.setVisibility(View.GONE);
-                tvTime.setVisibility(View.GONE);
-                Log.i(TAG, "invisible");
-            }else{
-                tvDescription.setVisibility(View.VISIBLE);
-                tvTime.setVisibility(View.VISIBLE);
-                Log.i(TAG, "again visible");
-            }
-        }*/
     }
 
     // Clean all elements of the recycler

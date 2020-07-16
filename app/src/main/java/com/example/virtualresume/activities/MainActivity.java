@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity{
     }
 
     //Adding menu option for logout
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Inflate menu and items present in it
@@ -81,6 +80,7 @@ public class MainActivity extends AppCompatActivity{
         return true;
     }
 
+    //Logout
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //Menu item clicked

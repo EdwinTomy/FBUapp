@@ -50,7 +50,6 @@ public class ViewFragment extends Fragment {
     protected List<Achievement> allAchievements;
     final protected int POST_LIMIT = 20;
     protected int postsLimit = 20;
-    //protected EndlessRecyclerViewScrollListener scrollListener;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
     public ViewFragment() {}
@@ -70,7 +69,6 @@ public class ViewFragment extends Fragment {
         // Lookup the swipe container view
         swipeContainer = view.findViewById(R.id.swipeContainer);
         setupPullToRefresh(swipeContainer);
-
         //Create adapter and data source
         allAchievements = new ArrayList<>();
         adapter = new AchievementsAdapter(getContext(), allAchievements);
@@ -88,37 +86,19 @@ public class ViewFragment extends Fragment {
         home = view.findViewById(R.id.home);
 
 
+        //Profile picture of user
         ParseFile profile = User.getCurrentUser().getParseFile("profileImage");
         if (profile != null) {
             Glide.with(getContext()).load(profile.getUrl()).into(profileImage);
             Log.i(TAG, "Profile Image loaded");
         }
 
-
-
+        //Name, username and bio of user
         String firstName = User.getCurrentUser().getString("firstName");
         String lastName = User.getCurrentUser().getString("lastName");
-
         fullName.setText(firstName + " " + lastName);
         bio.setText(User.getCurrentUser().getString("bio"));
         username.setText(User.getCurrentUser().getString("username"));
-
-        /*
-
-        //Endless scrolling
-        rvPosts.setLayoutManager(linearLayoutManager);
-        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                postsLimit += 10;
-                queryPosts(postsLimit);
-            }
-        };
-        // Adds the scroll listener to RecyclerView
-        rvPosts.addOnScrollListener(scrollListener);
-
-
-         */
     }
 
     //Configuring the container
