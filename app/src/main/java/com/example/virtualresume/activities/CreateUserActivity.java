@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.example.virtualresume.R;
 import com.example.virtualresume.models.User;
 import com.parse.ParseException;
-import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 import java.io.File;
@@ -54,7 +53,7 @@ public class CreateUserActivity extends AppCompatActivity {
         bioInput = findViewById(R.id.bioInput);
         picture = findViewById(R.id.picture);
         btnPicture = findViewById(R.id.btnPicture);
-        btnCreate = findViewById(R.id.btnCreate);
+        btnCreate = findViewById(R.id.btnEditProfile);
 
 
         //Taking a picture

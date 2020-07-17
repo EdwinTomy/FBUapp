@@ -61,7 +61,7 @@
         android:id="@+id/picture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnCreate"
+        android:layout_above="@+id/btnEditProfile"
         android:layout_below="@+id/btnPicture"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
@@ -86,7 +86,7 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/btnCreate"
+        android:id="@+id/btnEditProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
