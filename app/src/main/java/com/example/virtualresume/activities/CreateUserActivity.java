@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.virtualresume.R;
 import com.example.virtualresume.models.User;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.SignUpCallback;
 
 import java.io.File;
@@ -74,7 +75,6 @@ public class CreateUserActivity extends AppCompatActivity {
                 String lastName = lastNameInput.getText().toString();
                 String password = passwordInput.getText().toString();
                 String bio = bioInput.getText().toString();
-                ImageView picture = picture.getImage
 
                 if(firstName.isEmpty()){
                     Toast.makeText(CreateUserActivity.this, "Enter first name!", Toast.LENGTH_SHORT).show();
@@ -85,14 +85,14 @@ public class CreateUserActivity extends AppCompatActivity {
                     return;
                 }
 
-                SignUpUser(username, password, lastName, firstName, bio);
+                SignUpUser(username, password, lastName, firstName, bio, photoFile);
             }
         });
 
     }
 
     //Attempting to sign up after onClick
-    private void SignUpUser(String username, String password, String lastName, String firstName, String bio) {
+    private void SignUpUser(String username, String password, String lastName, String firstName, String bio, File photoFile) {
         Log.i(TAG, "Attempting to sign up user:" + username);
         //Create the ParseUser
         User user = new User();
@@ -102,6 +102,8 @@ public class CreateUserActivity extends AppCompatActivity {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setBio(bio);
+        if(photoFile != null)
+            user.setProfileImage(new ParseFile(photoFile));
         //Invoke signUpInBackground
         user.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {
