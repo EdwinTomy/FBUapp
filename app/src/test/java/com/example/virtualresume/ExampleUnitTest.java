@@ -3,6 +3,9 @@ package com.example.virtualresume;
 import com.example.virtualresume.activities.LoginActivity;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static com.parse.ParseUser.getCurrentUser;
 import static org.junit.Assert.*;
@@ -12,6 +15,8 @@ import static org.junit.Assert.*;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
+@RunWith(RobolectricTestRunner.class)
+@Config(manifest = Config.NONE)
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
@@ -23,7 +28,6 @@ public class ExampleUnitTest {
         LoginActivity loginActivity = new LoginActivity();
         loginActivity.loginUser("edwintomy", "edwintomy");
         String username = getCurrentUser().getUsername();
-
 
         assertEquals("edwintomy", username);
     }

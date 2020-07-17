@@ -34,7 +34,7 @@ public class ExampleInstrumentedTest {
     public void userObject(){
         LoginActivity loginActivity = new LoginActivity();
         loginActivity.loginUser("edwintomy", "edwintomy");
-        //String username = getCurrentUser().getUsername();
+        String username = getCurrentUser().getUsername();
 
         assertEquals("edwintomy", "holea");
     }

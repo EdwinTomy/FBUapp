@@ -19,7 +19,7 @@
         tools:layout_editor_absoluteY="55dp" />
 
     <TextView
-        android:id="@+id/fullName1"
+        android:id="@+id/fullName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/imageUser"
@@ -34,7 +34,7 @@
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/fullName1"
+        android:layout_below="@+id/fullName"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@+id/imageUser"

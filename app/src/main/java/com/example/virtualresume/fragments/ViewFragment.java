@@ -78,7 +78,7 @@ public class ViewFragment extends Fragment {
         queryPosts(POST_LIMIT);
 
         profileImage = view.findViewById(R.id.profileImage);
-        fullName = view.findViewById(R.id.fullName1);
+        fullName = view.findViewById(R.id.fullName);
         username = view.findViewById(R.id.username);
         bio = view.findViewById(R.id.bio);
         home = view.findViewById(R.id.home);

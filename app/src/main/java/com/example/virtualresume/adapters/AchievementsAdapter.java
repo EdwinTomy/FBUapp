@@ -1,6 +1,7 @@
 package com.example.virtualresume.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,8 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
+import com.example.virtualresume.activities.DetailedView;
 import com.example.virtualresume.models.Achievement;
 import com.parse.ParseFile;
+
+import org.parceler.Parcels;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -64,9 +68,9 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
         public ViewHolder(@NonNull View itemView) {
             super((itemView));
             profileImage = itemView.findViewById(R.id.profileImage);
-            fullName = itemView.findViewById(R.id.fullName1);
+            fullName = itemView.findViewById(R.id.fullName);
             image = itemView.findViewById(R.id.image);
-            title = itemView.findViewById(R.id.fullName1);
+            title = itemView.findViewById(R.id.fullName);
             timePassed = itemView.findViewById(R.id.timePassed);
             itemView.setOnClickListener(this);
         }
@@ -101,8 +105,14 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
             int position = getAdapterPosition();
             //Validity of position
             if(position != RecyclerView.NO_POSITION){
-                //Get movie at position
-                Achievement post = achievements.get(position);
+                //Get achievement at position
+                Achievement achievement = achievements.get(position);
+
+                //Create intent for new activity
+                Intent intent = new Intent(context, DetailedView.class);
+                //Serialize the movie with parser
+                intent.putExtra(Achievement.class.getSimpleName(), Parcels.wrap(achievement));//show activity
+                context.startActivity(intent);
             }
         }
     }

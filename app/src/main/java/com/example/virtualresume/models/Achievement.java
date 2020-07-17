@@ -5,10 +5,13 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import org.parceler.Parcel;
+
 import java.security.KeyFactory;
 import java.security.KeyStore;
 import java.util.Date;
 
+@Parcel(analyze = {Achievement.class})
 @ParseClassName("Achievement")
 public class Achievement extends ParseObject {
 
@@ -19,6 +22,9 @@ public class Achievement extends ParseObject {
     public static final String KEY_ORGANIZATION = "organization";
     public static final String KEY_TIME = "time";
     public static final String KEY_USER = "user";
+
+    public Achievement() {
+    }
 
     public String getDescription() {
         return getString(KEY_DESCRIPTION);
