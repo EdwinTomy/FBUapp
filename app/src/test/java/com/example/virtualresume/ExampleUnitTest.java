@@ -1,6 +1,8 @@
 package com.example.virtualresume;
 
 import com.example.virtualresume.activities.LoginActivity;
+import com.example.virtualresume.models.Achievement;
+import com.example.virtualresume.models.User;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,11 +26,36 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void userObject(){
-        LoginActivity loginActivity = new LoginActivity();
-        loginActivity.loginUser("edwintomy", "edwintomy");
-        String username = getCurrentUser().getUsername();
+    public void userObject1(){
+        User user = new User();
+        user.setLastName("Lopez de Santa Anna");
 
-        assertEquals("edwintomy", username);
+        assertEquals("Lopez de Santa Anna", user.getLastName());
+    }
+
+    @Test
+    public void userObject2(){
+        User user = new User();
+        user.setFirstName("Antonio");
+
+        assertEquals("Antonio", user.getLastName());
+    }
+
+    @Test
+    public void achievementObject1(){
+        Achievement achievement = new Achievement();
+        String description = "I served in the Spanish army and rose to the rank of captain. Fought on both sides of nearly every issue of the day. Backed Vicente Guerrero for president, only to help depose him later.";
+        achievement.setDescription(description);
+
+        assertEquals(description, achievement.getDescription());
+    }
+
+    @Test
+    public void achievementObject2(){
+        Achievement achievement = new Achievement();
+        String field = "war";
+        achievement.setField(field);
+
+        assertEquals(field, achievement.getField());
     }
 }
