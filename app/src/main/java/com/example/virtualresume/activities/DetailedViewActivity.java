@@ -22,7 +22,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DetailedView extends AppCompatActivity {
+public class DetailedViewActivity extends AppCompatActivity {
 
     Achievement achievement;
     private static final String TAG = "DetailedView";

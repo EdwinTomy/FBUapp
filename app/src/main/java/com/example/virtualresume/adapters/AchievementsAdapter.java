@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
-import com.example.virtualresume.activities.DetailedView;
+import com.example.virtualresume.activities.DetailedViewActivity;
 import com.example.virtualresume.models.Achievement;
 import com.parse.ParseFile;
 
@@ -105,16 +105,18 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
             int position = getAdapterPosition();
             //Validity of position
             if(position != RecyclerView.NO_POSITION){
-                //Get achievement at position
                 Achievement achievement = achievements.get(position);
-
-                //Create intent for new activity
-                Intent intent = new Intent(context, DetailedView.class);
-                //Serialize the movie with parser
-                intent.putExtra(Achievement.class.getSimpleName(), Parcels.wrap(achievement));//show activity
-                context.startActivity(intent);
+                goToActivity(achievement);
             }
         }
+    }
+
+    public void goToActivity(Achievement achievement) {
+        //Create intent for new activity
+        Intent intent = new Intent(context, DetailedViewActivity.class);
+        //Serialize the movie with parser
+        intent.putExtra(Achievement.class.getSimpleName(), Parcels.wrap(achievement));//show activity
+        context.startActivity(intent);
     }
 
     // Clean all elements of the recycler

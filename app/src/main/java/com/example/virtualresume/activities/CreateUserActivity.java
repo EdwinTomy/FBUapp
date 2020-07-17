@@ -74,6 +74,7 @@ public class CreateUserActivity extends AppCompatActivity {
                 String lastName = lastNameInput.getText().toString();
                 String password = passwordInput.getText().toString();
                 String bio = bioInput.getText().toString();
+                ImageView picture = picture.getImage
 
                 if(firstName.isEmpty()){
                     Toast.makeText(CreateUserActivity.this, "Enter first name!", Toast.LENGTH_SHORT).show();

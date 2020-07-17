@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
 import com.example.virtualresume.adapters.AchievementsAdapter;
+import com.example.virtualresume.adapters.EditAchievementsAdapter;
 import com.example.virtualresume.models.Achievement;
 import com.example.virtualresume.models.User;
 import com.parse.FindCallback;
@@ -44,7 +45,7 @@ public class EditFragment extends Fragment {
 
     private RecyclerView rvPosts;
     protected SwipeRefreshLayout swipeContainer;
-    protected AchievementsAdapter adapter;
+    protected EditAchievementsAdapter adapter;
     protected List<Achievement> allAchievements;
     final protected int POST_LIMIT = 20;
     protected int postsLimit = 20;
@@ -69,7 +70,7 @@ public class EditFragment extends Fragment {
         setupPullToRefresh(swipeContainer);
         //Create adapter and data source
         allAchievements = new ArrayList<>();
-        adapter = new AchievementsAdapter(getContext(), allAchievements);
+        adapter = new EditAchievementsAdapter(getContext(), allAchievements);
         //Create layout for one row in the list
         //Set the adapter on the recycler view
         rvPosts.setAdapter(adapter);
