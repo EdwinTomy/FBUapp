@@ -24,7 +24,10 @@ import com.example.virtualresume.R;
 import com.example.virtualresume.databinding.ActivityCreateAchievementBinding;
 import com.example.virtualresume.databinding.ActivityDetailedViewBinding;
 import com.example.virtualresume.models.Achievement;
+import com.example.virtualresume.models.User;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
@@ -60,7 +63,6 @@ public class CreateAchievement extends AppCompatActivity {
         setContentView(view);
 
         achievement = (Achievement) Parcels.unwrap(getIntent().getParcelableExtra(Achievement.class.getSimpleName()));
-        Log.d(TAG, String.format("Showing details for '%s:'", achievement.getTitle()));
 
         //Bind attributes
         imageAchievement = view.findViewById(R.id.imageAchievement);
@@ -72,17 +74,19 @@ public class CreateAchievement extends AppCompatActivity {
         organization = view.findViewById(R.id.organization);
         timeOf = view.findViewById(R.id.timeOf);
 
-        title.setText(achievement.getTitle());
-        field.setText(achievement.getField());
-        description.setText(achievement.getDescription());
-        organization.setText(achievement.getOrganization());
-        timeOf.setText(achievement.getTime().toString());
-
-        ParseFile picture = achievement.getImage();
-        if (picture != null) {
-            Glide.with(this).load(achievement.getImage().getUrl()).into(imageAchievement);
-        }else{
-            imageAchievement.setVisibility(View.GONE);
+        if(achievement != null) {
+            title.setText(achievement.getTitle());
+            field.setText(achievement.getField());
+            description.setText(achievement.getDescription());
+            organization.setText(achievement.getOrganization());
+            timeOf.setText(achievement.getTime().toString());
+            Log.d(TAG, String.format("Showing details for '%s:'", achievement.getTitle()));
+            ParseFile picture = achievement.getImage();
+            if (picture != null) {
+                Glide.with(this).load(achievement.getImage().getUrl()).into(imageAchievement);
+            }else{
+                imageAchievement.setVisibility(View.GONE);
+            }
         }
 
         //Taking a picture
@@ -98,34 +102,60 @@ public class CreateAchievement extends AppCompatActivity {
         btnEditAchievement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String titleContent = title.getText().toString();
                 if(titleContent.isEmpty()){
                     Toast.makeText(CreateAchievement.this, "Sorry, the title is empty!", Toast.LENGTH_LONG).show();
                     return;
-                }achievement.setTitle(titleContent);
+                }
 
                 String fieldContent = field.getText().toString();
                 if(fieldContent.isEmpty()){
                     Toast.makeText(CreateAchievement.this, "Sorry, the field is empty!", Toast.LENGTH_LONG).show();
                     return;
-                }achievement.setField(fieldContent);
+                }
 
                 String descriptionContent = description.getText().toString();
                 if(descriptionContent.isEmpty()){
                     Toast.makeText(CreateAchievement.this, "Sorry, the description is empty!", Toast.LENGTH_LONG).show();
                     return;
-                }achievement.setDescription(descriptionContent);
+                }
 
                 String organizationContent = organization.getText().toString();
                 if(organizationContent.isEmpty()){
                     Toast.makeText(CreateAchievement.this, "Sorry, the organization is empty!", Toast.LENGTH_LONG).show();
                     return;
-                }achievement.setOrganization(organizationContent);
+                }
 
+                if(achievement == null){
+                    Achievement achievement = new Achievement();
+                    achievement.setUser(User.getCurrentUser());
+                    Log.i(TAG, "new achievement");
+                    achievement.setTitle(titleContent);
+                    achievement.setField(fieldContent);
+                    achievement.setDescription(descriptionContent);
+                    achievement.setOrganization(organizationContent);
+                    if(photoFile != null)
+                        achievement.setImage(new ParseFile(photoFile));
+                    achievement.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if(e != null){
+                                Log.e(TAG, "Error while saving", e);
+                                Toast.makeText(CreateAchievement.this, "Error while saving", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }
+                    });
+                    return;
+                }
+
+                achievement.setTitle(titleContent);
+                achievement.setField(fieldContent);
+                achievement.setDescription(descriptionContent);
+                achievement.setOrganization(organizationContent);
                 if(photoFile != null)
                     achievement.setImage(new ParseFile(photoFile));
-
-                Toast.makeText(CreateAchievement.this, achievement.getTitle(), Toast.LENGTH_SHORT).show();
                 achievement.saveInBackground();
             }
         });

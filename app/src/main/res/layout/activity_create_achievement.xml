@@ -14,7 +14,7 @@
         android:layout_alignStart="@+id/title"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
-        android:text="TextView"
+        android:hint="organization"
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="55dp" />
 
@@ -26,7 +26,7 @@
         android:layout_alignStart="@+id/organization"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
-        android:text="TextView"
+        android:hint="description"
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="55dp" />
 
@@ -38,7 +38,7 @@
         android:layout_alignStart="@+id/description"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
-        android:text="TextView"
+        android:hint="field"
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="55dp" />
 
@@ -50,7 +50,7 @@
         android:layout_alignStart="@id/imageAchievement"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
-        android:text="TextView"
+        android:hint="title"
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="55dp" />
 
@@ -62,7 +62,7 @@
         android:layout_alignStart="@+id/field"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
-        android:text="TextView"
+        android:hint="nothing here"
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="55dp" />
 

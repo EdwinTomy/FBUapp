@@ -11,7 +11,7 @@
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/btnPicture"
+        android:layout_below="@+id/btnCreateAchievement"
         android:layout_marginTop="10dp">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -80,7 +80,7 @@
         android:text="TextView" />
 
     <Button
-        android:id="@+id/btnPicture"
+        android:id="@+id/btnCreateAchievement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/bio"
@@ -89,7 +89,7 @@
         android:layout_marginTop="5dp"
         android:backgroundTint="#2196F3"
         android:includeFontPadding="false"
-        android:text="take profile picture (optional)"
+        android:text="Create Achievement"
         android:textColor="#FFFFFF"
         android:textStyle="bold" />
 

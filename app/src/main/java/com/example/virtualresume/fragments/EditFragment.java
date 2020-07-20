@@ -1,5 +1,6 @@
 package com.example.virtualresume.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,11 +14,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
+import com.example.virtualresume.activities.CreateAchievement;
 import com.example.virtualresume.adapters.AchievementsAdapter;
 import com.example.virtualresume.adapters.EditAchievementsAdapter;
 import com.example.virtualresume.models.Achievement;
@@ -26,6 +29,8 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +47,8 @@ public class EditFragment extends Fragment {
     private TextView username;
     private TextView bio;
     private TextView fullName;
+    private Button btnEditProfile;
+    private Button btnCreateAchievement;
 
     private RecyclerView rvPosts;
     protected SwipeRefreshLayout swipeContainer;
@@ -84,6 +91,8 @@ public class EditFragment extends Fragment {
         bio = view.findViewById(R.id.bio);
         home = view.findViewById(R.id.home);
 
+        btnCreateAchievement = view.findViewById(R.id.btnCreateAchievement);
+        btnEditProfile = view.findViewById(R.id.btnEditProfile);
 
         //Profile picture of user
         ParseFile profile = User.getCurrentUser().getParseFile("profileImage");
@@ -98,6 +107,14 @@ public class EditFragment extends Fragment {
         fullName.setText(firstName + " " + lastName);
         bio.setText(User.getCurrentUser().getString("bio"));
         username.setText(User.getCurrentUser().getString("username"));
+
+        btnCreateAchievement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Achievement achievement = new Achievement();
+                goToActivity();
+            }
+        });
     }
 
     //Configuring the container
@@ -146,5 +163,13 @@ public class EditFragment extends Fragment {
                 swipeContainer.setRefreshing(false);
             }
         });
+    }
+
+    //Go to Create Achievement Screen
+    public void goToActivity() {
+        //Create intent for new activity
+        Intent intent = new Intent(getContext(), CreateAchievement.class);
+        //show activity
+        getContext().startActivity(intent);
     }
 }
