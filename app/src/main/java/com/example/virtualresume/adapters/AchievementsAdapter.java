@@ -70,7 +70,7 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
             profileImage = itemView.findViewById(R.id.profileImage);
             fullName = itemView.findViewById(R.id.fullName);
             image = itemView.findViewById(R.id.image);
-            title = itemView.findViewById(R.id.fullName);
+            title = itemView.findViewById(R.id.username);
             timePassed = itemView.findViewById(R.id.timePassed);
             itemView.setOnClickListener(this);
         }
@@ -98,7 +98,7 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
             title.setText(achievement.getTitle());
         }
 
-        // :TODO When post clicked, details appear
+        //When post clicked, details appear
         @Override
         public void onClick(View view) {
             //item position
