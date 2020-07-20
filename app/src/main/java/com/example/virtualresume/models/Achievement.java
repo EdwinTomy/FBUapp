@@ -46,7 +46,7 @@ public class Achievement extends ParseObject {
         return getString(KEY_TITLE);
     }
 
-    public void seTitle(String title){
+    public void setTitle(String title){
         put(KEY_TITLE, title);
     }
 
