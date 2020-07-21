@@ -19,6 +19,7 @@ import com.example.virtualresume.activities.DetailedViewActivity;
 import com.example.virtualresume.models.Achievement;
 import com.example.virtualresume.models.User;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 
@@ -27,75 +28,63 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapter.ViewHolder> {
+public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> {
 
-    public static final String TAG = "AchievementsAdapter";
+    public static final String TAG = "UsersAdapter";
     private Context context;
-    private List<Achievement> achievements;
+    private List<ParseUser> users;
 
-    public AchievementsAdapter(Context context, List<Achievement> achievements) {
+    public UsersAdapter(Context context, List<ParseUser> users) {
         this.context = context;
-        this.achievements = achievements;
+        this.users = users;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_achievement, parent, false);
-        return new ViewHolder(view);
+    public UsersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_contact, parent, false);
+        return new UsersAdapter.ViewHolder(view);
     }
 
-    //Binds view into a specific position
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Achievement achievement = achievements.get(position);
-        holder.bind(achievement);
+        ParseUser user = users.get(position);
+        holder.bind(user);
     }
 
     //Return total posts count
     @Override
     public int getItemCount() {
-        return achievements.size();
+        return users.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView profileImage;
         private TextView fullName;
-        private ImageView image;
-        private TextView title;
-        private TextView timePassed;
+        private TextView username;
 
         public ViewHolder(@NonNull View itemView) {
             super((itemView));
             profileImage = itemView.findViewById(R.id.profileImage);
             fullName = itemView.findViewById(R.id.fullName);
-            image = itemView.findViewById(R.id.image);
-            title = itemView.findViewById(R.id.username);
-            timePassed = itemView.findViewById(R.id.timePassed);
+            username = itemView.findViewById(R.id.username);
             itemView.setOnClickListener(this);
         }
 
-        public void bind(Achievement achievement) {
+        public void bind(ParseUser user) {
             //Bind achievement data into view elements
-            ParseFile picture = achievement.getImage();
-            if (picture != null) {
-                Glide.with(context).load(achievement.getImage().getUrl()).into(image);
-            }else{
-                image.setVisibility(View.GONE);
-            }
-
-            ParseFile profile = achievement.getUser().getParseFile("profileImage");
+            ParseFile profile = user.getParseFile("profileImage");
             if (profile != null) {
                 Glide.with(context).load(profile.getUrl()).into(profileImage);
                 Log.i(TAG, "Profile Image loaded");
             }
 
-            String firstName = achievement.getUser().get("firstName").toString();
-            String lastName = achievement.getUser().get("lastName").toString();
+            String firstName = user.getString("firstName");
+            String lastName = user.getString("lastName");
             fullName.setText(firstName + " " + lastName);
-            timePassed.setText(getRelativeTimeAgo(achievement.getCreatedAt()));
-            title.setText(achievement.getTitle());
+            username.setText(user.getUsername());
         }
 
         //When post clicked, details appear
@@ -105,29 +94,29 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
             int position = getAdapterPosition();
             //Validity of position
             if(position != RecyclerView.NO_POSITION){
-                Achievement achievement = achievements.get(position);
-                goToActivity(achievement);
+                ParseUser user = users.get(position);
+                //goToActivity(user);
             }
         }
     }
 
-    public void goToActivity(Achievement achievement) {
+    public void goToActivity(User user) {
         //Create intent for new activity
         Intent intent = new Intent(context, DetailedViewActivity.class);
         //Serialize the movie with parser
-        intent.putExtra(Achievement.class.getSimpleName(), Parcels.wrap(achievement));//show activity
+        intent.putExtra(User.class.getSimpleName(), Parcels.wrap(user));//show activity
         context.startActivity(intent);
     }
 
     // Clean all elements of the recycler
     public void clear() {
-        achievements.clear();
+        users.clear();
         notifyDataSetChanged();
     }
 
     // Add a list of items -- change to type used
-    public void addAll(List<Achievement> list) {
-        achievements.addAll(list);
+    public void addAll(List<User> list) {
+        users.addAll(list);
         notifyDataSetChanged();
     }
 
