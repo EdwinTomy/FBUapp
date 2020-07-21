@@ -9,10 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.example.virtualresume.R;
 import com.example.virtualresume.adapters.UsersAdapter;
@@ -37,6 +40,7 @@ public class ContactsFragment extends Fragment {
     protected SwipeRefreshLayout swipeContainer;
     protected UsersAdapter adapter;
     protected List<ParseUser> allUsers;
+    private EditText searchText;
     final protected int POST_LIMIT = 20;
     protected int postsLimit = 20;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -54,21 +58,38 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //Recycler View
         rvPosts = view.findViewById(R.id.rvPosts);
+        allUsers = new ArrayList<>();
+        adapter = new UsersAdapter(getContext(), allUsers);
+        rvPosts.setAdapter(adapter);
+        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Lookup the swipe container view
         swipeContainer = view.findViewById(R.id.swipeContainer);
         setupPullToRefresh(swipeContainer);
 
-        //Create adapter and data source
-        allUsers = new ArrayList<>();
-        adapter = new UsersAdapter(getContext(), allUsers);
-        //Create layout for one row in the list
-        //Set the adapter on the recycler view
-        rvPosts.setAdapter(adapter);
-        //Set the layout manager on the recycler view
-        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
-        queryPosts(POST_LIMIT);
+        //Search EditText
+        searchText = view.findViewById(R.id.searchText);
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                queryPosts(POST_LIMIT, editable.toString());
+            }
+        });
+
+        queryPosts(POST_LIMIT, null);
     }
 
     //Configuring the container
@@ -84,18 +105,24 @@ public class ContactsFragment extends Fragment {
             @Override
             public void onRefresh() {
                 Log.i(TAG, "Loading in");
-                queryPosts(POST_LIMIT);
+                queryPosts(POST_LIMIT, null);
                 postsLimit = POST_LIMIT;
             }
         });
     }
 
     //Retrieving ParseObjects (posts)
-    protected void queryPosts(int postsLimit) {
+    protected void queryPosts(int postsLimit, String searchText) {
         //Object to be queried (Post)
         Log.i(TAG, "Inside query");
         ParseQuery<ParseUser> query = User.getQuery();
         query.addAscendingOrder(User.KEY_FIRSTNAME);
+
+        //When searching
+        if(searchText != null) {
+            query.whereContains("username", searchText);
+        }
+
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> users, ParseException e) {
