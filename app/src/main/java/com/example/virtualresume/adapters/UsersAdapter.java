@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
+import com.example.virtualresume.activities.ContactProfileActivity;
 import com.example.virtualresume.activities.DetailedViewActivity;
+import com.example.virtualresume.fragments.ViewFragment;
 import com.example.virtualresume.models.Achievement;
 import com.example.virtualresume.models.User;
 import com.parse.ParseFile;
@@ -95,16 +97,16 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             //Validity of position
             if(position != RecyclerView.NO_POSITION){
                 ParseUser user = users.get(position);
-                //goToActivity(user);
+                goToActivity(user);
             }
         }
     }
 
-    public void goToActivity(User user) {
+    public void goToActivity(ParseUser user) {
         //Create intent for new activity
-        Intent intent = new Intent(context, DetailedViewActivity.class);
+        Intent intent = new Intent(context, ContactProfileActivity.class);
         //Serialize the movie with parser
-        intent.putExtra(User.class.getSimpleName(), Parcels.wrap(user));//show activity
+        intent.putExtra(ParseUser.class.getSimpleName(), Parcels.wrap(user));//show activity
         context.startActivity(intent);
     }
 
