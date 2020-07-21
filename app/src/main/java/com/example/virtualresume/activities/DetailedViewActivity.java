@@ -54,7 +54,6 @@ public class DetailedViewActivity extends AppCompatActivity {
         binding.username.setText(achievement.getUser().getUsername());
         binding.timePassed.setText(getRelativeTimeAgo(achievement.getUpdatedAt()));
         binding.organization.setText(achievement.getOrganization());
-        binding.timeOf.setText(achievement.getTime().toString());
 
         ParseFile picture = achievement.getImage();
         if (picture != null) {
@@ -64,9 +63,10 @@ public class DetailedViewActivity extends AppCompatActivity {
         }
 
         ParseFile profile = achievement.getUser().getParseFile("profileImage");
-        Glide.with(this).load(profile.getUrl()).into(imageUser);
-        Log.i(TAG, "Profile Image loaded");
-
+        if (profile != null) {
+            Glide.with(this).load(profile.getUrl()).into(imageUser);
+            Log.i(TAG, "Profile Image loaded");
+        }
     }
 
     //Formatting time passed

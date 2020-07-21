@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
 import com.example.virtualresume.activities.CreateAchievement;
+import com.example.virtualresume.activities.EditUserDetailsActivity;
 import com.example.virtualresume.adapters.AchievementsAdapter;
 import com.example.virtualresume.adapters.EditAchievementsAdapter;
 import com.example.virtualresume.models.Achievement;
@@ -29,6 +30,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 
@@ -112,7 +114,15 @@ public class EditFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Achievement achievement = new Achievement();
-                goToActivity();
+                goToCreateAchievementActivity();
+            }
+        });
+
+        btnEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Achievement achievement = new Achievement();
+                goToEditUserDetailsActivity(User.getCurrentUser());
             }
         });
     }
@@ -166,9 +176,19 @@ public class EditFragment extends Fragment {
     }
 
     //Go to Create Achievement Screen
-    public void goToActivity() {
+    public void goToCreateAchievementActivity() {
         //Create intent for new activity
         Intent intent = new Intent(getContext(), CreateAchievement.class);
+        //show activity
+        getContext().startActivity(intent);
+    }
+
+    //Go to Edit User Details Screen
+    public void goToEditUserDetailsActivity(ParseUser user) {
+        //Create intent for new activity
+        Intent intent = new Intent(getContext(), EditUserDetailsActivity.class);
+        //Serialize the achievement with parser
+        intent.putExtra(User.class.getSimpleName(), Parcels.wrap(user));
         //show activity
         getContext().startActivity(intent);
     }

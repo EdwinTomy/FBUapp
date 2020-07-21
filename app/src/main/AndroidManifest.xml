@@ -19,7 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.DetailedViewActivity"></activity>
+        <activity android:name=".activities.EditUserDetailsActivity"></activity>
+        <activity android:name=".activities.DetailedViewActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -31,7 +32,7 @@
                 android:resource="@xml/fileprovider" />
         </provider>
 
-        <activity android:name=".activities.CreateAchievement"></activity>
+        <activity android:name=".activities.CreateAchievement" />
         <activity android:name=".activities.CreateUserActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

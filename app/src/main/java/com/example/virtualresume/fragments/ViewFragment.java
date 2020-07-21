@@ -97,6 +97,8 @@ public class ViewFragment extends Fragment {
         fullName.setText(firstName + " " + lastName);
         bio.setText(User.getCurrentUser().getString("bio"));
         username.setText(User.getCurrentUser().getString("username"));
+        if (User.getCurrentUser().getParseFile("profileImage") != null)
+            Glide.with(this).load(User.getCurrentUser().getParseFile("profileImage").getUrl()).into(profileImage);
     }
 
     //Configuring the container

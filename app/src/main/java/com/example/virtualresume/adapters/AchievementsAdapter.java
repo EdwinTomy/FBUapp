@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
 import com.example.virtualresume.activities.DetailedViewActivity;
 import com.example.virtualresume.models.Achievement;
+import com.example.virtualresume.models.User;
 import com.parse.ParseFile;
 
 import org.parceler.Parcels;
@@ -93,7 +94,6 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
             String firstName = achievement.getUser().get("firstName").toString();
             String lastName = achievement.getUser().get("lastName").toString();
             fullName.setText(firstName + " " + lastName);
-
             timePassed.setText(getRelativeTimeAgo(achievement.getCreatedAt()));
             title.setText(achievement.getTitle());
         }

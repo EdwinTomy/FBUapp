@@ -54,18 +54,6 @@
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="55dp" />
 
-    <EditText
-        android:id="@+id/timeOf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/field"
-        android:layout_alignStart="@+id/field"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="5dp"
-        android:hint="nothing here"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="55dp" />
-
     <ImageView
         android:id="@+id/imageAchievement"
         android:layout_width="match_parent"

@@ -26,7 +26,7 @@ public class EditAchievementsAdapter extends AchievementsAdapter {
     public void goToActivity(Achievement achievement) {
         //Create intent for new activity
         Intent intent = new Intent(context, CreateAchievement.class);
-        //Serialize the movie with parser
+        //Serialize the achievement with parser
         intent.putExtra(Achievement.class.getSimpleName(), Parcels.wrap(achievement));
         //show activity
         context.startActivity(intent);

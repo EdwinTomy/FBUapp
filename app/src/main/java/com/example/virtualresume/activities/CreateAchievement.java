@@ -22,12 +22,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
 import com.example.virtualresume.databinding.ActivityCreateAchievementBinding;
-import com.example.virtualresume.databinding.ActivityDetailedViewBinding;
 import com.example.virtualresume.models.Achievement;
 import com.example.virtualresume.models.User;
-import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
@@ -49,7 +46,6 @@ public class CreateAchievement extends AppCompatActivity {
     private EditText field;
     private EditText description;
     private EditText organization;
-    private EditText timeOf;
     private File photoFile;
     public String photoFileName = "photo.jpg";
 
@@ -72,14 +68,13 @@ public class CreateAchievement extends AppCompatActivity {
         field = view.findViewById(R.id.field);
         description = view.findViewById(R.id.description);
         organization = view.findViewById(R.id.organization);
-        timeOf = view.findViewById(R.id.timeOf);
 
+        //For existing achievements, setting up the data
         if(achievement != null) {
             title.setText(achievement.getTitle());
             field.setText(achievement.getField());
             description.setText(achievement.getDescription());
             organization.setText(achievement.getOrganization());
-            timeOf.setText(achievement.getTime().toString());
             Log.d(TAG, String.format("Showing details for '%s:'", achievement.getTitle()));
             ParseFile picture = achievement.getImage();
             if (picture != null) {
@@ -103,30 +98,29 @@ public class CreateAchievement extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                //Obtaining input data
                 String titleContent = title.getText().toString();
                 if(titleContent.isEmpty()){
                     Toast.makeText(CreateAchievement.this, "Sorry, the title is empty!", Toast.LENGTH_LONG).show();
                     return;
                 }
-
                 String fieldContent = field.getText().toString();
                 if(fieldContent.isEmpty()){
                     Toast.makeText(CreateAchievement.this, "Sorry, the field is empty!", Toast.LENGTH_LONG).show();
                     return;
                 }
-
                 String descriptionContent = description.getText().toString();
                 if(descriptionContent.isEmpty()){
                     Toast.makeText(CreateAchievement.this, "Sorry, the description is empty!", Toast.LENGTH_LONG).show();
                     return;
                 }
-
                 String organizationContent = organization.getText().toString();
                 if(organizationContent.isEmpty()){
                     Toast.makeText(CreateAchievement.this, "Sorry, the organization is empty!", Toast.LENGTH_LONG).show();
                     return;
                 }
 
+                //Creating new achievement
                 if(achievement == null){
                     Achievement achievement = new Achievement();
                     achievement.setUser(User.getCurrentUser());
@@ -137,19 +131,9 @@ public class CreateAchievement extends AppCompatActivity {
                     achievement.setOrganization(organizationContent);
                     if(photoFile != null)
                         achievement.setImage(new ParseFile(photoFile));
-                    achievement.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if(e != null){
-                                Log.e(TAG, "Error while saving", e);
-                                Toast.makeText(CreateAchievement.this, "Error while saving", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                        }
-                    });
+                    achievement.saveInBackground();
                     return;
                 }
-
                 achievement.setTitle(titleContent);
                 achievement.setField(fieldContent);
                 achievement.setDescription(descriptionContent);
