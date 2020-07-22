@@ -32,11 +32,11 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     public static final String TAG = "UsersAdapter";
     private Context context;
-    private List<Following> followings;
+    private List<ParseUser> users;
 
-    public UsersAdapter(Context context, List<Following> followings) {
+    public UsersAdapter(Context context, List<ParseUser> users) {
         this.context = context;
-        this.followings = followings;
+        this.users = users;
     }
 
     @NonNull
@@ -49,14 +49,14 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Following following = followings.get(position);
-        holder.bind(following);
+        ParseUser user = users.get(position);
+        holder.bind(user);
     }
 
     //Return total posts count
     @Override
     public int getItemCount() {
-        return followings.size();
+        return users.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -73,16 +73,17 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             itemView.setOnClickListener(this);
         }
 
-        public void bind(Following following) {
+        public void bind(ParseUser user) {
             //Bind achievement data into view elements
-            ParseFile profile = following.getFollowingUser().getParseFile("profileImage");
+            ParseFile profile = user.getParseFile("profileImage");
             if (profile != null) {
                 Glide.with(context).load(profile.getUrl()).into(profileImage);
                 Log.i(TAG, "Profile Image loaded");
             }
 
-            fullName.setText(following.getFollowingUser().getString("fullName"));
-            username.setText(following.getFollowingUser().getUsername());
+            fullName.setText(user.getString("fullName"));
+            username.setText(user.getUsername());
+
         }
 
         //When post clicked, details appear
@@ -92,29 +93,29 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             int position = getAdapterPosition();
             //Validity of position
             if(position != RecyclerView.NO_POSITION){
-                Following following = followings.get(position);
-                goToActivity(following);
+                ParseUser user = users.get(position);
+                goToActivity(user);
             }
         }
     }
 
-    public void goToActivity(Following following) {
+    public void goToActivity(ParseUser user) {
         //Create intent for new activity
         Intent intent = new Intent(context, ContactProfileActivity.class);
         //Serialize the movie with parser
-        intent.putExtra(Following.class.getSimpleName(), Parcels.wrap(following));//show activity
+        intent.putExtra(ParseUser.class.getSimpleName(), Parcels.wrap(user));//show activity
         context.startActivity(intent);
     }
 
     // Clean all elements of the recycler
     public void clear() {
-        followings.clear();
+        users.clear();
         notifyDataSetChanged();
     }
 
     // Add a list of items -- change to type used
-    public void addAll(List<Following> list) {
-        followings.addAll(list);
+    public void addAll(List<User> list) {
+        users.addAll(list);
         notifyDataSetChanged();
     }
 

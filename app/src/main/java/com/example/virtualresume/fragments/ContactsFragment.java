@@ -19,11 +19,13 @@ import android.widget.EditText;
 
 import com.example.virtualresume.R;
 import com.example.virtualresume.adapters.UsersAdapter;
+import com.example.virtualresume.models.Achievement;
 import com.example.virtualresume.models.Following;
 import com.example.virtualresume.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +35,12 @@ import java.util.List;
  */
 public class ContactsFragment extends Fragment {
 
-    final private static String TAG = "ConstactsFragment";
+    final private static String TAG = "ContactsFragment";
 
     private RecyclerView rvPosts;
     protected SwipeRefreshLayout swipeContainer;
     protected UsersAdapter adapter;
-    protected List<Following> allUsers;
+    protected List<ParseUser> allUsers;
     private EditText searchText;
     final protected int POST_LIMIT = 20;
     protected int postsLimit = 20;
@@ -60,7 +62,7 @@ public class ContactsFragment extends Fragment {
 
         //Recycler View
         rvPosts = view.findViewById(R.id.rvPosts);
-        allUsers = new ArrayList<Following>();
+        allUsers = new ArrayList<>();
         adapter = new UsersAdapter(getContext(), allUsers);
         rvPosts.setAdapter(adapter);
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -114,27 +116,27 @@ public class ContactsFragment extends Fragment {
     protected void queryPosts(int postsLimit, String searchText) {
         //Object to be queried (Post)
         Log.i(TAG, "Inside query");
-        ParseQuery<Following> query = ParseQuery.getQuery(Following.class);
-        query.whereEqualTo(Following.FOLLOWING_KEY_USER, User.getCurrentUser());
+        ParseQuery<ParseUser> query = User.getQuery();
         query.addAscendingOrder(User.KEY_FULLNAME);
+        //query.whereContainedIn(User.getCurrentUser().getRelation("friends"));
 
         //When searching
         if(searchText != null) {
             query.whereContains("username", searchText);
         }
 
-        query.findInBackground(new FindCallback<Following>() {
+        query.findInBackground(new FindCallback<ParseUser>() {
             @Override
-            public void done(List<Following> followings, ParseException e) {
+            public void done(List<ParseUser> users, ParseException e) {
                 if(e != null){
                     Log.e(TAG, "Issue with getting users", e);
                     return;
                 }
-                for(Following following: followings){
-                    Log.i(TAG, "User: " + following.getFollowingUser().getString("fullName"));
+                for(ParseUser user: users){
+                    Log.i(TAG, "User: " + user.getUsername());
                 }
-                adapter.clear();
-                allUsers.addAll(followings);
+                allUsers.clear();
+                allUsers.addAll(users);
                 adapter.notifyDataSetChanged();
             }
         });
