@@ -16,9 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
 import com.example.virtualresume.activities.ContactProfileActivity;
-import com.example.virtualresume.activities.DetailedViewActivity;
-import com.example.virtualresume.fragments.ViewFragment;
-import com.example.virtualresume.models.Achievement;
+import com.example.virtualresume.models.Following;
 import com.example.virtualresume.models.User;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -34,11 +32,11 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     public static final String TAG = "UsersAdapter";
     private Context context;
-    private List<ParseUser> users;
+    private List<Following> followings;
 
-    public UsersAdapter(Context context, List<ParseUser> users) {
+    public UsersAdapter(Context context, List<Following> followings) {
         this.context = context;
-        this.users = users;
+        this.followings = followings;
     }
 
     @NonNull
@@ -51,14 +49,14 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ParseUser user = users.get(position);
-        holder.bind(user);
+        Following following = followings.get(position);
+        holder.bind(following);
     }
 
     //Return total posts count
     @Override
     public int getItemCount() {
-        return users.size();
+        return followings.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -75,18 +73,16 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             itemView.setOnClickListener(this);
         }
 
-        public void bind(ParseUser user) {
+        public void bind(Following following) {
             //Bind achievement data into view elements
-            ParseFile profile = user.getParseFile("profileImage");
+            ParseFile profile = following.getFollowingUser().getParseFile("profileImage");
             if (profile != null) {
                 Glide.with(context).load(profile.getUrl()).into(profileImage);
                 Log.i(TAG, "Profile Image loaded");
             }
 
-            String firstName = user.getString("firstName");
-            String lastName = user.getString("lastName");
-            fullName.setText(firstName + " " + lastName);
-            username.setText(user.getUsername());
+            fullName.setText(following.getFollowingUser().getString("fullName"));
+            username.setText(following.getFollowingUser().getUsername());
         }
 
         //When post clicked, details appear
@@ -96,29 +92,29 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             int position = getAdapterPosition();
             //Validity of position
             if(position != RecyclerView.NO_POSITION){
-                ParseUser user = users.get(position);
-                goToActivity(user);
+                Following following = followings.get(position);
+                goToActivity(following);
             }
         }
     }
 
-    public void goToActivity(ParseUser user) {
+    public void goToActivity(Following following) {
         //Create intent for new activity
         Intent intent = new Intent(context, ContactProfileActivity.class);
         //Serialize the movie with parser
-        intent.putExtra(ParseUser.class.getSimpleName(), Parcels.wrap(user));//show activity
+        intent.putExtra(Following.class.getSimpleName(), Parcels.wrap(following));//show activity
         context.startActivity(intent);
     }
 
     // Clean all elements of the recycler
     public void clear() {
-        users.clear();
+        followings.clear();
         notifyDataSetChanged();
     }
 
     // Add a list of items -- change to type used
-    public void addAll(List<User> list) {
-        users.addAll(list);
+    public void addAll(List<Following> list) {
+        followings.addAll(list);
         notifyDataSetChanged();
     }
 

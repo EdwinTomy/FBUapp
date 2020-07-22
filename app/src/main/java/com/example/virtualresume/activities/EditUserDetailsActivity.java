@@ -102,8 +102,7 @@ public class EditUserDetailsActivity extends AppCompatActivity {
         Log.i(TAG, "Updating details of" + firstName);
 
         //Update properties
-        user.put("firstName", firstName);
-        user.put("lastName", lastName);
+        user.put("fullName", firstName + " " + lastName);
         user.put("bio", bio);
         if(photoFile != null)
             user.put("profileImage", new ParseFile(photoFile));

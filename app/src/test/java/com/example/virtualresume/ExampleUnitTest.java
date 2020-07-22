@@ -28,17 +28,17 @@ public class ExampleUnitTest {
     @Test
     public void userObject1(){
         User user = new User();
-        user.setLastName("Lopez de Santa Anna");
+        user.setFullName("Lopez de Santa Anna");
 
-        assertEquals("Lopez de Santa Anna", user.getLastName());
+        assertEquals("Lopez de Santa Anna", user.getFullName());
     }
 
     @Test
     public void userObject2(){
         User user = new User();
-        user.setFirstName("Antonio");
+        user.setBio("Antonio");
 
-        assertEquals("Antonio", user.getLastName());
+        assertEquals("Antonio", user.getBio());
     }
 
     @Test

@@ -91,9 +91,7 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
                 Log.i(TAG, "Profile Image loaded");
             }
 
-            String firstName = achievement.getUser().get("firstName").toString();
-            String lastName = achievement.getUser().get("lastName").toString();
-            fullName.setText(firstName + " " + lastName);
+            fullName.setText(achievement.getUser().getString("fullName"));
             timePassed.setText(getRelativeTimeAgo(achievement.getCreatedAt()));
             title.setText(achievement.getTitle());
         }

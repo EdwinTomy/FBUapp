@@ -99,8 +99,7 @@ public class CreateUserActivity extends AppCompatActivity {
         //Set core properties
         user.setUsername(username);
         user.setPassword(password);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
+        user.setFullName(firstName + " " + lastName);
         user.setBio(bio);
         user.saveInBackground();
         //Invoke signUpInBackground

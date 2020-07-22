@@ -92,9 +92,7 @@ public class ViewFragment extends Fragment {
         }
 
         //Name, username and bio of user
-        String firstName = User.getCurrentUser().getString("firstName");
-        String lastName = User.getCurrentUser().getString("lastName");
-        fullName.setText(firstName + " " + lastName);
+        fullName.setText(User.getCurrentUser().getString("fullName"));
         bio.setText(User.getCurrentUser().getString("bio"));
         username.setText(User.getCurrentUser().getString("username"));
         if (User.getCurrentUser().getParseFile("profileImage") != null)

@@ -3,6 +3,7 @@ package com.example.virtualresume.network;
 import android.app.Application;
 
 import com.example.virtualresume.models.Achievement;
+import com.example.virtualresume.models.Following;
 import com.example.virtualresume.models.User;
 import com.parse.Parse;
 import com.parse.ParseObject;
@@ -15,6 +16,7 @@ public class ParseApplication extends Application {
 
         //Register parse models
         ParseObject.registerSubclass(Achievement.class);
+        ParseObject.registerSubclass(Following.class);
         ParseObject.registerSubclass(User.class);
 
         //Heroku server accessed

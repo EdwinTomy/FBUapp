@@ -19,12 +19,11 @@ import android.widget.EditText;
 
 import com.example.virtualresume.R;
 import com.example.virtualresume.adapters.UsersAdapter;
-import com.example.virtualresume.models.Achievement;
+import com.example.virtualresume.models.Following;
 import com.example.virtualresume.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,7 @@ public class ContactsFragment extends Fragment {
     private RecyclerView rvPosts;
     protected SwipeRefreshLayout swipeContainer;
     protected UsersAdapter adapter;
-    protected List<ParseUser> allUsers;
+    protected List<Following> allUsers;
     private EditText searchText;
     final protected int POST_LIMIT = 20;
     protected int postsLimit = 20;
@@ -61,7 +60,7 @@ public class ContactsFragment extends Fragment {
 
         //Recycler View
         rvPosts = view.findViewById(R.id.rvPosts);
-        allUsers = new ArrayList<>();
+        allUsers = new ArrayList<Following>();
         adapter = new UsersAdapter(getContext(), allUsers);
         rvPosts.setAdapter(adapter);
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -115,26 +114,27 @@ public class ContactsFragment extends Fragment {
     protected void queryPosts(int postsLimit, String searchText) {
         //Object to be queried (Post)
         Log.i(TAG, "Inside query");
-        ParseQuery<ParseUser> query = User.getQuery();
-        query.addAscendingOrder(User.KEY_FIRSTNAME);
+        ParseQuery<Following> query = ParseQuery.getQuery(Following.class);
+        query.whereEqualTo(Following.FOLLOWING_KEY_USER, User.getCurrentUser());
+        query.addAscendingOrder(User.KEY_FULLNAME);
 
         //When searching
         if(searchText != null) {
             query.whereContains("username", searchText);
         }
 
-        query.findInBackground(new FindCallback<ParseUser>() {
+        query.findInBackground(new FindCallback<Following>() {
             @Override
-            public void done(List<ParseUser> users, ParseException e) {
+            public void done(List<Following> followings, ParseException e) {
                 if(e != null){
                     Log.e(TAG, "Issue with getting users", e);
                     return;
                 }
-                for(ParseUser user: users){
-                    Log.i(TAG, "User: " + user.getUsername());
+                for(Following following: followings){
+                    Log.i(TAG, "User: " + following.getFollowingUser().getString("fullName"));
                 }
                 adapter.clear();
-                allUsers.addAll(users);
+                allUsers.addAll(followings);
                 adapter.notifyDataSetChanged();
             }
         });

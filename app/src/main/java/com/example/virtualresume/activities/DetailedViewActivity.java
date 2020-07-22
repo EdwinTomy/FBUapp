@@ -49,8 +49,7 @@ public class DetailedViewActivity extends AppCompatActivity {
         binding.field.setText(achievement.getField());
         binding.description.setText(achievement.getDescription());
 
-        String fullName = achievement.getUser().get("firstName").toString() + achievement.getUser().get("lastName").toString();
-        binding.fullName.setText(fullName);
+        binding.fullName.setText(achievement.getUser().getString("fullName"));
         binding.username.setText(achievement.getUser().getUsername());
         binding.timePassed.setText(getRelativeTimeAgo(achievement.getUpdatedAt()));
         binding.organization.setText(achievement.getOrganization());

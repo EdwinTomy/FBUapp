@@ -11,18 +11,17 @@ import java.util.Date;
 @ParseClassName("User")
 public class User extends ParseUser {
 
-    public static final String KEY_FIRSTNAME = "firstName";
-    public static final String KEY_LASTNAME = "lastName";
+    public static final String KEY_FULLNAME = "fullName";
     public static final String KEY_PROFILEIMAGE = "profileImage";
     public static final String KEY_HOME = "home";
     public static final String KEY_BIO = "bio";
 
-    public String getFirstName() {
-        return getString(KEY_FIRSTNAME);
+    public String getFullName() {
+        return getString(KEY_FULLNAME);
     }
 
-    public void setFirstName(String firstName){
-        put(KEY_FIRSTNAME, firstName);
+    public void setFullName(String fullName){
+        put(KEY_FULLNAME, fullName);
     }
 
     public ParseFile getProfileImage() {
@@ -31,14 +30,6 @@ public class User extends ParseUser {
 
     public void setProfileImage(ParseFile parseFile){
         put(KEY_PROFILEIMAGE, parseFile);
-    }
-
-    public String getLastName() {
-        return getString(KEY_LASTNAME);
-    }
-
-    public void setLastName(String lastName){
-        put(KEY_LASTNAME, lastName);
     }
 
     public ParseGeoPoint getHome() {

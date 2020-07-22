@@ -73,9 +73,7 @@ public class ContactProfileActivity extends AppCompatActivity {
         }
 
         //Name, username and bio of user
-        String firstName = user.getString("firstName");
-        String lastName = user.getString("lastName");
-        fullName.setText(firstName + " " + lastName);
+        fullName.setText(user.getString("fullName"));
         bio.setText(user.getString("bio"));
         username.setText(user.getString("username"));
         if (user.getParseFile("profileImage") != null)
