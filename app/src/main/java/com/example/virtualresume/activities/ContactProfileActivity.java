@@ -18,6 +18,7 @@ import com.example.virtualresume.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -57,7 +58,7 @@ public class ContactProfileActivity extends AppCompatActivity {
         setupPullToRefresh(swipeContainer);
 
         //Unwrapping User
-        user = Parcels.unwrap(getIntent().getParcelableExtra(ParseUser.class.getSimpleName()));
+        user = Parcels.unwrap(getIntent().getParcelableExtra(ParseObject.class.getSimpleName()));
 
         profileImage = findViewById(R.id.profileImage);
         fullName = findViewById(R.id.fullName);

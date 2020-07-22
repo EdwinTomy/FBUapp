@@ -24,6 +24,7 @@ import com.example.virtualresume.models.Following;
 import com.example.virtualresume.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -40,7 +41,7 @@ public class ContactsFragment extends Fragment {
     private RecyclerView rvPosts;
     protected SwipeRefreshLayout swipeContainer;
     protected UsersAdapter adapter;
-    protected List<ParseUser> allUsers;
+    protected List<ParseObject> allUsers;
     private EditText searchText;
     final protected int POST_LIMIT = 20;
     protected int postsLimit = 20;
@@ -116,7 +117,7 @@ public class ContactsFragment extends Fragment {
     protected void queryPosts(int postsLimit, String searchText) {
         //Object to be queried (Post)
         Log.i(TAG, "Inside query");
-        ParseQuery<ParseUser> query = User.getQuery();
+        ParseQuery<ParseObject> query = User.getCurrentUser().getRelation("friends").getQuery();
         query.addAscendingOrder(User.KEY_FULLNAME);
         //query.whereContainedIn(User.getCurrentUser().getRelation("friends"));
 
@@ -125,15 +126,15 @@ public class ContactsFragment extends Fragment {
             query.whereContains("username", searchText);
         }
 
-        query.findInBackground(new FindCallback<ParseUser>() {
+        query.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<ParseUser> users, ParseException e) {
+            public void done(List<ParseObject> users, ParseException e) {
                 if(e != null){
                     Log.e(TAG, "Issue with getting users", e);
                     return;
                 }
-                for(ParseUser user: users){
-                    Log.i(TAG, "User: " + user.getUsername());
+                for(ParseObject user: users){
+                    Log.i(TAG, "User: " + user.getString("username"));
                 }
                 allUsers.clear();
                 allUsers.addAll(users);

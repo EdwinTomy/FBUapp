@@ -19,6 +19,7 @@ import com.example.virtualresume.activities.ContactProfileActivity;
 import com.example.virtualresume.models.Following;
 import com.example.virtualresume.models.User;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
@@ -32,9 +33,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     public static final String TAG = "UsersAdapter";
     private Context context;
-    private List<ParseUser> users;
+    private List<ParseObject> users;
 
-    public UsersAdapter(Context context, List<ParseUser> users) {
+    public UsersAdapter(Context context, List<ParseObject> users) {
         this.context = context;
         this.users = users;
     }
@@ -49,7 +50,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ParseUser user = users.get(position);
+        ParseObject user = users.get(position);
         holder.bind(user);
     }
 
@@ -73,7 +74,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             itemView.setOnClickListener(this);
         }
 
-        public void bind(ParseUser user) {
+        public void bind(ParseObject user) {
             //Bind achievement data into view elements
             ParseFile profile = user.getParseFile("profileImage");
             if (profile != null) {
@@ -82,7 +83,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             }
 
             fullName.setText(user.getString("fullName"));
-            username.setText(user.getUsername());
+            username.setText(user.getString("username"));
 
         }
 
@@ -93,17 +94,17 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             int position = getAdapterPosition();
             //Validity of position
             if(position != RecyclerView.NO_POSITION){
-                ParseUser user = users.get(position);
+                ParseObject user = users.get(position);
                 goToActivity(user);
             }
         }
     }
 
-    public void goToActivity(ParseUser user) {
+    public void goToActivity(ParseObject user) {
         //Create intent for new activity
         Intent intent = new Intent(context, ContactProfileActivity.class);
         //Serialize the movie with parser
-        intent.putExtra(ParseUser.class.getSimpleName(), Parcels.wrap(user));//show activity
+        intent.putExtra(ParseObject.class.getSimpleName(), Parcels.wrap(user));//show activity
         context.startActivity(intent);
     }
 
