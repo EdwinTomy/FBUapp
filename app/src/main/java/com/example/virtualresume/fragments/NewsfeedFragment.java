@@ -16,9 +16,12 @@ import android.view.ViewGroup;
 
 import com.example.virtualresume.R;
 import com.example.virtualresume.adapters.AchievementsAdapter;
+import com.example.virtualresume.adapters.UsersAdapter;
 import com.example.virtualresume.models.Achievement;
+import com.example.virtualresume.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
@@ -33,8 +36,10 @@ public class NewsfeedFragment extends Fragment {
 
     private RecyclerView rvPosts;
     protected SwipeRefreshLayout swipeContainer;
-    protected AchievementsAdapter adapter;
+    protected AchievementsAdapter adapterAchievement;
     protected List<Achievement> allAchievements;
+    protected UsersAdapter adapterUsers;
+    protected List<ParseObject> allUsers;
     final protected int POST_LIMIT = 20;
     protected int postsLimit = 20;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -60,13 +65,17 @@ public class NewsfeedFragment extends Fragment {
 
         //Create adapter and data source
         allAchievements = new ArrayList<>();
-        adapter = new AchievementsAdapter(getContext(), allAchievements);
+        adapterAchievement = new AchievementsAdapter(getContext(), allAchievements);
         //Create layout for one row in the list
         //Set the adapter on the recycler view
-        rvPosts.setAdapter(adapter);
+        rvPosts.setAdapter(adapterAchievement);
         //Set the layout manager on the recycler view
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
-        queryPosts(POST_LIMIT);
+
+        allUsers = new ArrayList<>();
+        adapterUsers = new UsersAdapter(getContext(), allUsers);
+
+        queryUsers(POST_LIMIT);
     }
 
     //Configuring the container
@@ -82,7 +91,7 @@ public class NewsfeedFragment extends Fragment {
             @Override
             public void onRefresh() {
                 Log.i(TAG, "Loading in");
-                queryPosts(POST_LIMIT);
+                queryUsers(POST_LIMIT);
                 postsLimit = POST_LIMIT;
             }
         });
@@ -93,6 +102,7 @@ public class NewsfeedFragment extends Fragment {
         //Object to be queried (Post)
         ParseQuery<Achievement> query = ParseQuery.getQuery(Achievement.class);
         query.include(Achievement.KEY_USER);
+        query.whereContainedIn(Achievement.KEY_USER, allUsers);
         query.setLimit(postsLimit);
         query.addDescendingOrder(Achievement.KEY_CREATED_AT);
 
@@ -107,11 +117,36 @@ public class NewsfeedFragment extends Fragment {
                 for(Achievement achievement : achievements){
                     Log.i(TAG, "Post: " + achievement.getDescription() + ", user: " + achievement.getUser().getUsername());
                 }
-                adapter.clear();
+                adapterAchievement.clear();
                 allAchievements.addAll(achievements);
-                adapter.notifyDataSetChanged();
+                adapterAchievement.notifyDataSetChanged();
             }
         });
         swipeContainer.setRefreshing(false);
+    }
+
+    //Retrieving users (posts)
+    protected void queryUsers(int postsLimit) {
+        //Object to be queried (Post)
+        Log.i(TAG, "Inside query");
+        ParseQuery<ParseObject> query = User.getCurrentUser().getRelation("friends").getQuery();
+        query.addAscendingOrder(User.KEY_FULLNAME);
+
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> users, ParseException e) {
+                if(e != null){
+                    Log.e(TAG, "Issue with getting users", e);
+                    return;
+                }
+                for(ParseObject user: users){
+                    Log.i(TAG, "User: " + user.getString("username"));
+                }
+                allUsers.clear();
+                allUsers.addAll(users);
+                adapterUsers.notifyDataSetChanged();
+            }
+        });
+       queryPosts(postsLimit);
     }
 }

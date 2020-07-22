@@ -119,7 +119,6 @@ public class ContactsFragment extends Fragment {
         Log.i(TAG, "Inside query");
         ParseQuery<ParseObject> query = User.getCurrentUser().getRelation("friends").getQuery();
         query.addAscendingOrder(User.KEY_FULLNAME);
-        //query.whereContainedIn(User.getCurrentUser().getRelation("friends"));
 
         //When searching
         if(searchText != null) {
