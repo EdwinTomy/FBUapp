@@ -122,11 +122,10 @@ public class NewsfeedFragment extends Fragment {
                 adapterAchievement.notifyDataSetChanged();
             }
         });
-        swipeContainer.setRefreshing(false);
     }
 
     //Retrieving users (posts)
-    protected void queryUsers(int postsLimit) {
+    protected void queryUsers(final int postsLimit) {
         //Object to be queried (Post)
         Log.i(TAG, "Inside query");
         ParseQuery<ParseObject> query = User.getCurrentUser().getRelation("friends").getQuery();
@@ -145,8 +144,9 @@ public class NewsfeedFragment extends Fragment {
                 allUsers.clear();
                 allUsers.addAll(users);
                 adapterUsers.notifyDataSetChanged();
+                queryPosts(postsLimit);
             }
         });
-       queryPosts(postsLimit);
+       swipeContainer.setRefreshing(false);
     }
 }

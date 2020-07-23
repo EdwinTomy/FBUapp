@@ -16,11 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
 import com.example.virtualresume.activities.ContactProfileActivity;
-import com.example.virtualresume.models.Following;
 import com.example.virtualresume.models.User;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 

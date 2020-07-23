@@ -14,13 +14,13 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.virtualresume.R;
 import com.example.virtualresume.adapters.UsersAdapter;
-import com.example.virtualresume.models.Achievement;
-import com.example.virtualresume.models.Following;
 import com.example.virtualresume.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -40,11 +40,15 @@ public class ContactsFragment extends Fragment {
 
     private RecyclerView rvPosts;
     protected SwipeRefreshLayout swipeContainer;
-    protected UsersAdapter adapter;
-    protected List<ParseObject> allUsers;
+    protected UsersAdapter adapterContacts;
+    protected UsersAdapter adapterAddableContacts;
+    protected List<ParseObject> allContacts;
+    protected List<ParseObject> allAddableContacts;
     private EditText searchText;
     final protected int POST_LIMIT = 20;
     protected int postsLimit = 20;
+    protected Button btnAddContact;
+    protected Button btnSearchContact;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
     public ContactsFragment() {}
@@ -63,9 +67,9 @@ public class ContactsFragment extends Fragment {
 
         //Recycler View
         rvPosts = view.findViewById(R.id.rvPosts);
-        allUsers = new ArrayList<>();
-        adapter = new UsersAdapter(getContext(), allUsers);
-        rvPosts.setAdapter(adapter);
+        allContacts = new ArrayList<>();
+        adapterContacts = new UsersAdapter(getContext(), allContacts);
+        rvPosts.setAdapter(adapterContacts);
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Lookup the swipe container view
@@ -87,11 +91,29 @@ public class ContactsFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                queryPosts(POST_LIMIT, editable.toString());
+                queryContacts(POST_LIMIT, editable.toString());
             }
         });
 
-        queryPosts(POST_LIMIT, null);
+        //Adding Contact
+        btnAddContact = view.findViewById(R.id.btnAddContact);
+        btnAddContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                queryAddableUsers(POST_LIMIT, null);
+            }
+        });
+
+        //Searching Contact
+        btnSearchContact = view.findViewById(R.id.btnAddContact);
+        btnSearchContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                queryContacts(POST_LIMIT, null);
+            }
+        });
+
+        queryContacts(POST_LIMIT, null);
     }
 
     //Configuring the container
@@ -107,14 +129,14 @@ public class ContactsFragment extends Fragment {
             @Override
             public void onRefresh() {
                 Log.i(TAG, "Loading in");
-                queryPosts(POST_LIMIT, null);
+                queryContacts(POST_LIMIT, null);
                 postsLimit = POST_LIMIT;
             }
         });
     }
 
-    //Retrieving ParseObjects (posts)
-    protected void queryPosts(int postsLimit, String searchText) {
+    //Retrieving Contacts
+    protected void queryContacts(int postsLimit, String searchText) {
         //Object to be queried (Post)
         Log.i(TAG, "Inside query");
         ParseQuery<ParseObject> query = User.getCurrentUser().getRelation("friends").getQuery();
@@ -135,11 +157,33 @@ public class ContactsFragment extends Fragment {
                 for(ParseObject user: users){
                     Log.i(TAG, "User: " + user.getString("username"));
                 }
-                allUsers.clear();
-                allUsers.addAll(users);
-                adapter.notifyDataSetChanged();
+                allContacts.clear();
+                allContacts.addAll(users);
+                adapterContacts.notifyDataSetChanged();
             }
         });
         swipeContainer.setRefreshing(false);
     }
+
+
+    //Retrieving ParseUsers
+    protected void queryAddableUsers(int postsLimit, String searchText) {
+        //Object to be queried (Post)
+        Log.i(TAG, "Inside query");
+
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.whereEqualTo("username", searchText); // find adults
+        query.findInBackground(new FindCallback<ParseUser>() {
+            public void done(List<ParseUser> objects, ParseException e) {
+                if (e == null) {
+                    // The query was successful.
+                } else {
+                    // Something went wrong.
+                }
+            }
+        });
+
+        swipeContainer.setRefreshing(false);
+    }
 }
+

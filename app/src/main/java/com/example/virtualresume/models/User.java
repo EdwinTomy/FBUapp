@@ -3,6 +3,7 @@ package com.example.virtualresume.models;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 import java.util.Date;
@@ -15,6 +16,7 @@ public class User extends ParseUser {
     public static final String KEY_PROFILEIMAGE = "profileImage";
     public static final String KEY_HOME = "home";
     public static final String KEY_BIO = "bio";
+    public static final String USER_KEY_FRIENDS = "friends";
 
     public String getFullName() {
         return getString(KEY_FULLNAME);
@@ -46,5 +48,13 @@ public class User extends ParseUser {
 
     public void setBio(String bio){
         put(KEY_BIO, bio);
+    }
+
+    public ParseRelation getFriends(){
+        return getRelation(USER_KEY_FRIENDS);
+    }
+
+    public void setFriends(ParseRelation friends){
+        put(USER_KEY_FRIENDS, friends);
     }
 }

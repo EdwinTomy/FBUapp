@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.virtualresume.R;
 import com.example.virtualresume.models.Achievement;
 import com.example.virtualresume.models.User;
+import com.example.virtualresume.utils.CameraApplication;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -32,7 +33,7 @@ import java.io.File;
 
 import static com.parse.ParseUser.getCurrentUser;
 
-public class EditUserDetailsActivity extends AppCompatActivity {
+public class EditUserDetailsActivity extends CameraApplication {
 
     public static final String TAG = "EditUserDetailsActivity";
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 40;
@@ -69,7 +70,7 @@ public class EditUserDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "Clicked");
-                launchCamera();
+                photoFile = launchCamera(picture, photoFile);
             }
         });
 
@@ -108,53 +109,6 @@ public class EditUserDetailsActivity extends AppCompatActivity {
             user.put("profileImage", new ParseFile(photoFile));
         //Invoke signUpInBackground
         user.saveInBackground();
-    }
-
-    //Navigate to phone's inbuilt camera
-    private void launchCamera() {
-        // create Intent to take a picture and return control to the calling application
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Create a File reference for future access
-        photoFile = getPhotoFileUri(photoFileName);
-
-        // wrap File object into a content provider
-        Uri fileProvider = FileProvider.getUriForFile(EditUserDetailsActivity.this, "com.virtualresume.fileprovider", photoFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-
-        if (intent.resolveActivity(this.getPackageManager()) != null) {
-            // Start the image capture intent to take photo
-            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                // RESIZE BITMAP, see section below
-                // Load the taken image into a preview
-                picture.setImageBitmap(takenImage);
-            } else {
-                Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    // Returns the File for a photo stored on disk given the fileName
-    public File getPhotoFileUri(String fileName) {
-        // Get safe storage directory for photos
-        File mediaStorageDir = new File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
-
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
-            Log.d(TAG, "failed to create directory");
-        }
-
-        // Return the file target for the photo based on filename
-        File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
-        return file;
     }
 
     //Navigate to MainActivity

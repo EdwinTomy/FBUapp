@@ -20,7 +20,7 @@
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/searchText"
+        android:layout_below="@+id/btnSearchContact"
         android:layout_alignParentStart="true"
         android:layout_marginStart="1dp"
         android:layout_marginTop="5dp">
@@ -32,5 +32,34 @@
             android:padding="2dp" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <Button
+        android:id="@+id/btnAddContact"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/btnSearchContact"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="138dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="5dp"
+        android:backgroundTint="#2196F3"
+        android:includeFontPadding="false"
+        android:text="Add contact"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnSearchContact"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchText"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="#8BC34A"
+        android:includeFontPadding="false"
+        android:text="Search contact"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
 
 </RelativeLayout>
