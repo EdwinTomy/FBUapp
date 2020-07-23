@@ -7,11 +7,11 @@
     tools:context=".activities.CreateAchievement">
 
     <EditText
-        android:id="@+id/organization"
+        android:id="@+id/etOrganization"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-        android:layout_alignStart="@+id/title"
+        android:layout_below="@+id/etTitle"
+        android:layout_alignStart="@+id/etTitle"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:hint="organization"
@@ -19,11 +19,11 @@
         tools:layout_editor_absoluteY="55dp" />
 
     <EditText
-        android:id="@+id/description"
+        android:id="@+id/etDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/organization"
-        android:layout_alignStart="@+id/organization"
+        android:layout_below="@+id/etOrganization"
+        android:layout_alignStart="@+id/etOrganization"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:hint="description"
@@ -31,11 +31,11 @@
         tools:layout_editor_absoluteY="55dp" />
 
     <EditText
-        android:id="@+id/field"
+        android:id="@+id/etField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/description"
-        android:layout_alignStart="@+id/description"
+        android:layout_below="@+id/etDescription"
+        android:layout_alignStart="@+id/etDescription"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:hint="field"
@@ -43,11 +43,11 @@
         tools:layout_editor_absoluteY="55dp" />
 
     <EditText
-        android:id="@+id/title"
+        android:id="@+id/etTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/btnPicture"
-        android:layout_alignStart="@id/imageAchievement"
+        android:layout_alignStart="@id/ivAchievement"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:hint="title"
@@ -55,7 +55,7 @@
         tools:layout_editor_absoluteY="55dp" />
 
     <ImageView
-        android:id="@+id/imageAchievement"
+        android:id="@+id/ivAchievement"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_alignParentStart="true"
@@ -82,7 +82,7 @@
         android:id="@+id/btnPicture"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageAchievement"
+        android:layout_below="@+id/ivAchievement"
         android:layout_alignParentStart="true"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"

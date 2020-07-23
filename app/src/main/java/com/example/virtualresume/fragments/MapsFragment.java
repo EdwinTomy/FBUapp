@@ -11,17 +11,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.virtualresume.R;
+import com.example.virtualresume.adapters.UsersAdapter;
 import com.example.virtualresume.models.Achievement;
 import com.example.virtualresume.models.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -31,7 +35,7 @@ import java.util.List;
 public class MapsFragment extends Fragment {
 
     final private static String TAG = "MapFragment";
-    protected List<ParseUser> allUsers;
+    protected List<ParseObject> allUserContacts;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -46,21 +50,37 @@ public class MapsFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            Log.i(TAG, "inside callback");
-            queryPosts();
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-            for(ParseUser user: allUsers) {
-                Log.i(TAG, "User: " + user.getUsername());
-                double latitude = user.getParseGeoPoint("home").getLatitude();
-                double longitude = user.getParseGeoPoint("home").getLongitude();
-                LatLng home = new LatLng(latitude, longitude);
-                googleMap.addMarker(new MarkerOptions().position(home).title(user.getString("fullName")));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(home));
-            }
+            queryUserContacts();
+
+            //Marking current user and contacts locations
+            markContactsLocation(googleMap);
+            markUserLocation(googleMap);
         }
     };
+
+    //Marking user location
+    private void markUserLocation(GoogleMap googleMap) {
+        ParseUser user = User.getCurrentUser();
+        double latitude = user.getParseGeoPoint(User.USER_KEY_HOME).getLatitude();
+        double longitude = user.getParseGeoPoint(User.USER_KEY_HOME).getLongitude();
+        LatLng home = new LatLng(latitude, longitude);
+        googleMap.addMarker(new MarkerOptions().position(home).title("YOU").
+                icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(home));
+    }
+
+    //Marking contacts location
+    public void markContactsLocation(GoogleMap googleMap){
+        for(ParseObject contact: allUserContacts) {
+            if(!contact.getString(User.USER_KEY_FULLNAME).equals(User.getCurrentUser().getUsername())){
+                Log.i(TAG, "Contact: " + contact.getString(User.USER_KEY_FULLNAME));
+                double latitude = contact.getParseGeoPoint(User.USER_KEY_HOME).getLatitude();
+                double longitude = contact.getParseGeoPoint(User.USER_KEY_HOME).getLongitude();
+                LatLng home = new LatLng(latitude, longitude);
+                googleMap.addMarker(new MarkerOptions().position(home).title(contact.getString(User.USER_KEY_FULLNAME)));
+            }
+        }
+    }
 
     @Nullable
     @Override
@@ -76,24 +96,19 @@ public class MapsFragment extends Fragment {
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
-            Log.i(TAG, "before callback");
             mapFragment.getMapAsync(callback);
-            Log.i(TAG, "after callback");
         }
-        Log.i(TAG, "list creation");
-        allUsers = new ArrayList<>();
+        allUserContacts = new ArrayList<>();
     }
 
-    //Retrieving ParseUsers (posts)
-    protected void queryPosts() {
-        //Object to be queried (User)
-        Log.i(TAG, "Inside query");
-        ParseQuery<ParseUser> query = User.getQuery();
+    //Retrieving contacts of current user
+    protected void queryUserContacts() {
+        //Creating and constraining query
+        ParseQuery<ParseObject> query = User.getCurrentUser().getRelation(User.USER_KEY_CONTACTS).getQuery();
         query.addAscendingOrder(User.USER_KEY_FULLNAME);
-        query.include("user");
 
         try {
-            allUsers = query.find();
+            allUserContacts = query.find();
         } catch (ParseException e) {
             e.printStackTrace();
         }

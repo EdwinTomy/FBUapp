@@ -22,7 +22,6 @@ import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
 import com.example.virtualresume.activities.CreateAchievement;
 import com.example.virtualresume.activities.EditUserDetailsActivity;
-import com.example.virtualresume.adapters.AchievementsAdapter;
 import com.example.virtualresume.adapters.EditAchievementsAdapter;
 import com.example.virtualresume.models.Achievement;
 import com.example.virtualresume.models.User;
@@ -40,24 +39,22 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EditFragment extends Fragment {
+public class EditFragment extends ViewFragment {
 
     public static final String TAG = "EditFragment";
 
-    private ImageView profileImage;
-    private TextView home;
-    private TextView username;
-    private TextView bio;
-    private TextView fullName;
+    private ImageView userProfileImage;
+    private TextView userHome;
+    private TextView userUsername;
+    private TextView userBio;
+    private TextView userFullName;
     private Button btnEditProfile;
     private Button btnCreateAchievement;
 
-    private RecyclerView rvPosts;
+    private RecyclerView rvUserAchievements;
     protected SwipeRefreshLayout swipeContainer;
-    protected EditAchievementsAdapter adapter;
-    protected List<Achievement> allAchievements;
-    final protected int POST_LIMIT = 20;
-    protected int postsLimit = 20;
+    protected EditAchievementsAdapter userAchievementsAdapter;
+    protected List<Achievement> allUserAchievements;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
     public EditFragment() {}
@@ -72,41 +69,20 @@ public class EditFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        rvPosts = view.findViewById(R.id.rvPosts);
-
-        // Lookup the swipe container view
+        //Lookup the swipe container view
         swipeContainer = view.findViewById(R.id.swipeContainer);
         setupPullToRefresh(swipeContainer);
-        //Create adapter and data source
-        allAchievements = new ArrayList<>();
-        adapter = new EditAchievementsAdapter(getContext(), allAchievements);
-        //Create layout for one row in the list
-        //Set the adapter on the recycler view
-        rvPosts.setAdapter(adapter);
-        //Set the layout manager on the recycler view
-        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
-        queryPosts(POST_LIMIT);
 
-        profileImage = view.findViewById(R.id.profileImage);
-        fullName = view.findViewById(R.id.fullName);
-        username = view.findViewById(R.id.username);
-        bio = view.findViewById(R.id.bio);
-        home = view.findViewById(R.id.home);
+        //Filling the RecyclerView with the query of user Achievements
+        settingRecyclerView(view);
+        queryUserAchievements();
 
+        //Binding user details
+        bindUserDetails(view);
+
+        //Buttons for editing
         btnCreateAchievement = view.findViewById(R.id.btnCreateAchievement);
         btnEditProfile = view.findViewById(R.id.btnEditProfile);
-
-        //Profile picture of user
-        ParseFile profile = User.getCurrentUser().getParseFile("profileImage");
-        if (profile != null) {
-            Glide.with(getContext()).load(profile.getUrl()).into(profileImage);
-            Log.i(TAG, "Profile Image loaded");
-        }
-
-        //Name, username and bio of user
-        fullName.setText(User.getCurrentUser().getString("fullName"));
-        bio.setText(User.getCurrentUser().getString("bio"));
-        username.setText(User.getCurrentUser().getString("username"));
 
         btnCreateAchievement.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +101,41 @@ public class EditFragment extends Fragment {
         });
     }
 
+    //Go to Create Achievement Screen
+    public void goToCreateAchievementActivity() {
+        Intent intent = new Intent(getContext(), CreateAchievement.class);
+        getContext().startActivity(intent);
+    }
+
+    //Go to Edit User Details Screen
+    public void goToEditUserDetailsActivity(ParseUser user) {
+        Intent intent = new Intent(getContext(), EditUserDetailsActivity.class);
+        //Serialize the achievement with parser
+        intent.putExtra(User.class.getSimpleName(), Parcels.wrap(user));
+        getContext().startActivity(intent);
+    }
+
+    //Posting user details
+    private void bindUserDetails(View view) {
+        userProfileImage = view.findViewById(R.id.ivProfileImage);
+        userFullName = view.findViewById(R.id.etFullName);
+        userUsername = view.findViewById(R.id.etUsername);
+        userBio = view.findViewById(R.id.bio);
+        userHome = view.findViewById(R.id.etHome);
+
+
+        //Profile image of user
+        ParseFile profile = User.getCurrentUser().getParseFile(User.USER_KEY_PROFILEIMAGE);
+        if (profile != null) {
+            Glide.with(getContext()).load(profile.getUrl()).into(userProfileImage);
+            Log.i(TAG, "Profile Image loaded");
+        }
+        //Full name, username and bio of user
+        userFullName.setText(User.getCurrentUser().getString(User.USER_KEY_FULLNAME));
+        userBio.setText(User.getCurrentUser().getString(User.USER_KEY_BIO));
+        userUsername.setText(User.getCurrentUser().getUsername());
+    }
+
     //Configuring the container
     public void setupPullToRefresh(SwipeRefreshLayout swipeContainer){
         // Configure the refreshing colors
@@ -137,21 +148,27 @@ public class EditFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.i(TAG, "Loading in");
-                queryPosts(POST_LIMIT);
-                postsLimit = POST_LIMIT;
+                Log.i(TAG, "Loading in user achievements");
+                queryUserAchievements();
             }
         });
     }
 
-    //Retrieving ParseObjects (achievements) of current user
-    protected void queryPosts(int postLimit) {
+    //Setting the RecyclerView
+    protected void settingRecyclerView(@NonNull View view){
+        rvUserAchievements = view.findViewById(R.id.rvPosts);
+        allUserAchievements = new ArrayList<>();
+        userAchievementsAdapter = new EditAchievementsAdapter(getContext(), allUserAchievements);
+        rvUserAchievements.setAdapter(userAchievementsAdapter);
+        rvUserAchievements.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
 
-        //Object to be queried (Post)
+    //Retrieving achievements of the current user
+    protected void queryUserAchievements() {
+        //Creating and constraining query
         ParseQuery<Achievement> query = ParseQuery.getQuery(Achievement.class);
         query.include(Achievement.ACHIEVEMENT_KEY_USER);
         query.whereEqualTo(Achievement.ACHIEVEMENT_KEY_USER, User.getCurrentUser());
-        query.setLimit(postsLimit);
         query.addDescendingOrder(Achievement.KEY_CREATED_AT);
 
         query.findInBackground(new FindCallback<Achievement>() {
@@ -161,33 +178,15 @@ public class EditFragment extends Fragment {
                     Log.e(TAG, "Issue with getting posts", e);
                     return;
                 }
-                // Access data using the getter methods for the object
                 for(Achievement achievement : achievements){
-                    Log.i(TAG, "Post: " + achievement.getAchievementUser() + ", user: " + achievement.getAchievementUser().getUsername());
+                    Log.i(TAG, "Achievement: " + achievement.getAchievementTitle() + ", from user: " + achievement.getAchievementUser().getUsername());
                 }
-                allAchievements.clear();
-                allAchievements.addAll(achievements);
-                adapter.notifyDataSetChanged();
+                //Set the adapter with new list of achievements
+                allUserAchievements.clear();
+                allUserAchievements.addAll(achievements);
+                userAchievementsAdapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
             }
         });
-    }
-
-    //Go to Create Achievement Screen
-    public void goToCreateAchievementActivity() {
-        //Create intent for new activity
-        Intent intent = new Intent(getContext(), CreateAchievement.class);
-        //show activity
-        getContext().startActivity(intent);
-    }
-
-    //Go to Edit User Details Screen
-    public void goToEditUserDetailsActivity(ParseUser user) {
-        //Create intent for new activity
-        Intent intent = new Intent(getContext(), EditUserDetailsActivity.class);
-        //Serialize the achievement with parser
-        intent.putExtra(User.class.getSimpleName(), Parcels.wrap(user));
-        //show activity
-        getContext().startActivity(intent);
     }
 }

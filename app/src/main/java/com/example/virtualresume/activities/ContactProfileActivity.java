@@ -31,19 +31,17 @@ public class ContactProfileActivity extends AppCompatActivity {
 
     final private static String TAG = "ContactProfileActivity";
 
-    private ImageView profileImage;
-    private TextView home;
-    private TextView username;
-    private TextView bio;
-    private TextView fullName;
+    private ImageView userProfileImage;
+    private TextView userHome;
+    private TextView userUsername;
+    private TextView userBio;
+    private TextView userFullName;
 
     private ParseUser user;
-    private RecyclerView rvPosts;
+    private RecyclerView rvContactAchievements;
     protected SwipeRefreshLayout swipeContainer;
-    protected AchievementsAdapter adapter;
-    protected List<Achievement> allAchievements;
-    final protected int POST_LIMIT = 20;
-    protected int postsLimit = 20;
+    protected AchievementsAdapter contactAchievementsAdapter;
+    protected List<Achievement> allContactAchievements;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
     @Override
@@ -51,44 +49,40 @@ public class ContactProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_view);
 
-        rvPosts = findViewById(R.id.rvPosts);
-
         // Lookup the swipe container view
         swipeContainer = findViewById(R.id.swipeContainer);
         setupPullToRefresh(swipeContainer);
 
+        //Filling the RecyclerView with the query of contact achievements
+        settingRecyclerView();
+
+        //Binding contact details
+        bindContactDetails();
+        queryContactAchievements();
+    }
+
+    //Posting contact details
+    private void bindContactDetails() {
         //Unwrapping User
         user = Parcels.unwrap(getIntent().getParcelableExtra(ParseObject.class.getSimpleName()));
 
-        profileImage = findViewById(R.id.profileImage);
-        fullName = findViewById(R.id.fullName);
-        username = findViewById(R.id.username);
-        bio = findViewById(R.id.bio);
-        home = findViewById(R.id.home);
+        userProfileImage = findViewById(R.id.ivProfileImage);
+        userFullName = findViewById(R.id.etFullName);
+        userUsername = findViewById(R.id.etUsername);
+        userBio = findViewById(R.id.bio);
+        userHome = findViewById(R.id.etHome);
 
-        //Profile picture of user
-        ParseFile profile = User.getCurrentUser().getParseFile("profileImage");
+        //Profile picture of contact
+        ParseFile profile = user.getParseFile(User.USER_KEY_PROFILEIMAGE);
         if (profile != null) {
-            Glide.with(this).load(profile.getUrl()).into(profileImage);
+            Glide.with(this).load(profile.getUrl()).into(userProfileImage);
             Log.i(TAG, "Profile Image loaded");
         }
 
         //Name, username and bio of user
-        fullName.setText(user.getString("fullName"));
-        bio.setText(user.getString("bio"));
-        username.setText(user.getString("username"));
-        if (user.getParseFile("profileImage") != null)
-            Glide.with(this).load(user.getParseFile("profileImage").getUrl()).into(profileImage);
-
-        //Create adapter and data source
-        allAchievements = new ArrayList<>();
-        adapter = new AchievementsAdapter(this, allAchievements);
-        //Create layout for one row in the list
-        //Set the adapter on the recycler view
-        rvPosts.setAdapter(adapter);
-        //Set the layout manager on the recycler view
-        rvPosts.setLayoutManager(new LinearLayoutManager(this));
-        queryPosts(POST_LIMIT);
+        userFullName.setText(user.getString(User.USER_KEY_FULLNAME));
+        userBio.setText(user.getString(User.USER_KEY_BIO));
+        userUsername.setText(user.getString(User.USER_KEY_USERNAME));
     }
 
     //Configuring the container
@@ -104,20 +98,27 @@ public class ContactProfileActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 Log.i(TAG, "Loading in");
-                queryPosts(POST_LIMIT);
-                postsLimit = POST_LIMIT;
+                queryContactAchievements();
+
             }
         });
     }
 
-    //Retrieving ParseObjects (achievements) of current user
-    protected void queryPosts(int postLimit) {
+    //Setting the RecyclerView
+    protected void settingRecyclerView(){
+        rvContactAchievements = findViewById(R.id.rvPosts);
+        allContactAchievements = new ArrayList<>();
+        contactAchievementsAdapter = new AchievementsAdapter(this, allContactAchievements);
+        rvContactAchievements.setAdapter(contactAchievementsAdapter);
+        rvContactAchievements.setLayoutManager(new LinearLayoutManager(this));
+    }
 
-        //Object to be queried (Post)
+    //Retrieving achievements of the contact
+    protected void queryContactAchievements() {
+        //Creating and constraining query
         ParseQuery<Achievement> query = ParseQuery.getQuery(Achievement.class);
         query.include(Achievement.ACHIEVEMENT_KEY_USER);
         query.whereEqualTo(Achievement.ACHIEVEMENT_KEY_USER, user);
-        query.setLimit(postsLimit);
         query.addDescendingOrder(Achievement.KEY_CREATED_AT);
 
         query.findInBackground(new FindCallback<Achievement>() {
@@ -127,13 +128,13 @@ public class ContactProfileActivity extends AppCompatActivity {
                     Log.e(TAG, "Issue with getting posts", e);
                     return;
                 }
-                // Access data using the getter methods for the object
                 for(Achievement achievement : achievements){
-                    Log.i(TAG, "Post: " + achievement.getAchievementDescription() + ", user: " + achievement.getAchievementUser().getUsername());
+                    Log.i(TAG, "Achievement: " + achievement.getAchievementTitle() + ", from user: " + achievement.getAchievementUser().getUsername());
                 }
-                allAchievements.clear();
-                allAchievements.addAll(achievements);
-                adapter.notifyDataSetChanged();
+                //Set the adapter with new list of achievements
+                allContactAchievements.clear();
+                allContactAchievements.addAll(achievements);
+                contactAchievementsAdapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
             }
         });

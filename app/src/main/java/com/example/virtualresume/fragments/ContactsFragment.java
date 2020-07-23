@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.virtualresume.R;
+import com.example.virtualresume.adapters.AchievementsAdapter;
 import com.example.virtualresume.adapters.UsersAdapter;
 import com.example.virtualresume.models.User;
 import com.parse.FindCallback;
@@ -38,15 +39,14 @@ public class ContactsFragment extends Fragment {
 
     final private static String TAG = "ContactsFragment";
 
-    private RecyclerView rvPosts;
-    protected SwipeRefreshLayout swipeContainer;
-    protected UsersAdapter adapterContacts;
+    protected UsersAdapter userContactsAdapter;
     protected UsersAdapter adapterAddableContacts;
-    protected List<ParseObject> allContacts;
+    protected List<ParseObject> allUserContacts;
     protected List<ParseObject> allAddableContacts;
+
+    private RecyclerView rvUserContacts;
+    protected SwipeRefreshLayout swipeContainer;
     private EditText searchText;
-    final protected int POST_LIMIT = 20;
-    protected int postsLimit = 20;
     protected Button btnAddContact;
     protected Button btnSearchContact;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -64,24 +64,44 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        //Recycler View
-        rvPosts = view.findViewById(R.id.rvPosts);
-        allContacts = new ArrayList<>();
-        adapterContacts = new UsersAdapter(getContext(), allContacts);
-        rvPosts.setAdapter(adapterContacts);
-        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        // Lookup the swipe container view
+        //Lookup the swipe container view
         swipeContainer = view.findViewById(R.id.swipeContainer);
         setupPullToRefresh(swipeContainer);
 
-        //Search EditText
+        //Filling the RecyclerView with the query of user Achievements
+        settingRecyclerView(view);
+        queryUserContacts(null);
+
+        //Searching for a contact
+        searchContact(view);
+
+        //Adding Contact
+        btnAddContact = view.findViewById(R.id.btnAddContact);
+        btnAddContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                queryAddableUsers(null);
+            }
+        });
+
+        //Searching Contact
+        btnSearchContact = view.findViewById(R.id.btnAddContact);
+        btnSearchContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                queryUserContacts( null);
+            }
+        });
+
+        queryUserContacts(null);
+    }
+
+    //Searching for a contact
+    private void searchContact(View view) {
         searchText = view.findViewById(R.id.searchText);
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -91,29 +111,9 @@ public class ContactsFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                queryContacts(POST_LIMIT, editable.toString());
+                queryUserContacts(editable.toString());
             }
         });
-
-        //Adding Contact
-        btnAddContact = view.findViewById(R.id.btnAddContact);
-        btnAddContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                queryAddableUsers(POST_LIMIT, null);
-            }
-        });
-
-        //Searching Contact
-        btnSearchContact = view.findViewById(R.id.btnAddContact);
-        btnSearchContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                queryContacts(POST_LIMIT, null);
-            }
-        });
-
-        queryContacts(POST_LIMIT, null);
     }
 
     //Configuring the container
@@ -129,17 +129,24 @@ public class ContactsFragment extends Fragment {
             @Override
             public void onRefresh() {
                 Log.i(TAG, "Loading in");
-                queryContacts(POST_LIMIT, null);
-                postsLimit = POST_LIMIT;
+                queryUserContacts(null);
             }
         });
     }
 
-    //Retrieving Contacts
-    protected void queryContacts(int postsLimit, String searchText) {
-        //Object to be queried (Post)
-        Log.i(TAG, "Inside query");
-        ParseQuery<ParseObject> query = User.getCurrentUser().getRelation("friends").getQuery();
+    //Setting the RecyclerView
+    protected void settingRecyclerView(@NonNull View view){
+        rvUserContacts = view.findViewById(R.id.rvPosts);
+        allUserContacts = new ArrayList<>();
+        userContactsAdapter = new UsersAdapter(getContext(), allUserContacts);
+        rvUserContacts.setAdapter(userContactsAdapter);
+        rvUserContacts.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    //Retrieving contacts of current user
+    protected void queryUserContacts(String searchText) {
+        //Creating and constraining query
+        ParseQuery<ParseObject> query = User.getCurrentUser().getRelation(User.USER_KEY_CONTACTS).getQuery();
         query.addAscendingOrder(User.USER_KEY_FULLNAME);
 
         //When searching
@@ -155,11 +162,12 @@ public class ContactsFragment extends Fragment {
                     return;
                 }
                 for(ParseObject user: users){
-                    Log.i(TAG, "User: " + user.getString("username"));
+                    Log.i(TAG, "Contact: " + user.getString(User.USER_KEY_FULLNAME));
                 }
-                allContacts.clear();
-                allContacts.addAll(users);
-                adapterContacts.notifyDataSetChanged();
+                //Set the adapter with new list of contacts
+                allUserContacts.clear();
+                allUserContacts.addAll(users);
+                userContactsAdapter.notifyDataSetChanged();
             }
         });
         swipeContainer.setRefreshing(false);
@@ -167,7 +175,7 @@ public class ContactsFragment extends Fragment {
 
 
     //Retrieving ParseUsers
-    protected void queryAddableUsers(int postsLimit, String searchText) {
+    protected void queryAddableUsers(String searchText) {
         //Object to be queried (Post)
         Log.i(TAG, "Inside query");
 
@@ -182,7 +190,6 @@ public class ContactsFragment extends Fragment {
                 }
             }
         });
-
         swipeContainer.setRefreshing(false);
     }
 }

@@ -36,18 +36,16 @@ public class ViewFragment extends Fragment {
 
     public static final String TAG = "ViewFragment";
 
-    private ImageView profileImage;
-    private TextView home;
-    private TextView username;
-    private TextView bio;
-    private TextView fullName;
+    private ImageView userProfileImage;
+    private TextView userHome;
+    private TextView userUsername;
+    private TextView userBio;
+    private TextView userFullName;
 
-    private RecyclerView rvPosts;
+    private RecyclerView rvUserAchievements;
     protected SwipeRefreshLayout swipeContainer;
-    protected AchievementsAdapter adapter;
-    protected List<Achievement> allAchievements;
-    final protected int POST_LIMIT = 20;
-    protected int postsLimit = 20;
+    protected AchievementsAdapter userAchievementsAdapter;
+    protected List<Achievement> allUserAchievements;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
     public ViewFragment() {}
@@ -62,41 +60,38 @@ public class ViewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        rvPosts = view.findViewById(R.id.rvPosts);
 
-        // Lookup the swipe container view
+        //Lookup the swipe container view
         swipeContainer = view.findViewById(R.id.swipeContainer);
         setupPullToRefresh(swipeContainer);
-        //Create adapter and data source
-        allAchievements = new ArrayList<>();
-        adapter = new AchievementsAdapter(getContext(), allAchievements);
-        //Create layout for one row in the list
-        //Set the adapter on the recycler view
-        rvPosts.setAdapter(adapter);
-        //Set the layout manager on the recycler view
-        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
-        queryPosts(POST_LIMIT);
 
-        profileImage = view.findViewById(R.id.profileImage);
-        fullName = view.findViewById(R.id.fullName);
-        username = view.findViewById(R.id.username);
-        bio = view.findViewById(R.id.bio);
-        home = view.findViewById(R.id.home);
+        //Filling the RecyclerView with the query of user Achievements
+        settingRecyclerView(view);
+        queryUserAchievements();
+
+        //Binding user details
+        bindUserDetails(view);
+    }
+
+    //Posting user details
+    private void bindUserDetails(View view) {
+        userProfileImage = view.findViewById(R.id.ivProfileImage);
+        userFullName = view.findViewById(R.id.etFullName);
+        userUsername = view.findViewById(R.id.etUsername);
+        userBio = view.findViewById(R.id.bio);
+        userHome = view.findViewById(R.id.etHome);
 
 
-        //Profile picture of user
-        ParseFile profile = User.getCurrentUser().getParseFile("profileImage");
+        //Profile image of user
+        ParseFile profile = User.getCurrentUser().getParseFile(User.USER_KEY_PROFILEIMAGE);
         if (profile != null) {
-            Glide.with(getContext()).load(profile.getUrl()).into(profileImage);
+            Glide.with(getContext()).load(profile.getUrl()).into(userProfileImage);
             Log.i(TAG, "Profile Image loaded");
         }
-
-        //Name, username and bio of user
-        fullName.setText(User.getCurrentUser().getString("fullName"));
-        bio.setText(User.getCurrentUser().getString("bio"));
-        username.setText(User.getCurrentUser().getString("username"));
-        if (User.getCurrentUser().getParseFile("profileImage") != null)
-            Glide.with(this).load(User.getCurrentUser().getParseFile("profileImage").getUrl()).into(profileImage);
+        //Full name, username and bio of user
+        userFullName.setText(User.getCurrentUser().getString(User.USER_KEY_FULLNAME));
+        userBio.setText(User.getCurrentUser().getString(User.USER_KEY_BIO));
+        userUsername.setText(User.getCurrentUser().getUsername());
     }
 
     //Configuring the container
@@ -111,21 +106,27 @@ public class ViewFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.i(TAG, "Loading in");
-                queryPosts(POST_LIMIT);
-                postsLimit = POST_LIMIT;
+                Log.i(TAG, "Loading in user achievements");
+                queryUserAchievements();
             }
         });
     }
 
-    //Retrieving ParseObjects (achievements) of current user
-    protected void queryPosts(int postLimit) {
+    //Setting the RecyclerView
+    protected void settingRecyclerView(@NonNull View view){
+        rvUserAchievements = view.findViewById(R.id.rvPosts);
+        allUserAchievements = new ArrayList<>();
+        userAchievementsAdapter = new AchievementsAdapter(getContext(), allUserAchievements);
+        rvUserAchievements.setAdapter(userAchievementsAdapter);
+        rvUserAchievements.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
 
-        //Object to be queried (Post)
+    //Retrieving achievements of the current user
+    protected void queryUserAchievements() {
+        //Creating and constraining query
         ParseQuery<Achievement> query = ParseQuery.getQuery(Achievement.class);
         query.include(Achievement.ACHIEVEMENT_KEY_USER);
         query.whereEqualTo(Achievement.ACHIEVEMENT_KEY_USER, User.getCurrentUser());
-        query.setLimit(postsLimit);
         query.addDescendingOrder(Achievement.KEY_CREATED_AT);
 
         query.findInBackground(new FindCallback<Achievement>() {
@@ -135,13 +136,13 @@ public class ViewFragment extends Fragment {
                     Log.e(TAG, "Issue with getting posts", e);
                     return;
                 }
-                // Access data using the getter methods for the object
                 for(Achievement achievement : achievements){
-                    Log.i(TAG, "Post: " + achievement.getAchievementDescription() + ", user: " + achievement.getAchievementUser().getUsername());
+                    Log.i(TAG, "Achievement: " + achievement.getAchievementTitle() + ", from user: " + achievement.getAchievementUser().getUsername());
                 }
-                allAchievements.clear();
-                allAchievements.addAll(achievements);
-                adapter.notifyDataSetChanged();
+                //Set the adapter with new list of achievements
+                allUserAchievements.clear();
+                allUserAchievements.addAll(achievements);
+                userAchievementsAdapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
             }
         });

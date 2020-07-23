@@ -7,7 +7,7 @@
     tools:context=".activities.EditUserDetailsActivity">
 
     <EditText
-        android:id="@+id/firstNameInput"
+        android:id="@+id/etFirstName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -17,27 +17,27 @@
         android:hint="first name" />
 
     <EditText
-        android:id="@+id/lastNameInput"
+        android:id="@+id/etLastName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/firstNameInput"
-        android:layout_alignStart="@+id/firstNameInput"
+        android:layout_below="@+id/etFirstName"
+        android:layout_alignStart="@+id/etFirstName"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:hint="last name" />
 
     <EditText
-        android:id="@+id/bioInput"
+        android:id="@+id/etBio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lastNameInput"
-        android:layout_alignStart="@+id/firstNameInput"
+        android:layout_below="@+id/etLastName"
+        android:layout_alignStart="@+id/etFirstName"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:hint="brief description about yourself (optional)" />
 
     <ImageView
-        android:id="@+id/picture"
+        android:id="@+id/ivProfileImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnEditProfile"
@@ -54,7 +54,7 @@
         android:id="@+id/btnPicture"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/bioInput"
+        android:layout_below="@+id/etBio"
         android:layout_alignParentStart="true"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"

@@ -2,7 +2,6 @@ package com.example.virtualresume.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +21,6 @@ import com.parse.ParseObject;
 
 import org.parceler.Parcels;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> {
@@ -60,78 +56,57 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private ImageView profileImage;
-        private TextView fullName;
-        private TextView username;
+        private ImageView userProfileImage;
+        private TextView userFullName;
+        private TextView userUsername;
 
         public ViewHolder(@NonNull View itemView) {
             super((itemView));
-            profileImage = itemView.findViewById(R.id.profileImage);
-            fullName = itemView.findViewById(R.id.fullName);
-            username = itemView.findViewById(R.id.username);
+            userProfileImage = itemView.findViewById(R.id.ivProfileImage);
+            userFullName = itemView.findViewById(R.id.etFullName);
+            userUsername = itemView.findViewById(R.id.etUsername);
             itemView.setOnClickListener(this);
         }
 
+        //Bind achievement data into view elements
         public void bind(ParseObject user) {
-            //Bind achievement data into view elements
-            ParseFile profile = user.getParseFile("profileImage");
+            ParseFile profile = user.getParseFile(User.USER_KEY_PROFILEIMAGE);
             if (profile != null) {
-                Glide.with(context).load(profile.getUrl()).into(profileImage);
+                Glide.with(context).load(profile.getUrl()).into(userProfileImage);
                 Log.i(TAG, "Profile Image loaded");
             }
-
-            fullName.setText(user.getString("fullName"));
-            username.setText(user.getString("username"));
+            userFullName.setText(user.getString(User.USER_KEY_FULLNAME));
+            userUsername.setText(user.getString(User.USER_KEY_USERNAME));
 
         }
 
-        //When post clicked, details appear
+        //ProfileView when contact clicked
         @Override
         public void onClick(View view) {
-            //item position
             int position = getAdapterPosition();
-            //Validity of position
             if(position != RecyclerView.NO_POSITION){
                 ParseObject user = users.get(position);
-                goToActivity(user);
+                goToContactProfile(user);
             }
         }
     }
 
-    public void goToActivity(ParseObject user) {
-        //Create intent for new activity
+    public void goToContactProfile(ParseObject user) {
         Intent intent = new Intent(context, ContactProfileActivity.class);
         //Serialize the movie with parser
         intent.putExtra(ParseObject.class.getSimpleName(), Parcels.wrap(user));//show activity
         context.startActivity(intent);
     }
 
-    // Clean all elements of the recycler
+    //Clean all elements of the recycler
     public void clear() {
         users.clear();
         notifyDataSetChanged();
     }
 
-    // Add a list of items -- change to type used
+    //Add a list of items -- change to type used
     public void addAll(List<User> list) {
         users.addAll(list);
         notifyDataSetChanged();
-    }
-
-    //Formatting time passed
-    public String getRelativeTimeAgo(Date date) {
-
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-        String dateString = dateFormat.format(date);
-
-        String relativeDate = "";
-        try {
-            long dateMillis = dateFormat.parse(dateString).getTime();
-            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
-                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
-        } catch (java.text.ParseException e) {
-            e.printStackTrace();
-        }
-        return relativeDate;
     }
 }

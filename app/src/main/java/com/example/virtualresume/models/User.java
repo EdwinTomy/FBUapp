@@ -13,6 +13,7 @@ import java.util.Date;
 public class User extends ParseUser {
 
     public static final String USER_KEY_FULLNAME = "fullName";
+    public static final String USER_KEY_USERNAME = "username";
     public static final String USER_KEY_PROFILEIMAGE = "profileImage";
     public static final String USER_KEY_HOME = "home";
     public static final String USER_KEY_BIO = "bio";
@@ -27,6 +28,14 @@ public class User extends ParseUser {
 
     public void setUserFullName(String fullName){
         put(USER_KEY_FULLNAME, fullName);
+    }
+
+    public String getUserUsername() {
+        return getString(USER_KEY_USERNAME);
+    }
+
+    public void setUserUsername(String username){
+        put(USER_KEY_USERNAME, username);
     }
 
     public ParseFile getUserProfileImage() {

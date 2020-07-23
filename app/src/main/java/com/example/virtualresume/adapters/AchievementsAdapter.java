@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
 import com.example.virtualresume.activities.DetailedViewActivity;
 import com.example.virtualresume.models.Achievement;
+import com.example.virtualresume.models.User;
 import com.parse.ParseFile;
 
 import org.parceler.Parcels;
@@ -59,48 +60,46 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private ImageView profileImage;
-        private TextView fullName;
-        private ImageView image;
-        private TextView title;
-        private TextView timePassed;
+        private ImageView userProfileImage;
+        private ImageView achievementImage;
+        private TextView userFullName;
+        private TextView achievementTitle;
+        private TextView achievementTimePassed;
 
         public ViewHolder(@NonNull View itemView) {
             super((itemView));
-            profileImage = itemView.findViewById(R.id.profileImage);
-            fullName = itemView.findViewById(R.id.fullName);
-            image = itemView.findViewById(R.id.image);
-            title = itemView.findViewById(R.id.username);
-            timePassed = itemView.findViewById(R.id.timePassed);
+            userProfileImage = itemView.findViewById(R.id.ivProfileImage);
+            userFullName = itemView.findViewById(R.id.etFullName);
+            achievementImage = itemView.findViewById(R.id.image);
+            achievementTitle = itemView.findViewById(R.id.etUsername);
+            achievementTimePassed = itemView.findViewById(R.id.etTimePassed);
             itemView.setOnClickListener(this);
         }
 
+        //Bind achievement data into view elements
         public void bind(Achievement achievement) {
-            //Bind achievement data into view elements
             ParseFile picture = achievement.getAchievementImage();
             if (picture != null) {
-                Glide.with(context).load(achievement.getAchievementImage().getUrl()).into(image);
+                Glide.with(context).load(achievement.getAchievementImage().getUrl()).into(achievementImage);
             }else{
-                image.setVisibility(View.GONE);
+                achievementImage.setVisibility(View.GONE);
             }
 
-            ParseFile profile = achievement.getAchievementUser().getParseFile("profileImage");
+            ParseFile profile = achievement.getAchievementUser().getParseFile(User.USER_KEY_PROFILEIMAGE);
             if (profile != null) {
-                Glide.with(context).load(profile.getUrl()).into(profileImage);
+                Glide.with(context).load(profile.getUrl()).into(userProfileImage);
                 Log.i(TAG, "Profile Image loaded");
             }
 
-            fullName.setText(achievement.getAchievementUser().getString("fullName"));
-            timePassed.setText(getRelativeTimeAgo(achievement.getCreatedAt()));
-            title.setText(achievement.getAchievementTitle());
+            userFullName.setText(achievement.getAchievementUser().getString(User.USER_KEY_FULLNAME));
+            achievementTimePassed.setText(getRelativeTimeAgo(achievement.getCreatedAt()));
+            achievementTitle.setText(achievement.getAchievementTitle());
         }
 
         //When post clicked, details appear
         @Override
         public void onClick(View view) {
-            //item position
             int position = getAdapterPosition();
-            //Validity of position
             if(position != RecyclerView.NO_POSITION){
                 Achievement achievement = achievements.get(position);
                 goToActivity(achievement);
@@ -109,7 +108,6 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
     }
 
     public void goToActivity(Achievement achievement) {
-        //Create intent for new activity
         Intent intent = new Intent(context, DetailedViewActivity.class);
         //Serialize the movie with parser
         intent.putExtra(Achievement.class.getSimpleName(), Parcels.wrap(achievement));//show activity

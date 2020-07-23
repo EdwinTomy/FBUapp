@@ -1,16 +1,7 @@
 package com.example.virtualresume.activities;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -41,19 +32,18 @@ public class CreateUserActivity extends CameraApplication {
     private Button btnPicture;
     private Button btnCreate;
     private File photoFile;
-    public String photoFileName = "photo.jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_user);
 
-        firstNameInput = findViewById(R.id.firstNameInput);
-        lastNameInput = findViewById(R.id.lastNameInput);
-        usernameInput = findViewById(R.id.usernameInput);
-        passwordInput = findViewById(R.id.passwordInput);
-        bioInput = findViewById(R.id.bioInput);
-        picture = findViewById(R.id.picture);
+        firstNameInput = findViewById(R.id.etFirstName);
+        lastNameInput = findViewById(R.id.etLastName);
+        usernameInput = findViewById(R.id.etUsername);
+        passwordInput = findViewById(R.id.etPassword);
+        bioInput = findViewById(R.id.etBio);
+        picture = findViewById(R.id.ivProfileImage);
         btnPicture = findViewById(R.id.btnPicture);
         btnCreate = findViewById(R.id.btnEditProfile);
 
@@ -95,7 +85,6 @@ public class CreateUserActivity extends CameraApplication {
     //Attempting to sign up after onClick
     private void SignUpUser(String username, String password, String lastName, String firstName, String bio, File photoFile) {
         Log.i(TAG, "Attempting to sign up user:" + username);
-        //Create the ParseUser
         final User user = new User();
         //Set core properties
         user.setUsername(username);

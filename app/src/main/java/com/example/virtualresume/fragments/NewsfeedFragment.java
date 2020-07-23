@@ -34,12 +34,12 @@ public class NewsfeedFragment extends Fragment {
 
     final private static String TAG = "NewsfeedFragment";
 
-    private RecyclerView rvPosts;
+    private RecyclerView rvContactsAchievements;
     protected SwipeRefreshLayout swipeContainer;
-    protected AchievementsAdapter adapterAchievement;
-    protected List<Achievement> allAchievements;
-    protected UsersAdapter adapterUsers;
-    protected List<ParseObject> allUsers;
+    protected AchievementsAdapter contactsAchievementsAdapter;
+    protected List<Achievement> allContactsAchievements;
+    protected UsersAdapter userContactsAdapter;
+    protected List<ParseObject> allUserContacts;
     final protected int POST_LIMIT = 20;
     protected int postsLimit = 20;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -57,25 +57,14 @@ public class NewsfeedFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        rvPosts = view.findViewById(R.id.rvPosts);
 
         // Lookup the swipe container view
         swipeContainer = view.findViewById(R.id.swipeContainer);
         setupPullToRefresh(swipeContainer);
 
-        //Create adapter and data source
-        allAchievements = new ArrayList<>();
-        adapterAchievement = new AchievementsAdapter(getContext(), allAchievements);
-        //Create layout for one row in the list
-        //Set the adapter on the recycler view
-        rvPosts.setAdapter(adapterAchievement);
-        //Set the layout manager on the recycler view
-        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        allUsers = new ArrayList<>();
-        adapterUsers = new UsersAdapter(getContext(), allUsers);
-
-        queryUsers(POST_LIMIT);
+        //Filling the RecyclerView with the query of user Achievements
+        settingRecyclerView(view);
+        queryUserContacts(POST_LIMIT);
     }
 
     //Configuring the container
@@ -91,18 +80,29 @@ public class NewsfeedFragment extends Fragment {
             @Override
             public void onRefresh() {
                 Log.i(TAG, "Loading in");
-                queryUsers(POST_LIMIT);
+                queryUserContacts(POST_LIMIT);
                 postsLimit = POST_LIMIT;
             }
         });
     }
 
-    //Retrieving ParseObjects (posts)
-    protected void queryPosts(int postsLimit) {
-        //Object to be queried (Post)
+    //Setting the RecyclerView
+    protected void settingRecyclerView(@NonNull View view){
+        rvContactsAchievements = view.findViewById(R.id.rvPosts);
+        allContactsAchievements = new ArrayList<>();
+        contactsAchievementsAdapter = new AchievementsAdapter(getContext(), allContactsAchievements);
+        rvContactsAchievements.setAdapter(contactsAchievementsAdapter);
+        rvContactsAchievements.setLayoutManager(new LinearLayoutManager(getContext()));
+        allUserContacts = new ArrayList<>();
+        userContactsAdapter = new UsersAdapter(getContext(), allUserContacts);
+    }
+
+    //Retrieving achievements of contacts
+    protected void queryContactsAchievements(int postsLimit) {
+        //Creating and constraining query
         ParseQuery<Achievement> query = ParseQuery.getQuery(Achievement.class);
         query.include(Achievement.ACHIEVEMENT_KEY_USER);
-        query.whereContainedIn(Achievement.ACHIEVEMENT_KEY_USER, allUsers);
+        query.whereContainedIn(Achievement.ACHIEVEMENT_KEY_USER, allUserContacts);
         query.setLimit(postsLimit);
         query.addDescendingOrder(Achievement.KEY_CREATED_AT);
 
@@ -113,22 +113,21 @@ public class NewsfeedFragment extends Fragment {
                     Log.e(TAG, "Issue with getting achievements", e);
                     return;
                 }
-                // Access data using the getter methods for the object
                 for(Achievement achievement : achievements){
-                    Log.i(TAG, "Post: " + achievement.getAchievementDescription() + ", user: " + achievement.getAchievementUser().getUsername());
+                    Log.i(TAG, "Achievement: " + achievement.getAchievementTitle() + ", user: " + achievement.getAchievementUser().getUsername());
                 }
-                adapterAchievement.clear();
-                allAchievements.addAll(achievements);
-                adapterAchievement.notifyDataSetChanged();
+                //Set the adapter with new list of achievements
+                contactsAchievementsAdapter.clear();
+                allContactsAchievements.addAll(achievements);
+                contactsAchievementsAdapter.notifyDataSetChanged();
             }
         });
     }
 
-    //Retrieving users (posts)
-    protected void queryUsers(final int postsLimit) {
-        //Object to be queried (Post)
-        Log.i(TAG, "Inside query");
-        ParseQuery<ParseObject> query = User.getCurrentUser().getRelation("friends").getQuery();
+    //Retrieving contacts of current user
+    protected void queryUserContacts(final int postsLimit) {
+        //Creating and constraining query
+        ParseQuery<ParseObject> query = User.getCurrentUser().getRelation(User.USER_KEY_CONTACTS).getQuery();
         query.addAscendingOrder(User.USER_KEY_FULLNAME);
 
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -139,12 +138,13 @@ public class NewsfeedFragment extends Fragment {
                     return;
                 }
                 for(ParseObject user: users){
-                    Log.i(TAG, "User: " + user.getString("username"));
+                    Log.i(TAG, "Contact: " + user.getString(User.USER_KEY_FULLNAME));
                 }
-                allUsers.clear();
-                allUsers.addAll(users);
-                adapterUsers.notifyDataSetChanged();
-                queryPosts(postsLimit);
+                //Set the adapter with new list of contacts
+                allUserContacts.clear();
+                allUserContacts.addAll(users);
+                userContactsAdapter.notifyDataSetChanged();
+                queryContactsAchievements(postsLimit);
             }
         });
        swipeContainer.setRefreshing(false);

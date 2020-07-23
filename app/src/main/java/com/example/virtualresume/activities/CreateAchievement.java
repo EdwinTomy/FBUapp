@@ -1,17 +1,6 @@
 package com.example.virtualresume.activities;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,22 +19,19 @@ import com.parse.ParseFile;
 import org.parceler.Parcels;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class CreateAchievement extends CameraApplication {
 
     private static final String TAG = "Create Achievement";
 
-    private ImageView imageAchievement;
+    private ImageView achievementImage;
     private Achievement achievement;
     private Button btnEditAchievement;
     private Button btnPicture;
-    private EditText title;
-    private EditText field;
-    private EditText description;
-    private EditText organization;
+    private EditText achievementTitle;
+    private EditText achievementField;
+    private EditText achievementDescription;
+    private EditText achievementOrganization;
     private File photoFile;
 
     @Override
@@ -57,38 +43,28 @@ public class CreateAchievement extends CameraApplication {
         View view = binding.getRoot();
         setContentView(view);
 
+        //Unwrapping class
         achievement = (Achievement) Parcels.unwrap(getIntent().getParcelableExtra(Achievement.class.getSimpleName()));
 
-        //Bind attributes
-        imageAchievement = view.findViewById(R.id.imageAchievement);
+        //Binding attributes
+        achievementImage = view.findViewById(R.id.ivAchievement);
         btnEditAchievement = view.findViewById(R.id.btnEditAchievement);
         btnPicture = view.findViewById(R.id.btnPicture);
-        title = view.findViewById(R.id.title);
-        field = view.findViewById(R.id.field);
-        description = view.findViewById(R.id.description);
-        organization = view.findViewById(R.id.organization);
+        achievementTitle = view.findViewById(R.id.etTitle);
+        achievementField = view.findViewById(R.id.etField);
+        achievementDescription = view.findViewById(R.id.etDescription);
+        achievementOrganization = view.findViewById(R.id.etOrganization);
 
-        //For existing achievements, setting up the data
-        if(achievement != null) {
-            title.setText(achievement.getAchievementTitle());
-            field.setText(achievement.getAchievementField());
-            description.setText(achievement.getAchievementDescription());
-            organization.setText(achievement.getAchievementOrganization());
-            Log.d(TAG, String.format("Showing details for '%s:'", achievement.getAchievementTitle()));
-            ParseFile picture = achievement.getAchievementImage();
-            if (picture != null) {
-                Glide.with(this).load(achievement.getAchievementImage().getUrl()).into(imageAchievement);
-            }else{
-                imageAchievement.setVisibility(View.GONE);
-            }
-        }
+        //Setting up template for existing achievement
+        if(achievement != null)
+            existingAchievementTemplate();
 
         //Taking a picture
         btnPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "Clicked");
-                photoFile = launchCamera(imageAchievement, photoFile);
+                photoFile = launchCamera(achievementImage, photoFile);
             }
         });
 
@@ -98,66 +74,74 @@ public class CreateAchievement extends CameraApplication {
             public void onClick(View v) {
 
                 //Obtaining input data
-                String titleContent = title.getText().toString();
+                String titleContent = achievementTitle.getText().toString();
                 if(titleContent.isEmpty()){
                     Toast.makeText(CreateAchievement.this, "Sorry, the title is empty!", Toast.LENGTH_LONG).show();
                     return;
                 }
-                String fieldContent = field.getText().toString();
+                String fieldContent = achievementField.getText().toString();
                 if(fieldContent.isEmpty()){
                     Toast.makeText(CreateAchievement.this, "Sorry, the field is empty!", Toast.LENGTH_LONG).show();
                     return;
                 }
-                String descriptionContent = description.getText().toString();
+                String descriptionContent = achievementDescription.getText().toString();
                 if(descriptionContent.isEmpty()){
                     Toast.makeText(CreateAchievement.this, "Sorry, the description is empty!", Toast.LENGTH_LONG).show();
                     return;
                 }
-                String organizationContent = organization.getText().toString();
+                String organizationContent = achievementOrganization.getText().toString();
                 if(organizationContent.isEmpty()){
                     Toast.makeText(CreateAchievement.this, "Sorry, the organization is empty!", Toast.LENGTH_LONG).show();
                     return;
                 }
 
-                //Creating new achievement
+                //Creating or editing achievement
                 if(achievement == null){
-                    Achievement achievement = new Achievement();
-                    achievement.setAchievementUser(User.getCurrentUser());
-                    Log.i(TAG, "new achievement");
-                    achievement.setAchievementTitle(titleContent);
-                    achievement.setAchievementField(fieldContent);
-                    achievement.setAchievementDescription(descriptionContent);
-                    achievement.setAchievementOrganization(organizationContent);
-                    if(photoFile != null)
-                        achievement.setAchievementImage(new ParseFile(photoFile));
-                    achievement.saveInBackground();
+                    newAchievement(titleContent, fieldContent, descriptionContent, organizationContent);
                     return;
                 }
-                achievement.setAchievementTitle(titleContent);
-                achievement.setAchievementField(fieldContent);
-                achievement.setAchievementDescription(descriptionContent);
-                achievement.setAchievementOrganization(organizationContent);
-                if(photoFile != null)
-                    achievement.setAchievementImage(new ParseFile(photoFile));
-                achievement.saveInBackground();
+                editAchievement(titleContent, fieldContent, descriptionContent, organizationContent);
             }
         });
     }
 
-    //Formatting time passed
-    public String getRelativeTimeAgo(Date date) {
-
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-        String dateString = dateFormat.format(date);
-
-        String relativeDate = "";
-        try {
-            long dateMillis = dateFormat.parse(dateString).getTime();
-            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
-                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
-        } catch (java.text.ParseException e) {
-            e.printStackTrace();
+    //Setting up template for existing achievement
+    public void existingAchievementTemplate(){
+        achievementTitle.setText(achievement.getAchievementTitle());
+        achievementField.setText(achievement.getAchievementField());
+        achievementDescription.setText(achievement.getAchievementDescription());
+        achievementOrganization.setText(achievement.getAchievementOrganization());
+        Log.d(TAG, String.format("Showing details for '%s:'", achievement.getAchievementTitle()));
+        ParseFile picture = achievement.getAchievementImage();
+        if (picture != null) {
+            Glide.with(this).load(achievement.getAchievementImage().getUrl()).into(achievementImage);
+        }else{
+            achievementImage.setVisibility(View.GONE);
         }
-        return relativeDate;
+    }
+
+    //Creating new achievement
+    public void newAchievement(String titleContent, String fieldContent, String descriptionContent, String organizationContent){
+        Achievement achievement = new Achievement();
+        achievement.setAchievementUser(User.getCurrentUser());
+        Log.i(TAG, "new achievement");
+        achievement.setAchievementTitle(titleContent);
+        achievement.setAchievementField(fieldContent);
+        achievement.setAchievementDescription(descriptionContent);
+        achievement.setAchievementOrganization(organizationContent);
+        if(photoFile != null)
+            achievement.setAchievementImage(new ParseFile(photoFile));
+        achievement.saveInBackground();
+    }
+
+    //Editing existing achievement
+    public void editAchievement(String titleContent, String fieldContent, String descriptionContent, String organizationContent){
+        achievement.setAchievementTitle(titleContent);
+        achievement.setAchievementField(fieldContent);
+        achievement.setAchievementDescription(descriptionContent);
+        achievement.setAchievementOrganization(organizationContent);
+        if(photoFile != null)
+            achievement.setAchievementImage(new ParseFile(photoFile));
+        achievement.saveInBackground();
     }
 }

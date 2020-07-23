@@ -1,16 +1,7 @@
 package com.example.virtualresume.activities;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,62 +10,33 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.virtualresume.R;
-import com.example.virtualresume.models.Achievement;
 import com.example.virtualresume.models.User;
 import com.example.virtualresume.utils.CameraApplication;
-import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
-import com.parse.SignUpCallback;
-
-import org.parceler.Parcels;
 
 import java.io.File;
-
-import static com.parse.ParseUser.getCurrentUser;
 
 public class EditUserDetailsActivity extends CameraApplication {
 
     public static final String TAG = "EditUserDetailsActivity";
-    public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 40;
 
     private EditText firstNameInput;
     private EditText lastNameInput;
     private EditText bioInput;
-    private ImageView picture;
+    private ImageView pictureInput;
     private Button btnPicture;
     private Button btnEditProfile;
-    private User user;
     private File photoFile;
-    public String photoFileName = "photo.jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_user_details);
 
-        firstNameInput = findViewById(R.id.firstNameInput);
-        lastNameInput = findViewById(R.id.lastNameInput);
-        bioInput = findViewById(R.id.bioInput);
-        picture = findViewById(R.id.picture);
-        btnPicture = findViewById(R.id.btnPicture);
-        btnEditProfile = findViewById(R.id.btnEditProfile);
+        bindUserDetails();
 
-        //user = Parcels.unwrap(getIntent().getParcelableExtra(User.class.getSimpleName()));
-        firstNameInput.setText(User.getCurrentUser().getString("firstName"));
-        lastNameInput.setText(User.getCurrentUser().getString("lastName"));
-        bioInput.setText(User.getCurrentUser().getString("bio"));
-
-        //Taking a picture
-        btnPicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i(TAG, "Clicked");
-                photoFile = launchCamera(picture, photoFile);
-            }
-        });
-
-        //Clicking to create new user
+        //Clicking to update user details
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,16 +59,39 @@ public class EditUserDetailsActivity extends CameraApplication {
 
     }
 
+    //Posting user details
+    private void bindUserDetails() {
+        firstNameInput = findViewById(R.id.etFirstName);
+        lastNameInput = findViewById(R.id.etLastName);
+        bioInput = findViewById(R.id.etBio);
+        pictureInput = findViewById(R.id.ivProfileImage);
+        btnPicture = findViewById(R.id.btnPicture);
+        btnEditProfile = findViewById(R.id.btnEditProfile);
+
+        firstNameInput.setText(User.getCurrentUser().getString("firstName"));
+        lastNameInput.setText(User.getCurrentUser().getString("lastName"));
+        bioInput.setText(User.getCurrentUser().getString("bio"));
+
+        //Taking a picture
+        btnPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "Clicked");
+                photoFile = launchCamera(pictureInput, photoFile);
+            }
+        });
+    }
+
     //Update after onClick
     private void UpdateDetails(String lastName, String firstName, String bio, File photoFile) {
         ParseUser user = ParseUser.getCurrentUser();
         Log.i(TAG, "Updating details of" + firstName);
 
         //Update properties
-        user.put("fullName", firstName + " " + lastName);
-        user.put("bio", bio);
+        user.put(User.USER_KEY_FULLNAME, firstName + " " + lastName);
+        user.put(User.USER_KEY_BIO, bio);
         if(photoFile != null)
-            user.put("profileImage", new ParseFile(photoFile));
+            user.put(User.USER_KEY_PROFILEIMAGE, new ParseFile(photoFile));
         //Invoke signUpInBackground
         user.saveInBackground();
     }

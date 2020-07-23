@@ -7,11 +7,11 @@
     tools:context=".activities.DetailedViewActivity">
 
     <TextView
-        android:id="@+id/organization"
+        android:id="@+id/etOrganization"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-        android:layout_alignStart="@+id/title"
+        android:layout_below="@+id/etTitle"
+        android:layout_alignStart="@+id/etTitle"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:text="TextView"
@@ -19,47 +19,47 @@
         tools:layout_editor_absoluteY="55dp" />
 
     <TextView
-        android:id="@+id/fullName"
+        android:id="@+id/etFullName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageUser"
+        android:layout_alignTop="@+id/ivUser"
         android:layout_marginStart="5dp"
         android:layout_marginTop="-2dp"
-        android:layout_toEndOf="@+id/imageUser"
+        android:layout_toEndOf="@+id/ivUser"
         android:text="TextView"
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="55dp" />
 
     <TextView
-        android:id="@+id/username"
+        android:id="@+id/etUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/fullName"
+        android:layout_below="@+id/etFullName"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
-        android:layout_toEndOf="@+id/imageUser"
+        android:layout_toEndOf="@+id/ivUser"
         android:text="TextView"
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="55dp" />
 
     <TextView
-        android:id="@+id/timePassed"
+        android:id="@+id/etTimePassed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageUser"
+        android:layout_alignBottom="@+id/ivUser"
         android:layout_marginStart="5dp"
         android:layout_marginBottom="0dp"
-        android:layout_toEndOf="@+id/imageUser"
+        android:layout_toEndOf="@+id/ivUser"
         android:text="TextView"
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="55dp" />
 
     <TextView
-        android:id="@+id/description"
+        android:id="@+id/etDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/organization"
-        android:layout_alignStart="@+id/organization"
+        android:layout_below="@+id/etOrganization"
+        android:layout_alignStart="@+id/etOrganization"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:text="TextView"
@@ -67,11 +67,11 @@
         tools:layout_editor_absoluteY="55dp" />
 
     <TextView
-        android:id="@+id/field"
+        android:id="@+id/etField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/description"
-        android:layout_alignStart="@+id/description"
+        android:layout_below="@+id/etDescription"
+        android:layout_alignStart="@+id/etDescription"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:text="TextView"
@@ -79,11 +79,11 @@
         tools:layout_editor_absoluteY="55dp" />
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/etTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageUser"
-        android:layout_alignStart="@+id/imageUser"
+        android:layout_below="@+id/ivUser"
+        android:layout_alignStart="@+id/ivUser"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:text="TextView"
@@ -91,7 +91,7 @@
         tools:layout_editor_absoluteY="55dp" />
 
     <ImageView
-        android:id="@+id/imageAchievement"
+        android:id="@+id/ivAchievement"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_alignParentStart="true"
@@ -102,10 +102,10 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <ImageView
-        android:id="@+id/imageUser"
+        android:id="@+id/ivUser"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_below="@+id/imageAchievement"
+        android:layout_below="@+id/ivAchievement"
         android:layout_alignParentStart="true"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
