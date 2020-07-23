@@ -8,7 +8,7 @@
     tools:context=".activities.CreateUserActivity">
 
     <EditText
-        android:id="@+id/etFirstName"
+        android:id="@+id/etFullName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -21,8 +21,8 @@
         android:id="@+id/etLastName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etFirstName"
-        android:layout_alignStart="@+id/etFirstName"
+        android:layout_below="@+id/etFullName"
+        android:layout_alignStart="@+id/etFullName"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:hint="last name" />
@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/etPassword"
-        android:layout_alignStart="@+id/etFirstName"
+        android:layout_alignStart="@+id/etFullName"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:hint="brief description about yourself (optional)" />
@@ -42,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/etLastName"
-        android:layout_alignStart="@+id/etFirstName"
+        android:layout_alignStart="@+id/etFullName"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:hint="unique username" />
@@ -52,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/etUsername"
-        android:layout_alignStart="@+id/etFirstName"
+        android:layout_alignStart="@+id/etFullName"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:hint="@string/password" />

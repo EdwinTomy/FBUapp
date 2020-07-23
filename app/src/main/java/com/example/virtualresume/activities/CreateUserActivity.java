@@ -38,7 +38,7 @@ public class CreateUserActivity extends CameraApplication {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_user);
 
-        firstNameInput = findViewById(R.id.etFirstName);
+        firstNameInput = findViewById(R.id.etFullName);
         lastNameInput = findViewById(R.id.etLastName);
         usernameInput = findViewById(R.id.etUsername);
         passwordInput = findViewById(R.id.etPassword);

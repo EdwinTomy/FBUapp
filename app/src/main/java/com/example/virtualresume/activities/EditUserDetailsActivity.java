@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
 import com.example.virtualresume.models.User;
 import com.example.virtualresume.utils.CameraApplication;
@@ -21,8 +22,7 @@ public class EditUserDetailsActivity extends CameraApplication {
 
     public static final String TAG = "EditUserDetailsActivity";
 
-    private EditText firstNameInput;
-    private EditText lastNameInput;
+    private EditText fullNameInput;
     private EditText bioInput;
     private ImageView pictureInput;
     private Button btnPicture;
@@ -40,20 +40,19 @@ public class EditUserDetailsActivity extends CameraApplication {
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String firstName = firstNameInput.getText().toString();
-                String lastName = lastNameInput.getText().toString();
+                String fullName = fullNameInput.getText().toString();
                 String bio = bioInput.getText().toString();
 
-                if(firstName.isEmpty()){
-                    Toast.makeText(EditUserDetailsActivity.this, "Enter first name!", Toast.LENGTH_SHORT).show();
+                if(fullName.isEmpty()){
+                    Toast.makeText(EditUserDetailsActivity.this, "Enter full name!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(lastName.isEmpty()){
-                    Toast.makeText(EditUserDetailsActivity.this, "Enter last name!", Toast.LENGTH_SHORT).show();
+                if(bio.isEmpty()){
+                    Toast.makeText(EditUserDetailsActivity.this, "Enter bio!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                UpdateDetails(lastName, firstName, bio, photoFile);
+                UpdateDetails(fullName, bio, photoFile);
             }
         });
 
@@ -61,16 +60,17 @@ public class EditUserDetailsActivity extends CameraApplication {
 
     //Posting user details
     private void bindUserDetails() {
-        firstNameInput = findViewById(R.id.etFirstName);
-        lastNameInput = findViewById(R.id.etLastName);
+        fullNameInput = findViewById(R.id.etFullName);
         bioInput = findViewById(R.id.etBio);
         pictureInput = findViewById(R.id.ivProfileImage);
         btnPicture = findViewById(R.id.btnPicture);
         btnEditProfile = findViewById(R.id.btnEditProfile);
 
-        firstNameInput.setText(User.getCurrentUser().getString("firstName"));
-        lastNameInput.setText(User.getCurrentUser().getString("lastName"));
-        bioInput.setText(User.getCurrentUser().getString("bio"));
+        fullNameInput.setText(User.getCurrentUser().getString(User.USER_KEY_FULLNAME));
+        bioInput.setText(User.getCurrentUser().getString(User.USER_KEY_BIO));
+        ParseFile picture = User.getCurrentUser().getParseFile(User.USER_KEY_PROFILEIMAGE);
+        if (picture != null)
+            Glide.with(this).load(picture.getUrl()).into(pictureInput);
 
         //Taking a picture
         btnPicture.setOnClickListener(new View.OnClickListener() {
@@ -83,17 +83,18 @@ public class EditUserDetailsActivity extends CameraApplication {
     }
 
     //Update after onClick
-    private void UpdateDetails(String lastName, String firstName, String bio, File photoFile) {
+    private void UpdateDetails(String fullName, String bio, File photoFile) {
         ParseUser user = ParseUser.getCurrentUser();
-        Log.i(TAG, "Updating details of" + firstName);
+        Log.i(TAG, "Updating details of" + fullName);
 
         //Update properties
-        user.put(User.USER_KEY_FULLNAME, firstName + " " + lastName);
+        user.put(User.USER_KEY_FULLNAME, fullName);
         user.put(User.USER_KEY_BIO, bio);
         if(photoFile != null)
             user.put(User.USER_KEY_PROFILEIMAGE, new ParseFile(photoFile));
         //Invoke signUpInBackground
         user.saveInBackground();
+        goMainActivity();
     }
 
     //Navigate to MainActivity
