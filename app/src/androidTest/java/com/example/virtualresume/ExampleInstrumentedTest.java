@@ -29,13 +29,4 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("com.example.virtualresume", appContext.getPackageName());
     }
-
-    @Test
-    public void userObject(){
-        LoginActivity loginActivity = new LoginActivity();
-        loginActivity.loginUser("edwintomy", "edwintomy");
-        String username = getCurrentUser().getUsername();
-
-        assertEquals("edwintomy", "holea");
-    }
 }

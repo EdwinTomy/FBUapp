@@ -101,8 +101,8 @@ public class NewsfeedFragment extends Fragment {
     protected void queryPosts(int postsLimit) {
         //Object to be queried (Post)
         ParseQuery<Achievement> query = ParseQuery.getQuery(Achievement.class);
-        query.include(Achievement.KEY_USER);
-        query.whereContainedIn(Achievement.KEY_USER, allUsers);
+        query.include(Achievement.ACHIEVEMENT_KEY_USER);
+        query.whereContainedIn(Achievement.ACHIEVEMENT_KEY_USER, allUsers);
         query.setLimit(postsLimit);
         query.addDescendingOrder(Achievement.KEY_CREATED_AT);
 
@@ -115,7 +115,7 @@ public class NewsfeedFragment extends Fragment {
                 }
                 // Access data using the getter methods for the object
                 for(Achievement achievement : achievements){
-                    Log.i(TAG, "Post: " + achievement.getDescription() + ", user: " + achievement.getUser().getUsername());
+                    Log.i(TAG, "Post: " + achievement.getAchievementDescription() + ", user: " + achievement.getAchievementUser().getUsername());
                 }
                 adapterAchievement.clear();
                 allAchievements.addAll(achievements);
@@ -129,7 +129,7 @@ public class NewsfeedFragment extends Fragment {
         //Object to be queried (Post)
         Log.i(TAG, "Inside query");
         ParseQuery<ParseObject> query = User.getCurrentUser().getRelation("friends").getQuery();
-        query.addAscendingOrder(User.KEY_FULLNAME);
+        query.addAscendingOrder(User.USER_KEY_FULLNAME);
 
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override

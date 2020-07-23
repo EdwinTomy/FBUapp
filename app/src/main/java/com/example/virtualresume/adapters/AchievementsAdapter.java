@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
 import com.example.virtualresume.activities.DetailedViewActivity;
 import com.example.virtualresume.models.Achievement;
-import com.example.virtualresume.models.User;
 import com.parse.ParseFile;
 
 import org.parceler.Parcels;
@@ -78,22 +77,22 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
 
         public void bind(Achievement achievement) {
             //Bind achievement data into view elements
-            ParseFile picture = achievement.getImage();
+            ParseFile picture = achievement.getAchievementImage();
             if (picture != null) {
-                Glide.with(context).load(achievement.getImage().getUrl()).into(image);
+                Glide.with(context).load(achievement.getAchievementImage().getUrl()).into(image);
             }else{
                 image.setVisibility(View.GONE);
             }
 
-            ParseFile profile = achievement.getUser().getParseFile("profileImage");
+            ParseFile profile = achievement.getAchievementUser().getParseFile("profileImage");
             if (profile != null) {
                 Glide.with(context).load(profile.getUrl()).into(profileImage);
                 Log.i(TAG, "Profile Image loaded");
             }
 
-            fullName.setText(achievement.getUser().getString("fullName"));
+            fullName.setText(achievement.getAchievementUser().getString("fullName"));
             timePassed.setText(getRelativeTimeAgo(achievement.getCreatedAt()));
-            title.setText(achievement.getTitle());
+            title.setText(achievement.getAchievementTitle());
         }
 
         //When post clicked, details appear

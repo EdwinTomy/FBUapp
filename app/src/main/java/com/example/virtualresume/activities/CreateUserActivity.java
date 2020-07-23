@@ -100,8 +100,8 @@ public class CreateUserActivity extends CameraApplication {
         //Set core properties
         user.setUsername(username);
         user.setPassword(password);
-        user.setFullName(firstName + " " + lastName);
-        user.setBio(bio);
+        user.setUserFullName(firstName + " " + lastName);
+        user.setUserBio(bio);
         user.saveInBackground();
         //Invoke signUpInBackground
         user.signUpInBackground(new SignUpCallback() {
@@ -131,7 +131,7 @@ public class CreateUserActivity extends CameraApplication {
     private void savePhoto(User user) {
         if(photoFile != null) {
             ParseFile file = new ParseFile(photoFile);
-            user.setProfileImage(file);
+            user.setUserProfileImage(file);
             user.saveInBackground();
             Log.i(TAG, "File not null");
             Toast.makeText(CreateUserActivity.this, "Profile loaded", Toast.LENGTH_SHORT).show();

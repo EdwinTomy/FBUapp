@@ -89,7 +89,7 @@ public class MapsFragment extends Fragment {
         //Object to be queried (User)
         Log.i(TAG, "Inside query");
         ParseQuery<ParseUser> query = User.getQuery();
-        query.addAscendingOrder(User.KEY_FULLNAME);
+        query.addAscendingOrder(User.USER_KEY_FULLNAME);
         query.include("user");
 
         try {

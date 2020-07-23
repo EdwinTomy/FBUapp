@@ -15,71 +15,71 @@ import java.util.Date;
 @ParseClassName("Achievement")
 public class Achievement extends ParseObject {
 
-    public static final String KEY_DESCRIPTION = "description";
-    public static final String KEY_IMAGE = "image";
-    public static final String KEY_TITLE = "title";
-    public static final String KEY_FIELD = "field";
-    public static final String KEY_ORGANIZATION = "organization";
-    public static final String KEY_TIME = "time";
-    public static final String KEY_USER = "user";
+    public static final String ACHIEVEMENT_KEY_DESCRIPTION = "description";
+    public static final String ACHIEVEMENT_KEY_IMAGE = "image";
+    public static final String ACHIEVEMENT_KEY_TITLE = "title";
+    public static final String ACHIEVEMENT_KEY_FIELD = "field";
+    public static final String ACHIEVEMENT_KEY_ORGANIZATION = "organization";
+    public static final String ACHIEVEMENT_KEY_TIME = "time";
+    public static final String ACHIEVEMENT_KEY_USER = "user";
 
     public Achievement() {
     }
 
-    public String getDescription() {
-        return getString(KEY_DESCRIPTION);
+    public String getAchievementDescription() {
+        return getString(ACHIEVEMENT_KEY_DESCRIPTION);
     }
 
-    public void setDescription(String description){
-        put(KEY_DESCRIPTION, description);
+    public void setAchievementDescription(String description){
+        put(ACHIEVEMENT_KEY_DESCRIPTION, description);
     }
 
-    public ParseFile getImage() {
-        return getParseFile(KEY_IMAGE);
+    public ParseFile getAchievementImage() {
+        return getParseFile(ACHIEVEMENT_KEY_IMAGE);
     }
 
-    public void setImage(ParseFile parseFile){
-        put(KEY_IMAGE, parseFile);
+    public void setAchievementImage(ParseFile parseFile){
+        put(ACHIEVEMENT_KEY_IMAGE, parseFile);
     }
 
-    public String getTitle() {
-        return getString(KEY_TITLE);
+    public String getAchievementTitle() {
+        return getString(ACHIEVEMENT_KEY_TITLE);
     }
 
-    public void setTitle(String title){
-        put(KEY_TITLE, title);
+    public void setAchievementTitle(String title){
+        put(ACHIEVEMENT_KEY_TITLE, title);
     }
 
-    public String getField() {
-        return getString(KEY_FIELD);
+    public String getAchievementField() {
+        return getString(ACHIEVEMENT_KEY_FIELD);
     }
 
-    public void setField(String field){
-        put(KEY_FIELD, field);
+    public void setAchievementField(String field){
+        put(ACHIEVEMENT_KEY_FIELD, field);
     }
 
-    public String getOrganization() {
-        return getString(KEY_ORGANIZATION);
+    public String getAchievementOrganization() {
+        return getString(ACHIEVEMENT_KEY_ORGANIZATION);
     }
 
-    public void setOrganization(String organization){
-        put(KEY_ORGANIZATION, organization);
+    public void setAchievementOrganization(String organization){
+        put(ACHIEVEMENT_KEY_ORGANIZATION, organization);
     }
 
     public Date getTime() {
-        return getDate(KEY_TIME);
+        return getDate(ACHIEVEMENT_KEY_TIME);
     }
 
     public void setTime(Date date){
-        put(KEY_TIME, date);
+        put(ACHIEVEMENT_KEY_TIME, date);
     }
 
-    public ParseUser getUser() {
-        return getParseUser(KEY_USER);
+    public ParseUser getAchievementUser() {
+        return getParseUser(ACHIEVEMENT_KEY_USER);
     }
 
-    public void setUser(ParseUser user){
-        put(KEY_USER, user);
+    public void setAchievementUser(ParseUser user){
+        put(ACHIEVEMENT_KEY_USER, user);
     }
 
 }

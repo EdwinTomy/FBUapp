@@ -70,14 +70,14 @@ public class CreateAchievement extends CameraApplication {
 
         //For existing achievements, setting up the data
         if(achievement != null) {
-            title.setText(achievement.getTitle());
-            field.setText(achievement.getField());
-            description.setText(achievement.getDescription());
-            organization.setText(achievement.getOrganization());
-            Log.d(TAG, String.format("Showing details for '%s:'", achievement.getTitle()));
-            ParseFile picture = achievement.getImage();
+            title.setText(achievement.getAchievementTitle());
+            field.setText(achievement.getAchievementField());
+            description.setText(achievement.getAchievementDescription());
+            organization.setText(achievement.getAchievementOrganization());
+            Log.d(TAG, String.format("Showing details for '%s:'", achievement.getAchievementTitle()));
+            ParseFile picture = achievement.getAchievementImage();
             if (picture != null) {
-                Glide.with(this).load(achievement.getImage().getUrl()).into(imageAchievement);
+                Glide.with(this).load(achievement.getAchievementImage().getUrl()).into(imageAchievement);
             }else{
                 imageAchievement.setVisibility(View.GONE);
             }
@@ -122,23 +122,23 @@ public class CreateAchievement extends CameraApplication {
                 //Creating new achievement
                 if(achievement == null){
                     Achievement achievement = new Achievement();
-                    achievement.setUser(User.getCurrentUser());
+                    achievement.setAchievementUser(User.getCurrentUser());
                     Log.i(TAG, "new achievement");
-                    achievement.setTitle(titleContent);
-                    achievement.setField(fieldContent);
-                    achievement.setDescription(descriptionContent);
-                    achievement.setOrganization(organizationContent);
+                    achievement.setAchievementTitle(titleContent);
+                    achievement.setAchievementField(fieldContent);
+                    achievement.setAchievementDescription(descriptionContent);
+                    achievement.setAchievementOrganization(organizationContent);
                     if(photoFile != null)
-                        achievement.setImage(new ParseFile(photoFile));
+                        achievement.setAchievementImage(new ParseFile(photoFile));
                     achievement.saveInBackground();
                     return;
                 }
-                achievement.setTitle(titleContent);
-                achievement.setField(fieldContent);
-                achievement.setDescription(descriptionContent);
-                achievement.setOrganization(organizationContent);
+                achievement.setAchievementTitle(titleContent);
+                achievement.setAchievementField(fieldContent);
+                achievement.setAchievementDescription(descriptionContent);
+                achievement.setAchievementOrganization(organizationContent);
                 if(photoFile != null)
-                    achievement.setImage(new ParseFile(photoFile));
+                    achievement.setAchievementImage(new ParseFile(photoFile));
                 achievement.saveInBackground();
             }
         });

@@ -115,8 +115,8 @@ public class ContactProfileActivity extends AppCompatActivity {
 
         //Object to be queried (Post)
         ParseQuery<Achievement> query = ParseQuery.getQuery(Achievement.class);
-        query.include(Achievement.KEY_USER);
-        query.whereEqualTo(Achievement.KEY_USER, user);
+        query.include(Achievement.ACHIEVEMENT_KEY_USER);
+        query.whereEqualTo(Achievement.ACHIEVEMENT_KEY_USER, user);
         query.setLimit(postsLimit);
         query.addDescendingOrder(Achievement.KEY_CREATED_AT);
 
@@ -129,7 +129,7 @@ public class ContactProfileActivity extends AppCompatActivity {
                 }
                 // Access data using the getter methods for the object
                 for(Achievement achievement : achievements){
-                    Log.i(TAG, "Post: " + achievement.getDescription() + ", user: " + achievement.getUser().getUsername());
+                    Log.i(TAG, "Post: " + achievement.getAchievementDescription() + ", user: " + achievement.getAchievementUser().getUsername());
                 }
                 allAchievements.clear();
                 allAchievements.addAll(achievements);

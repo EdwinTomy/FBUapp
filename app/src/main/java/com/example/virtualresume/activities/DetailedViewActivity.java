@@ -42,26 +42,25 @@ public class DetailedViewActivity extends AppCompatActivity {
         imageAchievement = view.findViewById(R.id.imageAchievement);
 
         achievement = (Achievement) Parcels.unwrap(getIntent().getParcelableExtra(Achievement.class.getSimpleName()));
-        Log.d(TAG, String.format("Showing details for '%s:'", achievement.getTitle()));
+        Log.d(TAG, String.format("Showing details for '%s:'", achievement.getAchievementTitle()));
 
         //Bind attributes
-        binding.title.setText(achievement.getTitle());
-        binding.field.setText(achievement.getField());
-        binding.description.setText(achievement.getDescription());
-
-        binding.fullName.setText(achievement.getUser().getString("fullName"));
-        binding.username.setText(achievement.getUser().getUsername());
+        binding.title.setText(achievement.getAchievementTitle());
+        binding.field.setText(achievement.getAchievementField());
+        binding.description.setText(achievement.getAchievementDescription());
+        binding.fullName.setText(achievement.getAchievementUser().getString(User.USER_KEY_FULLNAME));
+        binding.username.setText(achievement.getAchievementUser().getUsername());
         binding.timePassed.setText(getRelativeTimeAgo(achievement.getUpdatedAt()));
-        binding.organization.setText(achievement.getOrganization());
+        binding.organization.setText(achievement.getAchievementOrganization());
 
-        ParseFile picture = achievement.getImage();
+        ParseFile picture = achievement.getAchievementImage();
         if (picture != null) {
-            Glide.with(this).load(achievement.getImage().getUrl()).into(imageAchievement);
+            Glide.with(this).load(achievement.getAchievementImage().getUrl()).into(imageAchievement);
         }else{
             imageAchievement.setVisibility(View.GONE);
         }
 
-        ParseFile profile = achievement.getUser().getParseFile("profileImage");
+        ParseFile profile = achievement.getAchievementUser().getParseFile(User.USER_KEY_PROFILEIMAGE);
         if (profile != null) {
             Glide.with(this).load(profile.getUrl()).into(imageUser);
             Log.i(TAG, "Profile Image loaded");

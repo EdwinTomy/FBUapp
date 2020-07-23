@@ -12,49 +12,52 @@ import java.util.Date;
 @ParseClassName("User")
 public class User extends ParseUser {
 
-    public static final String KEY_FULLNAME = "fullName";
-    public static final String KEY_PROFILEIMAGE = "profileImage";
-    public static final String KEY_HOME = "home";
-    public static final String KEY_BIO = "bio";
-    public static final String USER_KEY_FRIENDS = "friends";
+    public static final String USER_KEY_FULLNAME = "fullName";
+    public static final String USER_KEY_PROFILEIMAGE = "profileImage";
+    public static final String USER_KEY_HOME = "home";
+    public static final String USER_KEY_BIO = "bio";
+    public static final String USER_KEY_CONTACTS = "friends";
 
-    public String getFullName() {
-        return getString(KEY_FULLNAME);
+    public User() {
     }
 
-    public void setFullName(String fullName){
-        put(KEY_FULLNAME, fullName);
+    public String getUserFullName() {
+        return getString(USER_KEY_FULLNAME);
     }
 
-    public ParseFile getProfileImage() {
-        return getParseFile(KEY_PROFILEIMAGE);
+    public void setUserFullName(String fullName){
+        put(USER_KEY_FULLNAME, fullName);
     }
 
-    public void setProfileImage(ParseFile parseFile){
-        put(KEY_PROFILEIMAGE, parseFile);
+    public ParseFile getUserProfileImage() {
+        return getParseFile(USER_KEY_PROFILEIMAGE);
     }
 
-    public ParseGeoPoint getHome() {
-        return getParseGeoPoint(KEY_HOME);
+    public void setUserProfileImage(ParseFile parseFile){
+        put(USER_KEY_PROFILEIMAGE, parseFile);
     }
 
-    public void setHome(ParseGeoPoint parseGeoPoint){
-        put(KEY_HOME, parseGeoPoint);
+    public ParseGeoPoint getUserHome() {
+        return getParseGeoPoint(USER_KEY_HOME);
     }
 
-    public String getBio() {
-        return getString(KEY_BIO);
+    public void setUserHome(ParseGeoPoint parseGeoPoint){
+        put(USER_KEY_HOME, parseGeoPoint);
     }
 
-    public void setBio(String bio){
-        put(KEY_BIO, bio);
+    public String getUserBio() {
+        return getString(USER_KEY_BIO);
     }
 
-    public ParseRelation getFriends(){
-        return getRelation(USER_KEY_FRIENDS);
+    public void setUserBio(String bio){
+        put(USER_KEY_BIO, bio);
     }
 
-    public void setFriends(ParseRelation friends){
-        put(USER_KEY_FRIENDS, friends);
+    public ParseRelation getUserContacts(){
+        return getRelation(USER_KEY_CONTACTS);
+    }
+
+    public void setUserContacts(ParseRelation contacts){
+        put(USER_KEY_CONTACTS, contacts);
     }
 }
