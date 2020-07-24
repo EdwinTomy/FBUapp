@@ -15,6 +15,7 @@ import com.example.virtualresume.databinding.ActivityCreateAchievementBinding;
 import com.example.virtualresume.models.Achievement;
 import com.example.virtualresume.models.User;
 import com.example.virtualresume.utils.CameraApplication;
+import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.SaveCallback;
@@ -30,6 +31,7 @@ public class CreateAchievement extends CameraApplication {
     private ImageView achievementImage;
     private Achievement achievement;
     private Button btnEditAchievement;
+    private Button btnDeleteAchievement;
     private Button btnPicture;
     private EditText achievementTitle;
     private EditText achievementField;
@@ -52,6 +54,7 @@ public class CreateAchievement extends CameraApplication {
         //Binding attributes
         achievementImage = view.findViewById(R.id.ivAchievement);
         btnEditAchievement = view.findViewById(R.id.btnEditAchievement);
+        btnDeleteAchievement = view.findViewById(R.id.btnDeleteAchievement);
         btnPicture = view.findViewById(R.id.btnPicture);
         achievementTitle = view.findViewById(R.id.etTitle);
         achievementField = view.findViewById(R.id.etField);
@@ -104,6 +107,19 @@ public class CreateAchievement extends CameraApplication {
                     return;
                 }
                 editAchievement(titleContent, fieldContent, descriptionContent, organizationContent);
+            }
+        });
+
+        //Delete achievement
+        btnDeleteAchievement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                achievement.deleteInBackground(new DeleteCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        goMainActivity();
+                    }
+                });
             }
         });
     }

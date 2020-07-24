@@ -79,6 +79,19 @@
         android:textStyle="bold" />
 
     <Button
+        android:id="@+id/btnDeleteAchievement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnEditAchievement"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="5dp"
+        android:backgroundTint="#8BC34A"
+        android:text="Delete Achievement"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
+
+    <Button
         android:id="@+id/btnPicture"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
