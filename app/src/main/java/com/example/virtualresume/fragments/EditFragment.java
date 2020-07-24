@@ -42,6 +42,8 @@ import java.util.List;
 public class EditFragment extends ViewFragment {
 
     public static final String TAG = "EditFragment";
+    public static final int EDIT_USER_DETAILS_ACTIVITY_REQUEST_CODE = 30;
+    public static final int EDIT_USER_ACHIEVEMENTS_ACTIVITY_REQUEST_CODE = 20;
 
     private ImageView userProfileImage;
     private TextView userHome;
@@ -78,7 +80,12 @@ public class EditFragment extends ViewFragment {
         queryUserAchievements();
 
         //Binding user details
-        bindUserDetails(view);
+        userProfileImage = view.findViewById(R.id.ivProfileImage);
+        userFullName = view.findViewById(R.id.etFullName);
+        userUsername = view.findViewById(R.id.etUsername);
+        userBio = view.findViewById(R.id.bio);
+        userHome = view.findViewById(R.id.etHome);
+        bindUserDetails();
 
         //Buttons for editing
         btnCreateAchievement = view.findViewById(R.id.btnCreateAchievement);
@@ -87,7 +94,6 @@ public class EditFragment extends ViewFragment {
         btnCreateAchievement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Achievement achievement = new Achievement();
                 goToCreateAchievementActivity();
             }
         });
@@ -95,7 +101,6 @@ public class EditFragment extends ViewFragment {
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Achievement achievement = new Achievement();
                 goToEditUserDetailsActivity(User.getCurrentUser());
             }
         });
@@ -104,7 +109,7 @@ public class EditFragment extends ViewFragment {
     //Go to Create Achievement Screen
     public void goToCreateAchievementActivity() {
         Intent intent = new Intent(getContext(), CreateAchievement.class);
-        getContext().startActivity(intent);
+        startActivityForResult(intent, EDIT_USER_ACHIEVEMENTS_ACTIVITY_REQUEST_CODE);
     }
 
     //Go to Edit User Details Screen
@@ -112,17 +117,19 @@ public class EditFragment extends ViewFragment {
         Intent intent = new Intent(getContext(), EditUserDetailsActivity.class);
         //Serialize the achievement with parser
         intent.putExtra(User.class.getSimpleName(), Parcels.wrap(user));
-        getContext().startActivity(intent);
+        startActivityForResult(intent, EDIT_USER_DETAILS_ACTIVITY_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i(TAG, requestCode + " and " + resultCode);
+        bindUserDetails();
+        queryUserAchievements();
     }
 
     //Posting user details
-    private void bindUserDetails(View view) {
-        userProfileImage = view.findViewById(R.id.ivProfileImage);
-        userFullName = view.findViewById(R.id.etFullName);
-        userUsername = view.findViewById(R.id.etUsername);
-        userBio = view.findViewById(R.id.bio);
-        userHome = view.findViewById(R.id.etHome);
-
+    private void bindUserDetails() {
 
         //Profile image of user
         ParseFile profile = User.getCurrentUser().getParseFile(User.USER_KEY_PROFILEIMAGE);

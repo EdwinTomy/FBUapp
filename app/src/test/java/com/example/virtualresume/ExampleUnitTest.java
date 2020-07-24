@@ -28,34 +28,34 @@ public class ExampleUnitTest {
     @Test
     public void userObject1(){
         User user = new User();
-        user.setFullName("Lopez de Santa Anna");
+        user.setUserFullName("Lopez de Santa Anna");
 
-        assertEquals("Lopez de Santa Anna", user.getFullName());
+        assertEquals("Lopez de Santa Anna", user.getUserFullName());
     }
 
     @Test
     public void userObject2(){
         User user = new User();
-        user.setBio("Antonio");
+        user.setUserBio("Antonio");
 
-        assertEquals("Antonio", user.getBio());
+        assertEquals("Antonio", user.getUserBio());
     }
 
     @Test
     public void achievementObject1(){
         Achievement achievement = new Achievement();
         String description = "I served in the Spanish army and rose to the rank of captain. Fought on both sides of nearly every issue of the day. Backed Vicente Guerrero for president, only to help depose him later.";
-        achievement.setDescription(description);
+        achievement.setAchievementDescription(description);
 
-        assertEquals(description, achievement.getDescription());
+        assertEquals(description, achievement.getAchievementDescription());
     }
 
     @Test
     public void achievementObject2(){
         Achievement achievement = new Achievement();
         String field = "war";
-        achievement.setField(field);
+        achievement.setAchievementField(field);
 
-        assertEquals(field, achievement.getField());
+        assertEquals(field, achievement.getAchievementField());
     }
 }

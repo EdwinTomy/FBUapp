@@ -13,8 +13,10 @@ import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
 import com.example.virtualresume.models.User;
 import com.example.virtualresume.utils.CameraApplication;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.io.File;
 
@@ -93,14 +95,11 @@ public class EditUserDetailsActivity extends CameraApplication {
         if(photoFile != null)
             user.put(User.USER_KEY_PROFILEIMAGE, new ParseFile(photoFile));
         //Invoke signUpInBackground
-        user.saveInBackground();
-        goMainActivity();
-    }
-
-    //Navigate to MainActivity
-    private void goMainActivity() {
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
-        finish();
+        user.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                finish();
+            }
+        });
     }
 }

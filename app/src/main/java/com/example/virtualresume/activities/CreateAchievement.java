@@ -1,5 +1,6 @@
 package com.example.virtualresume.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,7 +15,9 @@ import com.example.virtualresume.databinding.ActivityCreateAchievementBinding;
 import com.example.virtualresume.models.Achievement;
 import com.example.virtualresume.models.User;
 import com.example.virtualresume.utils.CameraApplication;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
@@ -131,7 +134,12 @@ public class CreateAchievement extends CameraApplication {
         achievement.setAchievementOrganization(organizationContent);
         if(photoFile != null)
             achievement.setAchievementImage(new ParseFile(photoFile));
-        achievement.saveInBackground();
+        achievement.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                goMainActivity();
+            }
+        });
     }
 
     //Editing existing achievement
@@ -142,6 +150,18 @@ public class CreateAchievement extends CameraApplication {
         achievement.setAchievementOrganization(organizationContent);
         if(photoFile != null)
             achievement.setAchievementImage(new ParseFile(photoFile));
-        achievement.saveInBackground();
+        achievement.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                goMainActivity();
+            }
+        });
+    }
+
+    //Navigate to MainActivity
+    private void goMainActivity() {
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        finish();
     }
 }
