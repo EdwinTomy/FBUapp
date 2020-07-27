@@ -134,8 +134,6 @@ public class CreateAchievement extends CameraApplication {
         ParseFile picture = achievement.getAchievementImage();
         if (picture != null) {
             Glide.with(this).load(achievement.getAchievementImage().getUrl()).into(achievementImage);
-        }else{
-            achievementImage.setVisibility(View.GONE);
         }
     }
 

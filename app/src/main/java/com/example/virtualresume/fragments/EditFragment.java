@@ -122,10 +122,11 @@ public class EditFragment extends ViewFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         Log.i(TAG, requestCode + " and " + resultCode);
         bindUserDetails();
         queryUserAchievements();
+        userAchievementsAdapter.notifyDataSetChanged();
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     //Posting user details

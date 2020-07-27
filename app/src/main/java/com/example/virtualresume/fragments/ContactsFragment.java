@@ -14,13 +14,11 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.virtualresume.R;
-import com.example.virtualresume.adapters.AchievementsAdapter;
 import com.example.virtualresume.adapters.UsersAdapter;
 import com.example.virtualresume.models.User;
 import com.parse.FindCallback;
@@ -49,6 +47,7 @@ public class ContactsFragment extends Fragment {
     private EditText searchText;
     protected Button btnAddContact;
     protected Button btnSearchContact;
+    protected boolean isSearching = true;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
     public ContactsFragment() {}
@@ -80,20 +79,20 @@ public class ContactsFragment extends Fragment {
         btnAddContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isSearching = false;
                 queryAddableUsers(null);
             }
         });
 
         //Searching Contact
-        btnSearchContact = view.findViewById(R.id.btnAddContact);
+        btnSearchContact = view.findViewById(R.id.btnSearchContact);
         btnSearchContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                queryUserContacts( null);
+                isSearching = true;
+                queryUserContacts(null);
             }
         });
-
-        queryUserContacts(null);
     }
 
     //Searching for a contact
@@ -111,7 +110,10 @@ public class ContactsFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                queryUserContacts(editable.toString());
+                if(isSearching)
+                    queryUserContacts(editable.toString());
+                else
+                    queryAddableUsers(editable.toString());
             }
         });
     }
@@ -129,7 +131,10 @@ public class ContactsFragment extends Fragment {
             @Override
             public void onRefresh() {
                 Log.i(TAG, "Loading in");
-                queryUserContacts(null);
+                if(isSearching)
+                    queryUserContacts(null);
+                else
+                    queryAddableUsers(null);
             }
         });
     }
@@ -138,6 +143,7 @@ public class ContactsFragment extends Fragment {
     protected void settingRecyclerView(@NonNull View view){
         rvUserContacts = view.findViewById(R.id.rvPosts);
         allUserContacts = new ArrayList<>();
+        allAddableContacts = new ArrayList<>();
         userContactsAdapter = new UsersAdapter(getContext(), allUserContacts);
         rvUserContacts.setAdapter(userContactsAdapter);
         rvUserContacts.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -176,20 +182,46 @@ public class ContactsFragment extends Fragment {
 
     //Retrieving ParseUsers
     protected void queryAddableUsers(String searchText) {
-        //Object to be queried (Post)
-        Log.i(TAG, "Inside query");
+        //Creating and constraining query
+        Log.i(TAG, "inside addable");
+        ParseQuery<ParseUser> query =  User.getQuery();
+        query.addAscendingOrder(User.USER_KEY_FULLNAME);
 
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereEqualTo("username", searchText); // find adults
+
+        //When searching
+        if(searchText != null) {
+            query.whereContains("username", searchText);
+        }
+
         query.findInBackground(new FindCallback<ParseUser>() {
-            public void done(List<ParseUser> objects, ParseException e) {
-                if (e == null) {
-                    // The query was successful.
-                } else {
-                    // Something went wrong.
+            @Override
+            public void done(List<ParseUser> users, ParseException e) {
+                if(e != null){
+                    Log.e(TAG, "Issue with getting users", e);
+                    return;
                 }
+                for(ParseObject user: users){
+                    Log.i(TAG, "Contact: " + user.getString(User.USER_KEY_FULLNAME));
+                }
+                //Set the adapter with new list of contacts
+                allAddableContacts.clear();
+                allAddableContacts.addAll(users);
+                for(ParseObject user: allAddableContacts){
+                    Log.i(TAG, "after add all contact: " + user.getString(User.USER_KEY_FULLNAME));
+                }
+                for(ParseObject user: allUserContacts){
+                    Log.i(TAG, "ontact: " + user.getString(User.USER_KEY_FULLNAME));
+                }
+                allAddableContacts.removeAll(allUserContacts);
+                for(ParseObject user: allAddableContacts){
+                    Log.i(TAG, "after removing contact: " + user.getString(User.USER_KEY_FULLNAME));
+                }
+                allUserContacts.clear();
+                allUserContacts.addAll(allAddableContacts);
+                userContactsAdapter.notifyDataSetChanged();
             }
         });
+
         swipeContainer.setRefreshing(false);
     }
 }
