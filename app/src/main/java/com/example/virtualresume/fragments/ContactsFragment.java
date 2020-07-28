@@ -24,16 +24,19 @@ import com.example.virtualresume.R;
 import com.example.virtualresume.adapters.AddableUsersAdapter;
 import com.example.virtualresume.adapters.UsersAdapter;
 import com.example.virtualresume.models.User;
+import com.example.virtualresume.utils.DistanceCalculator;
 import com.example.virtualresume.utils.ItemSwiper;
 import com.example.virtualresume.utils.MyButtonClickListener;
 import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
+import java.net.UnknownServiceException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +59,8 @@ public class ContactsFragment extends Fragment {
     protected Button btnAddContact;
     protected Button btnSearchContact;
     protected boolean isSearching = true;
+    protected boolean isSortedAlphabetically = true;
+    final private double radiusEarth = 6371.8;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
     public ContactsFragment() {}
@@ -213,6 +218,7 @@ public class ContactsFragment extends Fragment {
                 //Set the adapter with new list of contacts
                 allUserContacts.clear();
                 allUserContacts.addAll(users);
+                updateDistances(allUserContacts);
                 userContactsAdapter.notifyDataSetChanged();
             }
         });
@@ -231,7 +237,7 @@ public class ContactsFragment extends Fragment {
         //When searching
         if(searchText != null) {
             query.whereContains("username", searchText);
-        }else{
+        } else {
             allUserContacts.clear();
             allUserContacts.addAll(allAddableContacts);
             userContactsAdapter.notifyDataSetChanged();
@@ -252,22 +258,55 @@ public class ContactsFragment extends Fragment {
                 //Set the adapter with new list of contacts
                 allAddableContacts.clear();
                 allAddableContacts.addAll(users);
-                for(ParseObject user: allAddableContacts){
-                    Log.i(TAG, "after add all contact: " + user.getString(User.USER_KEY_FULLNAME));
-                }
-                for(ParseObject user: allUserContacts){
-                    Log.i(TAG, "ontact: " + user.getString(User.USER_KEY_FULLNAME));
-                }
                 allAddableContacts.removeAll(allUserContacts);
-                for(ParseObject user: allAddableContacts){
-                    Log.i(TAG, "after removing contact: " + user.getString(User.USER_KEY_FULLNAME));
-                }
                 allUserContacts.clear();
                 allUserContacts.addAll(allAddableContacts);
+                updateDistances(allUserContacts);
                 userContactsAdapter.notifyDataSetChanged();
             }
         });
         swipeContainer.setRefreshing(false);
+    }
+
+    //Complex algorithm below
+
+    //Assign the distances to the users from current user.
+    protected void updateDistances(List<ParseObject> users){
+        for(ParseObject user: users){
+            ParseGeoPoint userHome = User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME);
+            ParseGeoPoint contactHome = user.getParseGeoPoint(User.USER_KEY_HOME);
+            double distance = calculateDistanceKilometer(userHome, contactHome);
+            user.put(User.USER_KEY_DISTANCE_FROM, distance);
+            Log.i(TAG, user.getString(User.USER_KEY_FULLNAME) + ": " + distance);
+            user.saveInBackground();
+        }
+    }
+
+    //Calculate distances between two ParseGeoPoints
+    protected double calculateDistanceKilometer(ParseGeoPoint userHome, ParseGeoPoint contactHome){
+
+        double userHomeLatitudeRad = Math.toRadians(userHome.getLatitude());
+        Log.i("Distance", String.valueOf(userHomeLatitudeRad));
+        double userHomeLongitudeRad = Math.toRadians(userHome.getLongitude());
+        Log.i("Distance", String.valueOf(userHomeLongitudeRad));
+        double contactHomeLatitudeRad = Math.toRadians(contactHome.getLatitude());
+        Log.i("Distance", String.valueOf(contactHomeLatitudeRad));
+        double contactHomeLongitudeRad = Math.toRadians(contactHome.getLongitude());
+        Log.i("Distance", String.valueOf(contactHomeLongitudeRad));
+
+        double latitudeDistance = contactHomeLatitudeRad - userHomeLatitudeRad;
+        double longitudeDistance = contactHomeLongitudeRad - userHomeLongitudeRad;
+
+        //Haversine formula
+        double distance = Math.pow(Math.sin(latitudeDistance / 2), 2)
+                + Math.cos(userHomeLatitudeRad)
+                * Math.cos(contactHomeLatitudeRad)
+                * Math.pow(Math.sin(longitudeDistance / 2), 2);
+        distance = 2 * Math.asin(Math.sqrt(distance)) * radiusEarth;
+
+        Log.i("Distance", String.valueOf(distance));
+
+        return distance;
     }
 }
 
