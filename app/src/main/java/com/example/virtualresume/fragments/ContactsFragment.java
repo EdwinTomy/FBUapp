@@ -81,19 +81,16 @@ public class ContactsFragment extends Fragment {
         itemSwiper = new ItemSwiper(getContext(), rvUserContacts, 200) {
             @Override
             public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<ItemSwiper.MyButton> buffer) {
-                buffer.add(new MyButton(getContext(), "Add", 30, 0, Color.parseColor("#008000"), new MyButtonClickListener() {
-                    @Override
-                    public void onClick(int position) {
-                        Toast.makeText(getContext(), "Add", Toast.LENGTH_SHORT).show();
-                        addContact(position);
-                    }
-                }));
-                buffer.add(new MyButton(getContext(), "Delete", 30, 0, Color.parseColor("#FF4C30"), new MyButtonClickListener() {
-                    @Override
-                    public void onClick(int position) {
-                        Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
-                    }
-                }));
+
+                if(isSearching){
+                    buffer.add(new MyButton(getContext(), "Delete", 30, 0, Color.parseColor("#FF4C30"), new MyButtonClickListener() {
+                        @Override
+                        public void onClick(int position) {
+                            Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
+                            deleteContact(position);
+                        }
+                    }));
+                }
             }
         };
 
@@ -129,7 +126,22 @@ public class ContactsFragment extends Fragment {
             ParseRelation<ParseObject> relation = User.getCurrentUser().getRelation(User.USER_KEY_CONTACTS);
             relation.add(user);
             try {
-                user.save();
+                User.getCurrentUser().save();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //Delete existing contact
+    private void deleteContact(int position){
+        if(position != RecyclerView.NO_POSITION){
+            ParseObject user = allUserContacts.get(position);
+            Log.i(TAG, user.getString(User.USER_KEY_USERNAME));
+            ParseRelation<ParseObject> relation = User.getCurrentUser().getRelation(User.USER_KEY_CONTACTS);
+            relation.remove(user);
+            try {
+                User.getCurrentUser().save();
             } catch (ParseException e) {
                 e.printStackTrace();
             }
