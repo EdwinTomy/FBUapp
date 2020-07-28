@@ -26,9 +26,11 @@ import com.example.virtualresume.models.User;
 import com.example.virtualresume.utils.ItemSwiper;
 import com.example.virtualresume.utils.MyButtonClickListener;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -76,25 +78,24 @@ public class ContactsFragment extends Fragment {
         settingRecyclerView(view);
         queryUserContacts(null);
 
-        //Swipe each item
         itemSwiper = new ItemSwiper(getContext(), rvUserContacts, 200) {
             @Override
             public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<ItemSwiper.MyButton> buffer) {
-                buffer.add(new MyButton(getContext(), "Add", 30, 0, Color.parseColor("#FF4C30"), new MyButtonClickListener() {
+                buffer.add(new MyButton(getContext(), "Add", 30, 0, Color.parseColor("#008000"), new MyButtonClickListener() {
                     @Override
-                    public void onClick(int pos) {
+                    public void onClick(int position) {
                         Toast.makeText(getContext(), "Add", Toast.LENGTH_SHORT).show();
+                        addContact(position);
                     }
                 }));
-                buffer.add(new MyButton(getContext(), "Delete", 30, 0, Color.parseColor("#FF3C30"), new MyButtonClickListener() {
+                buffer.add(new MyButton(getContext(), "Delete", 30, 0, Color.parseColor("#FF4C30"), new MyButtonClickListener() {
                     @Override
-                    public void onClick(int pos) {
+                    public void onClick(int position) {
                         Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
                     }
                 }));
             }
         };
-
 
         //Searching for a contact
         searchContact(view);
@@ -118,6 +119,21 @@ public class ContactsFragment extends Fragment {
                 queryUserContacts(null);
             }
         });
+    }
+
+    //Add new contact
+    private void addContact(int position){
+        if(position != RecyclerView.NO_POSITION){
+            ParseObject user = allAddableContacts.get(position);
+            Log.i(TAG, user.getString(User.USER_KEY_USERNAME));
+            ParseRelation<ParseObject> relation = User.getCurrentUser().getRelation(User.USER_KEY_CONTACTS);
+            relation.add(user);
+            try {
+                user.save();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     //Searching for a contact
