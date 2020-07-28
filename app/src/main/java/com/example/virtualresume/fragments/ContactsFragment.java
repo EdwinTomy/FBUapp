@@ -1,5 +1,6 @@
 package com.example.virtualresume.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,10 +18,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.virtualresume.R;
 import com.example.virtualresume.adapters.UsersAdapter;
 import com.example.virtualresume.models.User;
+import com.example.virtualresume.utils.ItemSwiper;
+import com.example.virtualresume.utils.MyButtonClickListener;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -41,9 +45,10 @@ public class ContactsFragment extends Fragment {
     protected UsersAdapter adapterAddableContacts;
     protected List<ParseObject> allUserContacts;
     protected List<ParseObject> allAddableContacts;
-
     private RecyclerView rvUserContacts;
     protected SwipeRefreshLayout swipeContainer;
+    protected ItemSwiper itemSwiper;
+
     private EditText searchText;
     protected Button btnAddContact;
     protected Button btnSearchContact;
@@ -70,6 +75,26 @@ public class ContactsFragment extends Fragment {
         //Filling the RecyclerView with the query of user Achievements
         settingRecyclerView(view);
         queryUserContacts(null);
+
+        //Swipe each item
+        itemSwiper = new ItemSwiper(getContext(), rvUserContacts, 200) {
+            @Override
+            public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<ItemSwiper.MyButton> buffer) {
+                buffer.add(new MyButton(getContext(), "Add", 30, 0, Color.parseColor("#FF4C30"), new MyButtonClickListener() {
+                    @Override
+                    public void onClick(int pos) {
+                        Toast.makeText(getContext(), "Add", Toast.LENGTH_SHORT).show();
+                    }
+                }));
+                buffer.add(new MyButton(getContext(), "Delete", 30, 0, Color.parseColor("#FF3C30"), new MyButtonClickListener() {
+                    @Override
+                    public void onClick(int pos) {
+                        Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
+                    }
+                }));
+            }
+        };
+
 
         //Searching for a contact
         searchContact(view);
