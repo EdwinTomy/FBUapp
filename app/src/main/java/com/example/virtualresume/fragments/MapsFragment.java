@@ -61,12 +61,14 @@ public class MapsFragment extends Fragment {
     //Marking user location
     private void markUserLocation(GoogleMap googleMap) {
         ParseUser user = User.getCurrentUser();
-        double latitude = user.getParseGeoPoint(User.USER_KEY_HOME).getLatitude();
-        double longitude = user.getParseGeoPoint(User.USER_KEY_HOME).getLongitude();
-        LatLng home = new LatLng(latitude, longitude);
-        googleMap.addMarker(new MarkerOptions().position(home).title("YOU").
-                icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(home));
+        if(User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME) != null) {
+            double latitude = user.getParseGeoPoint(User.USER_KEY_HOME).getLatitude();
+            double longitude = user.getParseGeoPoint(User.USER_KEY_HOME).getLongitude();
+            LatLng home = new LatLng(latitude, longitude);
+            googleMap.addMarker(new MarkerOptions().position(home).title("YOU").
+                    icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(home));
+        }
     }
 
     //Marking contacts location

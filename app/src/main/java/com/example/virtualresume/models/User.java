@@ -18,6 +18,7 @@ public class User extends ParseUser {
     public static final String USER_KEY_HOME = "home";
     public static final String USER_KEY_BIO = "bio";
     public static final String USER_KEY_CONTACTS = "friends";
+    public static final String USER_KEY_DISTANCE_FROM = "distanceFromCurrent";
 
     public User() {
     }
@@ -68,5 +69,13 @@ public class User extends ParseUser {
 
     public void setUserContacts(ParseRelation contacts){
         put(USER_KEY_CONTACTS, contacts);
+    }
+
+    public Double getUserDistanceFrom() {
+        return getDouble(USER_KEY_DISTANCE_FROM);
+    }
+
+    public void setUserDistanceFrom(Double distanceFrom){
+        put(USER_KEY_DISTANCE_FROM, distanceFrom);
     }
 }
