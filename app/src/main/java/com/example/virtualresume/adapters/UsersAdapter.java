@@ -86,12 +86,12 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             int position = getAdapterPosition();
             if(position != RecyclerView.NO_POSITION){
                 ParseObject user = users.get(position);
-                goToContactProfile(user);
+                onClickAction(user);
             }
         }
     }
 
-    public void goToContactProfile(ParseObject user) {
+    public void onClickAction(ParseObject user) {
         Intent intent = new Intent(context, ContactProfileActivity.class);
         //Serialize the movie with parser
         intent.putExtra(ParseObject.class.getSimpleName(), Parcels.wrap(user));//show activity

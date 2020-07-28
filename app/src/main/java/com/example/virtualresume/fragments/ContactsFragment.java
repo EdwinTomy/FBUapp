@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.virtualresume.R;
+import com.example.virtualresume.adapters.AddableUsersAdapter;
 import com.example.virtualresume.adapters.UsersAdapter;
 import com.example.virtualresume.models.User;
 import com.example.virtualresume.utils.ItemSwiper;
@@ -44,7 +45,7 @@ public class ContactsFragment extends Fragment {
     final private static String TAG = "ContactsFragment";
 
     protected UsersAdapter userContactsAdapter;
-    protected UsersAdapter adapterAddableContacts;
+    protected AddableUsersAdapter addableContactsAdapter;
     protected List<ParseObject> allUserContacts;
     protected List<ParseObject> allAddableContacts;
     private RecyclerView rvUserContacts;
@@ -81,16 +82,14 @@ public class ContactsFragment extends Fragment {
         itemSwiper = new ItemSwiper(getContext(), rvUserContacts, 200) {
             @Override
             public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<ItemSwiper.MyButton> buffer) {
+                buffer.add(new MyButton(getContext(), "Delete", 30, 0, Color.parseColor("#FF4C30"), new MyButtonClickListener() {
+                    @Override
+                    public void onClick(int position) {
+                        Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
+                        deleteAddContact(position);
+                    }
+                }));
 
-                if(isSearching){
-                    buffer.add(new MyButton(getContext(), "Delete", 30, 0, Color.parseColor("#FF4C30"), new MyButtonClickListener() {
-                        @Override
-                        public void onClick(int position) {
-                            Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
-                            deleteContact(position);
-                        }
-                    }));
-                }
             }
         };
 
@@ -118,28 +117,16 @@ public class ContactsFragment extends Fragment {
         });
     }
 
-    //Add new contact
-    private void addContact(int position){
-        if(position != RecyclerView.NO_POSITION){
-            ParseObject user = allAddableContacts.get(position);
-            Log.i(TAG, user.getString(User.USER_KEY_USERNAME));
-            ParseRelation<ParseObject> relation = User.getCurrentUser().getRelation(User.USER_KEY_CONTACTS);
-            relation.add(user);
-            try {
-                User.getCurrentUser().save();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    //Delete existing contact
-    private void deleteContact(int position){
+    //Delete or add contact
+    private void deleteAddContact(int position){
         if(position != RecyclerView.NO_POSITION){
             ParseObject user = allUserContacts.get(position);
             Log.i(TAG, user.getString(User.USER_KEY_USERNAME));
             ParseRelation<ParseObject> relation = User.getCurrentUser().getRelation(User.USER_KEY_CONTACTS);
-            relation.remove(user);
+            if(isSearching)
+                relation.remove(user);
+            else
+                relation.add(user);
             try {
                 User.getCurrentUser().save();
             } catch (ParseException e) {
@@ -244,6 +231,12 @@ public class ContactsFragment extends Fragment {
         //When searching
         if(searchText != null) {
             query.whereContains("username", searchText);
+        }else{
+            allUserContacts.clear();
+            allUserContacts.addAll(allAddableContacts);
+            userContactsAdapter.notifyDataSetChanged();
+            swipeContainer.setRefreshing(false);
+            return;
         }
 
         query.findInBackground(new FindCallback<ParseUser>() {
@@ -274,7 +267,6 @@ public class ContactsFragment extends Fragment {
                 userContactsAdapter.notifyDataSetChanged();
             }
         });
-
         swipeContainer.setRefreshing(false);
     }
 }
