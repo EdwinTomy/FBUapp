@@ -17,6 +17,7 @@ import com.example.virtualresume.R;
 import com.example.virtualresume.activities.ContactProfileActivity;
 import com.example.virtualresume.models.User;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
 import org.parceler.Parcels;
@@ -28,6 +29,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     public static final String TAG = "UsersAdapter";
     private Context context;
     private List<ParseObject> users;
+    final private double EARTH_RADIUS = 6371.8;
 
     public UsersAdapter(Context context, List<ParseObject> users) {
         this.context = context;
@@ -59,12 +61,14 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         private ImageView userProfileImage;
         private TextView userFullName;
         private TextView userUsername;
+        private TextView userDistanceFrom;
 
         public ViewHolder(@NonNull View itemView) {
             super((itemView));
             userProfileImage = itemView.findViewById(R.id.ivProfileImage);
             userFullName = itemView.findViewById(R.id.etFullName);
             userUsername = itemView.findViewById(R.id.etUsername);
+            userDistanceFrom = itemView.findViewById(R.id.etDistanceFrom);
             itemView.setOnClickListener(this);
         }
 
@@ -77,7 +81,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             }
             userFullName.setText(user.getString(User.USER_KEY_FULLNAME));
             userUsername.setText(user.getString(User.USER_KEY_USERNAME));
-
+            ParseGeoPoint userHome = User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME);
+            ParseGeoPoint contactHome = user.getParseGeoPoint(User.USER_KEY_HOME);
+            double distance = calculateDistanceKilometer(userHome, contactHome);
+            userDistanceFrom.setText(distanceToString(distance));
         }
 
         //ProfileView when contact clicked
@@ -108,5 +115,41 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     public void addAll(List<User> list) {
         users.addAll(list);
         notifyDataSetChanged();
+    }
+
+    //Calculate distances between two ParseGeoPoints
+    protected double calculateDistanceKilometer(ParseGeoPoint userHome, ParseGeoPoint contactHome){
+
+        double userHomeLatitudeRad = Math.toRadians(userHome.getLatitude());
+        Log.i("Distance", String.valueOf(userHomeLatitudeRad));
+        double userHomeLongitudeRad = Math.toRadians(userHome.getLongitude());
+        Log.i("Distance", String.valueOf(userHomeLongitudeRad));
+        double contactHomeLatitudeRad = Math.toRadians(contactHome.getLatitude());
+        Log.i("Distance", String.valueOf(contactHomeLatitudeRad));
+        double contactHomeLongitudeRad = Math.toRadians(contactHome.getLongitude());
+        Log.i("Distance", String.valueOf(contactHomeLongitudeRad));
+
+        double latitudeDistance = contactHomeLatitudeRad - userHomeLatitudeRad;
+        double longitudeDistance = contactHomeLongitudeRad - userHomeLongitudeRad;
+
+        //Haversine formula
+        double distance = Math.pow(Math.sin(latitudeDistance / 2), 2)
+                + Math.cos(userHomeLatitudeRad)
+                * Math.cos(contactHomeLatitudeRad)
+                * Math.pow(Math.sin(longitudeDistance / 2), 2);
+        distance = 2 * Math.asin(Math.sqrt(distance)) * EARTH_RADIUS;
+
+        Log.i("Distance", String.valueOf(distance));
+
+        return distance;
+    }
+
+    //Convert double distance into whole kilometers
+    protected String distanceToString(Double distance){
+
+        int distanceToInt = (int) Math.round(distance);
+        if(distanceToInt == 0)
+            return "Current location";
+        return distanceToInt + " km.";
     }
 }

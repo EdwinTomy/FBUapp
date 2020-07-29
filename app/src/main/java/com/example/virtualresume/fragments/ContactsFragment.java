@@ -24,11 +24,9 @@ import com.example.virtualresume.R;
 import com.example.virtualresume.adapters.AddableUsersAdapter;
 import com.example.virtualresume.adapters.UsersAdapter;
 import com.example.virtualresume.models.User;
-import com.example.virtualresume.utils.DistanceCalculator;
 import com.example.virtualresume.utils.ItemSwiper;
 import com.example.virtualresume.utils.MyButtonClickListener;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
@@ -36,7 +34,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
-import java.net.UnknownServiceException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +57,7 @@ public class ContactsFragment extends Fragment {
     protected Button btnSearchContact;
     protected boolean isSearching = true;
     protected boolean isSortedAlphabetically = true;
-    final private double radiusEarth = 6371.8;
+    final private double EARTH_RADIUS = 6371.8;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
     public ContactsFragment() {}
@@ -302,7 +299,7 @@ public class ContactsFragment extends Fragment {
                 + Math.cos(userHomeLatitudeRad)
                 * Math.cos(contactHomeLatitudeRad)
                 * Math.pow(Math.sin(longitudeDistance / 2), 2);
-        distance = 2 * Math.asin(Math.sqrt(distance)) * radiusEarth;
+        distance = 2 * Math.asin(Math.sqrt(distance)) * EARTH_RADIUS;
 
         Log.i("Distance", String.valueOf(distance));
 

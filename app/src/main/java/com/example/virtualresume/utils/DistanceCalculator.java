@@ -2,7 +2,7 @@ package com.example.virtualresume.utils;
 
 import com.parse.ParseGeoPoint;
 
-public abstract class DistanceCalculator {
+public final class DistanceCalculator {
 
     protected ParseGeoPoint userHome;
     protected ParseGeoPoint contactHome;
