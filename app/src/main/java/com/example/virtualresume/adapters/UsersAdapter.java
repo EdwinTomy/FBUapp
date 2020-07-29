@@ -117,6 +117,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
+    //Below is part of the complex algorithm
+
     //Calculate distances between two ParseGeoPoints
     protected double calculateDistanceKilometer(ParseGeoPoint userHome, ParseGeoPoint contactHome){
 

@@ -7,20 +7,40 @@
     tools:context=".fragments.ContactsFragment">
 
     <EditText
-        android:id="@+id/searchText"
+        android:id="@+id/searchLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchName"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:hint="within this distance" />
+
+    <EditText
+        android:id="@+id/searchField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchLocation"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:hint="with this fields" />
+
+    <EditText
+        android:id="@+id/searchName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
-        android:hint="search username" />
+        android:hint="search users" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/btnSearchContact"
+        android:layout_below="@id/btnSortAlphabetically"
         android:layout_alignParentStart="true"
         android:layout_marginStart="1dp"
         android:layout_marginTop="5dp">
@@ -44,7 +64,7 @@
         android:layout_marginEnd="5dp"
         android:backgroundTint="#2196F3"
         android:includeFontPadding="false"
-        android:text="Add contact"
+        android:text="Add User"
         android:textColor="#FFFFFF"
         android:textStyle="bold" />
 
@@ -52,13 +72,39 @@
         android:id="@+id/btnSearchContact"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/searchText"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_below="@+id/searchField"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="154dp"
         android:backgroundTint="#8BC34A"
         android:includeFontPadding="false"
         android:text="Search contact"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnSortAlphabetically"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/btnSortProximity"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="138dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="5dp"
+        android:backgroundTint="#2196F3"
+        android:includeFontPadding="false"
+        android:text="Sort by distanec"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnSortProximity"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnSearchContact"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="#8BC34A"
+        android:includeFontPadding="false"
+        android:text="Sort by Names"
         android:textColor="#FFFFFF"
         android:textStyle="bold" />
 

@@ -139,7 +139,7 @@ public class ContactsFragment extends Fragment {
 
     //Searching for a contact
     private void searchContact(View view) {
-        searchText = view.findViewById(R.id.searchText);
+        searchText = view.findViewById(R.id.searchName);
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -195,7 +195,8 @@ public class ContactsFragment extends Fragment {
     protected void queryUserContacts(String searchText) {
         //Creating and constraining query
         ParseQuery<ParseObject> query = User.getCurrentUser().getRelation(User.USER_KEY_CONTACTS).getQuery();
-        query.addAscendingOrder(User.USER_KEY_FULLNAME);
+        //query.addAscendingOrder(User.USER_KEY_FULLNAME);
+        query.whereNear(User.USER_KEY_HOME, User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME));
 
         //When searching
         if(searchText != null) {

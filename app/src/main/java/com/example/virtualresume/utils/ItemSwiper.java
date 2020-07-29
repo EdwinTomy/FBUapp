@@ -113,6 +113,7 @@ public abstract class ItemSwiper extends SimpleCallback {
         }
     }
 
+    //Create button to be tapped after swiping
     protected class MyButton {
         private String text;
         private int imageResId, textSize, color, position;
@@ -139,6 +140,7 @@ public abstract class ItemSwiper extends SimpleCallback {
             return false;
         }
 
+        // Drawing the button layout
         public void onDraw(Canvas canvas, RectF rectF, int position){
             Paint paint = new Paint();
             paint.setColor(color);
@@ -182,6 +184,7 @@ public abstract class ItemSwiper extends SimpleCallback {
         return false;
     }
 
+    //When item in recycler view is swiped
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         int position = viewHolder.getAdapterPosition();
@@ -197,6 +200,7 @@ public abstract class ItemSwiper extends SimpleCallback {
         recoverSwipedItem();
     }
 
+    //Speeds of swiping
     public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder) {
         return swipeThreshold;
     }
