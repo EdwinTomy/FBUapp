@@ -52,11 +52,18 @@ public class ContactsFragment extends Fragment {
     protected SwipeRefreshLayout swipeContainer;
     protected ItemSwiper itemSwiper;
 
-    private EditText searchText;
+    //Sorting and search filtering elements
+    private EditText searchByName;
+    private EditText searchByProximity;
+    private EditText searchByField;
     protected Button btnAddContact;
     protected Button btnSearchContact;
+    protected Button btnSortAlphabetically;
+    protected Button btnSortProximity;
     protected boolean isSearching = true;
     protected boolean isSortedAlphabetically = true;
+    protected String searchConstraint;
+
     final private double EARTH_RADIUS = 6371.8;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
@@ -79,7 +86,7 @@ public class ContactsFragment extends Fragment {
 
         //Filling the RecyclerView with the query of user Achievements
         settingRecyclerView(view);
-        queryUserContacts(null);
+        queryUserContacts();
 
         itemSwiper = new ItemSwiper(getContext(), rvUserContacts, 200) {
             @Override
@@ -98,13 +105,13 @@ public class ContactsFragment extends Fragment {
         //Searching for a contact
         searchContact(view);
 
-        //Adding Contact
+        //Adding contact
         btnAddContact = view.findViewById(R.id.btnAddContact);
         btnAddContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 isSearching = false;
-                queryAddableUsers(null);
+                queryAddableUsers();
             }
         });
 
@@ -114,7 +121,33 @@ public class ContactsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 isSearching = true;
-                queryUserContacts(null);
+                queryUserContacts();
+            }
+        });
+
+        //Sorting Alphabetically
+        btnSortAlphabetically = view.findViewById(R.id.btnSortAlphabetically);
+        btnSortAlphabetically.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isSortedAlphabetically = true;
+                if(isSearching)
+                    queryUserContacts();
+                else
+                    queryAddableUsers();
+            }
+        });
+
+        //Sorting by proximity
+        btnSortProximity = view.findViewById(R.id.btnSortProximity);
+        btnSortProximity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isSortedAlphabetically = false;
+                if(isSearching)
+                    queryUserContacts();
+                else
+                    queryAddableUsers();
             }
         });
     }
@@ -139,8 +172,8 @@ public class ContactsFragment extends Fragment {
 
     //Searching for a contact
     private void searchContact(View view) {
-        searchText = view.findViewById(R.id.searchName);
-        searchText.addTextChangedListener(new TextWatcher() {
+        searchByName = view.findViewById(R.id.searchName);
+        searchByName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
@@ -152,10 +185,11 @@ public class ContactsFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                searchConstraint = editable.toString();
                 if(isSearching)
-                    queryUserContacts(editable.toString());
+                    queryUserContacts();
                 else
-                    queryAddableUsers(editable.toString());
+                    queryAddableUsers();
             }
         });
     }
@@ -174,9 +208,9 @@ public class ContactsFragment extends Fragment {
             public void onRefresh() {
                 Log.i(TAG, "Loading in");
                 if(isSearching)
-                    queryUserContacts(null);
+                    queryUserContacts();
                 else
-                    queryAddableUsers(null);
+                    queryAddableUsers();
             }
         });
     }
@@ -192,15 +226,15 @@ public class ContactsFragment extends Fragment {
     }
 
     //Retrieving contacts of current user
-    protected void queryUserContacts(String searchText) {
+    protected void queryUserContacts() {
         //Creating and constraining query
         ParseQuery<ParseObject> query = User.getCurrentUser().getRelation(User.USER_KEY_CONTACTS).getQuery();
-        //query.addAscendingOrder(User.USER_KEY_FULLNAME);
-        query.whereNear(User.USER_KEY_HOME, User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME));
+        filterQueryObject(query);
+
 
         //When searching
-        if(searchText != null) {
-            query.whereContains("username", searchText);
+        if(searchConstraint != null) {
+            query.whereContains("username", searchConstraint);
         }
 
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -216,7 +250,6 @@ public class ContactsFragment extends Fragment {
                 //Set the adapter with new list of contacts
                 allUserContacts.clear();
                 allUserContacts.addAll(users);
-                updateDistances(allUserContacts);
                 userContactsAdapter.notifyDataSetChanged();
             }
         });
@@ -225,22 +258,15 @@ public class ContactsFragment extends Fragment {
 
 
     //Retrieving ParseUsers
-    protected void queryAddableUsers(String searchText) {
+    protected void queryAddableUsers() {
         //Creating and constraining query
         Log.i(TAG, "inside addable");
         ParseQuery<ParseUser> query =  User.getQuery();
-        query.addAscendingOrder(User.USER_KEY_FULLNAME);
-
+        filterQueryUser(query);
 
         //When searching
-        if(searchText != null) {
-            query.whereContains("username", searchText);
-        } else {
-            allUserContacts.clear();
-            allUserContacts.addAll(allAddableContacts);
-            userContactsAdapter.notifyDataSetChanged();
-            swipeContainer.setRefreshing(false);
-            return;
+        if(searchConstraint != null) {
+            query.whereContains("username", searchConstraint);
         }
 
         query.findInBackground(new FindCallback<ParseUser>() {
@@ -259,14 +285,11 @@ public class ContactsFragment extends Fragment {
                 allAddableContacts.removeAll(allUserContacts);
                 allUserContacts.clear();
                 allUserContacts.addAll(allAddableContacts);
-                updateDistances(allUserContacts);
                 userContactsAdapter.notifyDataSetChanged();
             }
         });
         swipeContainer.setRefreshing(false);
     }
-
-    //Complex algorithm below
 
     //Assign the distances to the users from current user.
     protected void updateDistances(List<ParseObject> users){
@@ -305,6 +328,23 @@ public class ContactsFragment extends Fragment {
         Log.i("Distance", String.valueOf(distance));
 
         return distance;
+    }
+
+    //Sorting and filtering based on user input for ParseObject
+    protected void filterQueryObject(ParseQuery<ParseObject> query){
+        if(isSortedAlphabetically)
+            query.addAscendingOrder(User.USER_KEY_FULLNAME);
+        else
+            query.whereNear(User.USER_KEY_HOME, User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME));
+
+    }
+
+    //Sorting and filtering based on user input for ParseUser
+    protected void filterQueryUser(ParseQuery<ParseUser> query){
+        if(isSortedAlphabetically)
+            query.addAscendingOrder(User.USER_KEY_FULLNAME);
+        else
+            query.whereNear(User.USER_KEY_HOME, User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME));
     }
 }
 
