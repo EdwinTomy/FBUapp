@@ -120,6 +120,7 @@ public class NewsfeedFragment extends Fragment {
                 contactsAchievementsAdapter.clear();
                 allContactsAchievements.addAll(achievements);
                 contactsAchievementsAdapter.notifyDataSetChanged();
+                swipeContainer.setRefreshing(false);
             }
         });
     }
@@ -147,6 +148,5 @@ public class NewsfeedFragment extends Fragment {
                 queryContactsAchievements(postsLimit);
             }
         });
-       swipeContainer.setRefreshing(false);
     }
 }

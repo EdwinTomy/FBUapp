@@ -331,24 +331,19 @@ public class ContactsFragment extends Fragment {
                     for (ParseObject user : users) {
                         Log.i(TAG, "     After typing, contacts: " + user.getString(User.USER_KEY_FULLNAME));
                         userAchievementsMatchField(user);
-                        for(ParseObject achievement: allUserAchievements){
-                            Log.i(TAG, "     Achievements that pass to main query:" +  achievement.getString(Achievement.ACHIEVEMENT_KEY_TITLE));
-                        }
-                        if (allUserAchievements.isEmpty()) {
-                            allUserContacts.remove(user);
-                            Log.i(TAG, "   Query contact being removed: " + user.getString(User.USER_KEY_FULLNAME));
-                        }
+
                     }
+                } else {
+                    userContactsAdapter.notifyDataSetChanged();
+                    swipeContainer.setRefreshing(false);
                 }
-                userContactsAdapter.notifyDataSetChanged();
             }
         });
-        swipeContainer.setRefreshing(false);
     }
 
     //Retrieving achievements of where the fields contain the search constrain
-    protected void userAchievementsMatchField(ParseObject user) {
-        Boolean hasAchievementMatch = true;
+    protected void userAchievementsMatchField(final ParseObject user) {
+        swipeContainer.setRefreshing(true);
         //Creating and constraining query
         ParseQuery<Achievement> query = ParseQuery.getQuery(Achievement.class);
         query.include(Achievement.ACHIEVEMENT_KEY_USER);
@@ -364,22 +359,16 @@ public class ContactsFragment extends Fragment {
                     return;
                 }
 
-                for(ParseObject achievement: allUserAchievements){
-                    Log.i(TAG, "          Achievements querying:" +  achievement.getString(Achievement.ACHIEVEMENT_KEY_TITLE));
+                //Removing the users that have no matching achievements
+                if(achievements == null || achievements.isEmpty()) {
+                    allUserContacts.remove(user);
                 }
-                if(allUserAchievements == null || allUserAchievements.isEmpty()) {
-                    Log.i(TAG, "          User has no achievements:");
-                }
+
                 //Set the adapter with new list of achievements
-                allUserAchievements.clear();
-                allUserAchievements.addAll(achievements);
+                userContactsAdapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
             }
         });
-
-        for(ParseObject achievement: allUserAchievements){
-            Log.i(TAG, "          Achievements that pass constraint:" +  achievement.getString(Achievement.ACHIEVEMENT_KEY_TITLE));
-        }
     }
 
 
@@ -388,8 +377,39 @@ public class ContactsFragment extends Fragment {
         //Creating and constraining query
         Log.i(TAG, "inside addable");
         ParseQuery<ParseUser> query =  User.getQuery();
-        filterQueryUser(query);
 
+        //Compound querying for username and/or full name constraint matching from same input
+        if(nameConstraint != null && !nameConstraint.isEmpty()) {
+            //Constraining to username matching nameConstraint
+            ParseQuery<ParseUser> queryUsername = User.getQuery();
+            queryUsername.whereContains(User.USER_KEY_USERNAME, nameConstraint);
+
+            //Constraining to full name matching nameConstraint
+            ParseQuery<ParseUser> queryFullName = User.getQuery();
+            queryFullName.whereContains(User.USER_KEY_FULLNAME, nameConstraint);
+
+            //Compounding queries
+            List<ParseQuery<ParseUser>> queries = new ArrayList<ParseQuery<ParseUser>>();
+            queries.add(queryUsername);
+            queries.add(queryFullName);
+            query = ParseQuery.or(queries);
+        } else {
+            query = User.getQuery();
+        }
+
+        //Constraining users within distance entered
+        if(proximityConstraint != null && !proximityConstraint.isEmpty()) {
+            query.whereWithinKilometers(User.USER_KEY_HOME,
+                    User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME), Double.valueOf(proximityConstraint));
+        }
+
+        //Sorting alphabetically or proximity
+        if(isSortedAlphabetically)
+            query.addAscendingOrder(User.USER_KEY_FULLNAME);
+        else
+            query.whereNear(User.USER_KEY_HOME, User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME));
+
+        //Finalize query
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> users, ParseException e) {
@@ -398,18 +418,26 @@ public class ContactsFragment extends Fragment {
                     return;
                 }
                 for(ParseObject user: users){
-                    Log.i(TAG, "Contact: " + user.getString(User.USER_KEY_FULLNAME));
+                    Log.i(TAG, "Query contacts: " + user.getString(User.USER_KEY_FULLNAME));
+
                 }
                 //Set the adapter with new list of contacts
-                allAddableContacts.clear();
-                allAddableContacts.addAll(users);
-                allAddableContacts.removeAll(allUserContacts);
                 allUserContacts.clear();
-                allUserContacts.addAll(allAddableContacts);
-                userContactsAdapter.notifyDataSetChanged();
+                allUserContacts.addAll(users);
+                if(fieldConstraint != null && !fieldConstraint.isEmpty()) {
+
+                    //Removing all users who have no achievements containing the constraint text in their fields
+                    for (ParseObject user : users) {
+                        Log.i(TAG, "     After typing, contacts: " + user.getString(User.USER_KEY_FULLNAME));
+                        userAchievementsMatchField(user);
+
+                    }
+                } else {
+                    userContactsAdapter.notifyDataSetChanged();
+                    swipeContainer.setRefreshing(false);
+                }
             }
         });
-        swipeContainer.setRefreshing(false);
     }
 
 
