@@ -21,8 +21,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.virtualresume.R;
+import com.example.virtualresume.adapters.AchievementsAdapter;
 import com.example.virtualresume.adapters.AddableUsersAdapter;
 import com.example.virtualresume.adapters.UsersAdapter;
+import com.example.virtualresume.models.Achievement;
 import com.example.virtualresume.models.User;
 import com.example.virtualresume.utils.ItemSwiper;
 import com.example.virtualresume.utils.MyButtonClickListener;
@@ -46,6 +48,7 @@ public class ContactsFragment extends Fragment {
 
     protected UsersAdapter userContactsAdapter;
     protected AddableUsersAdapter addableContactsAdapter;
+    protected List<Achievement> allUserAchievements;
     protected List<ParseObject> allUserContacts;
     protected List<ParseObject> allAddableContacts;
     private RecyclerView rvUserContacts;
@@ -107,6 +110,7 @@ public class ContactsFragment extends Fragment {
         //Searching constraints
         inputName(view);
         inputProximity(view);
+        inputField(view);
 
         //Adding contact
         btnAddContact = view.findViewById(R.id.btnAddContact);
@@ -216,6 +220,27 @@ public class ContactsFragment extends Fragment {
         });
     }
 
+    //Search by distance from current user
+    private void inputField(View view) {
+        searchByField = view.findViewById(R.id.searchField);
+        searchByField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                fieldConstraint = editable.toString();
+                if(isSearching)
+                    queryUserContacts();
+                else
+                    queryAddableUsers();
+            }
+        });
+    }
+
     //Configuring the container
     public void setupPullToRefresh(SwipeRefreshLayout swipeContainer){
         // Configure the refreshing colors
@@ -228,7 +253,6 @@ public class ContactsFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.i(TAG, "Loading in");
                 if(isSearching)
                     queryUserContacts();
                 else
@@ -242,6 +266,7 @@ public class ContactsFragment extends Fragment {
         rvUserContacts = view.findViewById(R.id.rvPosts);
         allUserContacts = new ArrayList<>();
         allAddableContacts = new ArrayList<>();
+        allUserAchievements = new ArrayList<>();
         userContactsAdapter = new UsersAdapter(getContext(), allUserContacts);
         rvUserContacts.setAdapter(userContactsAdapter);
         rvUserContacts.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -253,7 +278,7 @@ public class ContactsFragment extends Fragment {
         ParseQuery<ParseObject> query;
 
         //Compound querying for username and/or full name constraint matching from same input
-        if(nameConstraint != null) {
+        if(nameConstraint != null && !nameConstraint.isEmpty()) {
             //Constraining to username matching nameConstraint
             ParseQuery<ParseObject> queryUsername =
                     User.getCurrentUser().getRelation(User.USER_KEY_CONTACTS).getQuery();
@@ -294,15 +319,67 @@ public class ContactsFragment extends Fragment {
                     return;
                 }
                 for(ParseObject user: users){
-                    Log.i(TAG, "Contact: " + user.getString(User.USER_KEY_FULLNAME));
+                    Log.i(TAG, "Query contacts: " + user.getString(User.USER_KEY_FULLNAME));
+
                 }
                 //Set the adapter with new list of contacts
                 allUserContacts.clear();
                 allUserContacts.addAll(users);
+                if(fieldConstraint != null && !fieldConstraint.isEmpty()) {
+
+                    //Removing all users who have no achievements containing the constraint text in their fields
+                    for (ParseObject user : users) {
+                        Log.i(TAG, "     After typing, contacts: " + user.getString(User.USER_KEY_FULLNAME));
+                        userAchievementsMatchField(user);
+                        for(ParseObject achievement: allUserAchievements){
+                            Log.i(TAG, "     Achievements that pass to main query:" +  achievement.getString(Achievement.ACHIEVEMENT_KEY_TITLE));
+                        }
+                        if (allUserAchievements.isEmpty()) {
+                            allUserContacts.remove(user);
+                            Log.i(TAG, "   Query contact being removed: " + user.getString(User.USER_KEY_FULLNAME));
+                        }
+                    }
+                }
                 userContactsAdapter.notifyDataSetChanged();
             }
         });
         swipeContainer.setRefreshing(false);
+    }
+
+    //Retrieving achievements of where the fields contain the search constrain
+    protected void userAchievementsMatchField(ParseObject user) {
+        Boolean hasAchievementMatch = true;
+        //Creating and constraining query
+        ParseQuery<Achievement> query = ParseQuery.getQuery(Achievement.class);
+        query.include(Achievement.ACHIEVEMENT_KEY_USER);
+        query.include(Achievement.ACHIEVEMENT_KEY_FIELD);
+        query.whereEqualTo(Achievement.ACHIEVEMENT_KEY_USER, user);
+        query.whereContains(Achievement.ACHIEVEMENT_KEY_FIELD, fieldConstraint);
+
+        query.findInBackground(new FindCallback<Achievement>() {
+            @Override
+            public void done(List<Achievement> achievements, ParseException e) {
+                if(e != null) {
+                    Log.e(TAG, "Issue with getting posts", e);
+                    return;
+                }
+
+                for(ParseObject achievement: allUserAchievements){
+                    Log.i(TAG, "          Achievements querying:" +  achievement.getString(Achievement.ACHIEVEMENT_KEY_TITLE));
+                }
+                if(allUserAchievements == null || allUserAchievements.isEmpty()) {
+                    Log.i(TAG, "          User has no achievements:");
+                }
+                //Set the adapter with new list of achievements
+                allUserAchievements.clear();
+                allUserAchievements.addAll(achievements);
+                swipeContainer.setRefreshing(false);
+            }
+        });
+
+        for(ParseObject achievement: allUserAchievements){
+            Log.i(TAG, "          Achievements that pass constraint:" +  achievement.getString(Achievement.ACHIEVEMENT_KEY_TITLE));
+        }
     }
 
 
@@ -335,44 +412,6 @@ public class ContactsFragment extends Fragment {
         swipeContainer.setRefreshing(false);
     }
 
-    //Assign the distances to the users from current user.
-    protected void updateDistances(List<ParseObject> users){
-        for(ParseObject user: users){
-            ParseGeoPoint userHome = User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME);
-            ParseGeoPoint contactHome = user.getParseGeoPoint(User.USER_KEY_HOME);
-            double distance = calculateDistanceKilometer(userHome, contactHome);
-            user.put(User.USER_KEY_DISTANCE_FROM, distance);
-            Log.i(TAG, user.getString(User.USER_KEY_FULLNAME) + ": " + distance);
-            user.saveInBackground();
-        }
-    }
-
-    //Calculate distances between two ParseGeoPoints
-    protected double calculateDistanceKilometer(ParseGeoPoint userHome, ParseGeoPoint contactHome){
-
-        double userHomeLatitudeRad = Math.toRadians(userHome.getLatitude());
-        Log.i("Distance", String.valueOf(userHomeLatitudeRad));
-        double userHomeLongitudeRad = Math.toRadians(userHome.getLongitude());
-        Log.i("Distance", String.valueOf(userHomeLongitudeRad));
-        double contactHomeLatitudeRad = Math.toRadians(contactHome.getLatitude());
-        Log.i("Distance", String.valueOf(contactHomeLatitudeRad));
-        double contactHomeLongitudeRad = Math.toRadians(contactHome.getLongitude());
-        Log.i("Distance", String.valueOf(contactHomeLongitudeRad));
-
-        double latitudeDistance = contactHomeLatitudeRad - userHomeLatitudeRad;
-        double longitudeDistance = contactHomeLongitudeRad - userHomeLongitudeRad;
-
-        //Haversine formula
-        double distance = Math.pow(Math.sin(latitudeDistance / 2), 2)
-                + Math.cos(userHomeLatitudeRad)
-                * Math.cos(contactHomeLatitudeRad)
-                * Math.pow(Math.sin(longitudeDistance / 2), 2);
-        distance = 2 * Math.asin(Math.sqrt(distance)) * EARTH_RADIUS;
-
-        Log.i("Distance", String.valueOf(distance));
-
-        return distance;
-    }
 
     //Sorting and filtering based on user input for ParseObject
     protected ParseQuery<ParseObject> filterQueryObject(ParseQuery<ParseObject> query){
