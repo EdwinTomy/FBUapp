@@ -63,6 +63,7 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
         private ImageView userProfileImage;
         private ImageView achievementImage;
         private TextView userFullName;
+        private TextView userUsername;
         private TextView achievementTitle;
         private TextView achievementTimePassed;
 
@@ -71,7 +72,8 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
             userProfileImage = itemView.findViewById(R.id.ivProfileImage);
             userFullName = itemView.findViewById(R.id.etFullName);
             achievementImage = itemView.findViewById(R.id.image);
-            achievementTitle = itemView.findViewById(R.id.etUsername);
+            achievementTitle = itemView.findViewById(R.id.etAchivementSum);
+            userUsername = itemView.findViewById(R.id.etTagUser);
             achievementTimePassed = itemView.findViewById(R.id.etTimePassed);
             itemView.setOnClickListener(this);
         }
@@ -92,6 +94,7 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
             }
 
             userFullName.setText(achievement.getAchievementUser().getString(User.USER_KEY_FULLNAME));
+            userUsername.setText("@" + achievement.getAchievementUser().getString(User.USER_KEY_FULLNAME));
             achievementTimePassed.setText(getRelativeTimeAgo(achievement.getCreatedAt()));
             achievementTitle.setText(achievement.getAchievementTitle());
         }
