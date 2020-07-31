@@ -10,47 +10,13 @@
         android:id="@+id/etOrganization"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etTitle"
-        android:layout_alignStart="@+id/etTitle"
+        android:layout_below="@+id/etAchievementSum"
+        android:layout_alignStart="@+id/etAchievementSum"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:text="TextView"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="55dp" />
-
-    <TextView
-        android:id="@+id/etFullName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/ivUser"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="-2dp"
-        android:layout_toEndOf="@+id/ivUser"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="55dp" />
-
-    <TextView
-        android:id="@+id/etUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etFullName"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_toEndOf="@+id/ivUser"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="55dp" />
-
-    <TextView
-        android:id="@+id/etTimePassed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/ivUser"
-        android:layout_marginStart="5dp"
-        android:layout_marginBottom="0dp"
-        android:layout_toEndOf="@+id/ivUser"
-        android:text="TextView"
+        android:textSize="18sp"
+        android:textStyle="bold"
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="55dp" />
 
@@ -60,8 +26,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/etOrganization"
         android:layout_alignStart="@+id/etOrganization"
+        android:layout_alignParentEnd="true"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
         android:text="TextView"
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="55dp" />
@@ -71,44 +39,84 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/etDescription"
-        android:layout_alignStart="@+id/etDescription"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="5dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:text="TextView"
+        android:textStyle="italic"
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="55dp" />
 
+
     <TextView
-        android:id="@+id/etTitle"
+        android:id="@+id/etFullName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ivUser"
-        android:layout_alignStart="@+id/ivUser"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="5dp"
+        android:layout_below="@+id/ivAchievement"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/cardProfile"
         android:text="TextView"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="55dp" />
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/etAchievementSum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cardProfile"
+        android:layout_alignStart="@+id/cardProfile"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="10dp"
+        android:text="TextView"
+        android:textSize="24sp" />
 
     <ImageView
         android:id="@+id/ivAchievement"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <ImageView
-        android:id="@+id/ivUser"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+    <TextView
+        android:id="@+id/etTimePassed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etField"
+        android:layout_alignEnd="@+id/etField"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="0dp"
+        android:text="TextView"
+        android:textSize="14sp" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardProfile"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_below="@+id/ivAchievement"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        app:cardCornerRadius="25dp">
+
+        <ImageView
+            android:id="@+id/ivProfileImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@tools:sample/avatars" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/etTagUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etFullName"
+        android:layout_alignStart="@+id/etFullName"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="3dp"
+        android:text="TextView"
+        android:textColor="@color/tagBlue"
+        android:textSize="14sp" />
+
 
 </RelativeLayout>

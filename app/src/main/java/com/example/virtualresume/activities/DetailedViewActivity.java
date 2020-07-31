@@ -42,12 +42,12 @@ public class DetailedViewActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        binding.etTitle.setText(achievement.getAchievementTitle());
+        binding.etAchievementSum.setText(achievement.getAchievementTitle());
         binding.etField.setText(achievement.getAchievementField());
         binding.etDescription.setText(achievement.getAchievementDescription());
         binding.etFullName.setText(achievement.getAchievementUser().getString(User.USER_KEY_FULLNAME));
-        binding.etUsername.setText(achievement.getAchievementUser().getUsername());
-        binding.etTimePassed.setText(getRelativeTimeAgo(achievement.getUpdatedAt()));
+        binding.etTagUser.setText("@" + achievement.getAchievementUser().getUsername());
+        binding.etTimePassed.setText(getRelativeTimeAgo(achievement.getCreatedAt()));
         binding.etOrganization.setText(achievement.getAchievementOrganization());
 
         //Uploading user profile image and achievement image
@@ -59,7 +59,7 @@ public class DetailedViewActivity extends AppCompatActivity {
             imageAchievement.setVisibility(View.GONE);
         }
 
-        imageUser = view.findViewById(R.id.ivUser);
+        imageUser = view.findViewById(R.id.ivProfileImage);
         ParseFile profile = achievement.getAchievementUser().getParseFile(User.USER_KEY_PROFILEIMAGE);
         if (profile != null) {
             Glide.with(this).load(profile.getUrl()).into(imageUser);
