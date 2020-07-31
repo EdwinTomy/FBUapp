@@ -94,7 +94,7 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
             }
 
             userFullName.setText(achievement.getAchievementUser().getString(User.USER_KEY_FULLNAME));
-            userUsername.setText("@" + achievement.getAchievementUser().getString(User.USER_KEY_FULLNAME));
+            userUsername.setText("@" + achievement.getAchievementUser().getString(User.USER_KEY_USERNAME));
             achievementTimePassed.setText(getRelativeTimeAgo(achievement.getCreatedAt()));
             achievementTitle.setText(achievement.getAchievementTitle());
         }

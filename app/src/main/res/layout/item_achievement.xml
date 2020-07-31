@@ -52,6 +52,7 @@
             android:layout_alignStart="@id/etAchivementSum"
             android:layout_marginStart="0dp"
             android:layout_marginTop="10dp"
+            android:textSize="14sp"
             android:text="TextView" />
 
         <androidx.cardview.widget.CardView
@@ -76,11 +77,13 @@
             android:id="@+id/etTagUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/cardProfile"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="0dp"
-            android:layout_toEndOf="@+id/cardProfile"
-            android:text="TextView" />
+            android:layout_below="@+id/etFullName"
+            android:layout_alignStart="@+id/etFullName"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="3dp"
+            android:text="TextView"
+            android:textColor="@color/tagBlue"
+            android:textSize="14sp" />
 
 
     </RelativeLayout>
