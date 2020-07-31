@@ -26,34 +26,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_below="@+id/etFullName"
         android:layout_alignStart="@+id/etFullName"
+        android:layout_alignBottom="@+id/cardProfile"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="5dp"
-        android:text="TextView" />
+        android:layout_marginBottom="5dp"
+        android:text="Placeholder_Location"/>
 
     <TextView
         android:id="@+id/etUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_alignTop="@+id/etFullName"
-        android:layout_marginStart="5dp"
+        android:layout_below="@+id/etFullName"
+        android:layout_alignStart="@+id/etFullName"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
-        android:layout_toEndOf="@+id/etFullName"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textColor="@color/tagBlue"
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/bio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:layout_below="@+id/etHome"
-        android:layout_alignStart="@+id/etHome"
-        android:layout_alignBottom="@+id/cardProfile"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="0dp"
+        android:layout_below="@+id/cardProfile"
+        android:layout_alignStart="@+id/cardProfile"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
         android:text="TextView" />
 
     <androidx.cardview.widget.CardView
@@ -63,7 +64,7 @@
         android:layout_below="@+id/btnEditProfile"
         android:layout_alignParentStart="true"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         app:cardCornerRadius="50dp">
 
         <ImageView
@@ -74,6 +75,7 @@
             android:layout_alignParentStart="true"
             android:scaleType="centerCrop"
             tools:src="@tools:sample/avatars" />
+
     </androidx.cardview.widget.CardView>
 
     <TextView
@@ -83,9 +85,10 @@
 
         android:layout_alignTop="@+id/cardProfile"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="5dp"
         android:layout_toEndOf="@+id/cardProfile"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textSize="24sp"/>
 
     <Button
         android:id="@+id/btnCreateAchievement"
