@@ -17,8 +17,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.example.virtualresume.R;
 import com.example.virtualresume.adapters.AchievementsAdapter;
@@ -59,10 +61,8 @@ public class ContactsFragment extends Fragment {
     private EditText searchByName;
     private EditText searchByProximity;
     private EditText searchByField;
-    protected Button btnAddContact;
-    protected Button btnSearchContact;
-    protected Button btnSortAlphabetically;
-    protected Button btnSortProximity;
+    protected ToggleButton btnSearchContact;
+    protected ToggleButton btnSortAlphabetically;
     protected boolean isSearching = true;
     protected boolean isSortedAlphabetically = true;
     protected String nameConstraint;
@@ -112,49 +112,40 @@ public class ContactsFragment extends Fragment {
         inputProximity(view);
         inputField(view);
 
-        //Adding contact
-        btnAddContact = view.findViewById(R.id.btnAddContact);
-        btnAddContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                isSearching = false;
-                queryAddableUsers();
-            }
-        });
-
-        //Searching Contact
+        //Searching contact or user
         btnSearchContact = view.findViewById(R.id.btnSearchContact);
-        btnSearchContact.setOnClickListener(new View.OnClickListener() {
+        btnSearchContact.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                isSearching = true;
-                queryUserContacts();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    isSearching = false;
+                    queryAddableUsers();
+                }else{
+                    isSearching = true;
+                    queryUserContacts();
+                }
             }
         });
 
-        //Sorting Alphabetically
+
+        //Sorting button
         btnSortAlphabetically = view.findViewById(R.id.btnSortAlphabetically);
-        btnSortAlphabetically.setOnClickListener(new View.OnClickListener() {
+        btnSortAlphabetically.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                isSortedAlphabetically = true;
-                if(isSearching)
-                    queryUserContacts();
-                else
-                    queryAddableUsers();
-            }
-        });
-
-        //Sorting by proximity
-        btnSortProximity = view.findViewById(R.id.btnSortProximity);
-        btnSortProximity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                isSortedAlphabetically = false;
-                if(isSearching)
-                    queryUserContacts();
-                else
-                    queryAddableUsers();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    isSortedAlphabetically = false;
+                    if(isSearching)
+                        queryUserContacts();
+                    else
+                        queryAddableUsers();
+                }else{
+                    isSortedAlphabetically = true;
+                    if (isSearching)
+                        queryUserContacts();
+                    else
+                        queryAddableUsers();
+                }
             }
         });
     }
