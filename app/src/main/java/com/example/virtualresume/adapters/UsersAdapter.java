@@ -80,7 +80,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
                 Log.i(TAG, "Profile Image loaded");
             }
             userFullName.setText(user.getString(User.USER_KEY_FULLNAME));
-            userUsername.setText(user.getString(User.USER_KEY_USERNAME));
+            userUsername.setText("@" + user.getString(User.USER_KEY_USERNAME));
             ParseGeoPoint userHome = User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME);
             ParseGeoPoint contactHome = user.getParseGeoPoint(User.USER_KEY_HOME);
             double distance = calculateDistanceKilometer(userHome, contactHome);
@@ -150,6 +150,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         int distanceToInt = (int) Math.round(distance);
         if(distanceToInt == 0)
             return "Current location";
-        return distanceToInt + " km.";
+        return distanceToInt + " km";
     }
 }
