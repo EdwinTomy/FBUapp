@@ -14,6 +14,7 @@ import com.example.virtualresume.models.User;
 import com.example.virtualresume.utils.CameraApplication;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.SignUpCallback;
 
 import java.io.File;
@@ -28,6 +29,8 @@ public class CreateUserActivity extends CameraApplication {
     private EditText usernameInput;
     private EditText passwordInput;
     private EditText bioInput;
+    private EditText latInput;
+    private EditText lonInput;
     private ImageView picture;
     private Button btnPicture;
     private Button btnCreate;
@@ -43,6 +46,8 @@ public class CreateUserActivity extends CameraApplication {
         usernameInput = findViewById(R.id.etUsername);
         passwordInput = findViewById(R.id.etPassword);
         bioInput = findViewById(R.id.etBio);
+        latInput = findViewById(R.id.etLat);
+        lonInput = findViewById(R.id.etLon);
         picture = findViewById(R.id.ivProfileImage);
         btnPicture = findViewById(R.id.btnPicture);
         btnCreate = findViewById(R.id.btnEditProfile);
@@ -65,25 +70,44 @@ public class CreateUserActivity extends CameraApplication {
                 String username = usernameInput.getText().toString();
                 String lastName = lastNameInput.getText().toString();
                 String password = passwordInput.getText().toString();
+                Double latitude = Double.valueOf(latInput.getText().toString());
+                Double longitude = Double.valueOf(lonInput.getText().toString());
                 String bio = bioInput.getText().toString();
 
                 if(firstName.isEmpty()){
-                    Toast.makeText(CreateUserActivity.this, "Enter first name!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(lastName.isEmpty()){
-                    Toast.makeText(CreateUserActivity.this, "Enter last name!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateUserActivity.this, "Enter first name!",
+                            Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                SignUpUser(username, password, lastName, firstName, bio, photoFile);
+                if(lastName.isEmpty()){
+                    Toast.makeText(CreateUserActivity.this, "Enter last name!",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(latitude == null){
+                    Toast.makeText(CreateUserActivity.this, "Enter latitude!",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(longitude == null){
+                    Toast.makeText(CreateUserActivity.this, "Enter longitude!",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                SignUpUser(username, password, lastName, firstName, bio, latitude, longitude,
+                        photoFile);
             }
         });
 
     }
 
     //Attempting to sign up after onClick
-    private void SignUpUser(String username, String password, String lastName, String firstName, String bio, File photoFile) {
+    private void SignUpUser(String username, String password, String lastName, String firstName,
+                            String bio, Double latitude, Double longitude, File photoFile) {
+
         Log.i(TAG, "Attempting to sign up user:" + username);
         final User user = new User();
         //Set core properties
@@ -91,17 +115,20 @@ public class CreateUserActivity extends CameraApplication {
         user.setPassword(password);
         user.setUserFullName(firstName + " " + lastName);
         user.setUserBio(bio);
+        user.setUserHome(new ParseGeoPoint(latitude, longitude));
         user.saveInBackground();
         //Invoke signUpInBackground
         user.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {
                 if (e == null) {
                     //Navigate to MainActivity
-                    Toast.makeText(CreateUserActivity.this, "Success in sign up!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateUserActivity.this, "Success in sign up!",
+                            Toast.LENGTH_SHORT).show();
                     savePhoto(user);
                     return;
                 }
-                Toast.makeText(CreateUserActivity.this, "Enter a password and unique username!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateUserActivity.this,
+                        "Enter a password and unique username!", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "Issue with sign up", e);
                 return;
             }
