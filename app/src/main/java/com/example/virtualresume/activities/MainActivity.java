@@ -43,24 +43,19 @@ public class MainActivity extends AppCompatActivity{
                 switch (menuItem.getItemId()) {
                     case R.id.action_newsfeed:
                         fragment = new NewsfeedFragment();
-                        Toast.makeText(MainActivity.this, "1!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_contacts:
                         fragment = new ContactsFragment();
-                        Toast.makeText(MainActivity.this, "2!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_edit:
                         fragment = new EditFragment();
-                        Toast.makeText(MainActivity.this, "3!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_map:
                         fragment = new MapsFragment();
-                        Toast.makeText(MainActivity.this, "4!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_view:
                     default:
                         fragment = new ViewFragment();
-                        Toast.makeText(MainActivity.this, "6!", Toast.LENGTH_SHORT).show();
                         break;
                 }
                 fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();

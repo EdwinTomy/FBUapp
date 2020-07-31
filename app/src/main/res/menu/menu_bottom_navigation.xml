@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
     <item
         android:id="@+id/action_newsfeed"
-        android:icon="@android:drawable/ic_popup_reminder"
-        android:title="Newsfeed"
+        android:icon="@drawable/instagram_home_filled_24"
+        android:title=""
         app:showAsAction="always" />
     <item
         android:id="@+id/action_contacts"
-        android:icon="@android:drawable/ic_menu_my_calendar"
-        android:title="Contact List"
+        android:icon="@drawable/ic_vector_search"
+        android:title=""
         app:showAsAction="always" />
     <item
         android:id="@+id/action_view"
-        android:icon="@android:drawable/ic_menu_view"
-        android:title="View"
+        android:icon="@drawable/instagram_user_filled_24"
+        android:title=""
         app:showAsAction="always" />
     <item
         android:id="@+id/action_edit"
-        android:icon="@android:drawable/ic_menu_edit"
-        android:title="Edit Profile"
+        android:icon="@drawable/instagram_new_post_filled_24"
+        android:title=""
         app:showAsAction="always" />
     <item
         android:id="@+id/action_map"
-        android:icon="@android:drawable/ic_dialog_map"
-        android:title="Map"
+        android:icon="@drawable/ic_vector_location"
+        android:title=""
         app:showAsAction="always" />
 </menu>

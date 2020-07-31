@@ -91,7 +91,7 @@ public class ViewFragment extends Fragment {
         //Full name, username and bio of user
         userFullName.setText(User.getCurrentUser().getString(User.USER_KEY_FULLNAME));
         userBio.setText(User.getCurrentUser().getString(User.USER_KEY_BIO));
-        userUsername.setText(User.getCurrentUser().getUsername());
+        userUsername.setText("@" + User.getCurrentUser().getUsername());
     }
 
     //Configuring the container
