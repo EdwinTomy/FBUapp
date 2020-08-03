@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.example.virtualresume.R;
 import com.example.virtualresume.models.User;
 import com.example.virtualresume.utils.CameraApplication;
@@ -101,7 +103,6 @@ public class CreateUserActivity extends CameraApplication {
                         photoFile);
             }
         });
-
     }
 
     //Attempting to sign up after onClick

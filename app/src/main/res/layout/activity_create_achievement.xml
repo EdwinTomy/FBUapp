@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.CreateAchievement">
+    tools:context=".activities.CreateAchievement"
+    android:padding="8dp">
 
     <EditText
         android:id="@+id/etOrganization"
@@ -13,7 +14,7 @@
         android:layout_below="@+id/etTitle"
         android:layout_alignStart="@+id/etTitle"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="0dp"
         android:hint="organization"
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="55dp" />
@@ -25,7 +26,7 @@
         android:layout_below="@+id/etOrganization"
         android:layout_alignStart="@+id/etOrganization"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="0dp"
         android:hint="description"
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="55dp" />
@@ -37,7 +38,7 @@
         android:layout_below="@+id/etDescription"
         android:layout_alignStart="@+id/etDescription"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="0dp"
         android:hint="field"
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="55dp" />
@@ -63,18 +64,17 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
+        android:scaleType="centerCrop"
         tools:srcCompat="@tools:sample/avatars" />
 
     <Button
         android:id="@+id/btnEditAchievement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
         android:layout_marginBottom="5dp"
-        android:backgroundTint="#8BC34A"
-        android:text="Upload Achievement"
+        android:backgroundTint="@color/colorAccent"
+        android:text="Save Achievement"
         android:textColor="#FFFFFF"
         android:textStyle="bold" />
 
@@ -83,10 +83,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnEditAchievement"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="4dp"
         android:layout_marginBottom="5dp"
-        android:backgroundTint="#8BC34A"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:text="Delete Achievement"
         android:textColor="#FFFFFF"
         android:textStyle="bold" />
@@ -96,8 +94,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivAchievement"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:backgroundTint="#2196F3"
         android:includeFontPadding="false"

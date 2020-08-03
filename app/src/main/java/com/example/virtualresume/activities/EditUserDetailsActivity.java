@@ -91,11 +91,13 @@ public class EditUserDetailsActivity extends CameraApplication {
         fullNameInput.setText(User.getCurrentUser().getString(User.USER_KEY_FULLNAME));
         bioInput.setText(User.getCurrentUser().getString(User.USER_KEY_BIO));
 
-        int latitude = (int) User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME).getLatitude();
-        int longitude = (int) User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME).getLongitude();
+        double latDouble = User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME).getLatitude();
+        double lonDouble = User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME).getLongitude();
+        String latitude = String.format("%,.2f", latDouble);
+        String longitude = String.format("%,.2f", lonDouble);
 
-        latInput.setText(Integer.toString(latitude));
-        lonInput.setText(Integer.toString(longitude));
+        latInput.setText(latitude);
+        lonInput.setText(longitude);
 
         ParseFile picture = User.getCurrentUser().getParseFile(User.USER_KEY_PROFILEIMAGE);
         if (picture != null)
@@ -127,10 +129,8 @@ public class EditUserDetailsActivity extends CameraApplication {
         user.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                finish();
             }
         });
+        finish();
     }
-
-
 }

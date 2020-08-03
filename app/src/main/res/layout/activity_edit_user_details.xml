@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="8dp"
     tools:context=".activities.EditUserDetailsActivity">
 
     <EditText
@@ -22,8 +23,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/etFullName"
         android:layout_alignStart="@+id/etFullName"
+        android:layout_alignParentEnd="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="10dp"
         android:hint="brief description about yourself" />
 
     <EditText
@@ -33,7 +36,7 @@
         android:layout_below="@+id/etBio"
         android:layout_alignStart="@+id/etBio"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="0dp"
         android:hint="latitude"
         android:inputType="numberDecimal" />
 
@@ -48,19 +51,30 @@
         android:hint="longitude"
         android:inputType="numberDecimal" />
 
-    <ImageView
-        android:id="@+id/ivProfileImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardProfile"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:layout_above="@+id/btnEditProfile"
         android:layout_below="@+id/btnPicture"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="0dp"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:id="@+id/ivProfileImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/btnEditProfile"
+            android:layout_below="@+id/btnPicture"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"
+            tools:src="@tools:sample/avatars" />
+    </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/btnPicture"
@@ -70,7 +84,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
-        android:backgroundTint="#2196F3"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:includeFontPadding="false"
         android:text="Update profile picture"
         android:textColor="#FFFFFF"
@@ -84,8 +98,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
         android:layout_marginBottom="5dp"
-        android:backgroundTint="#8BC34A"
-        android:text="Update Details"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="Save User"
         android:textColor="#FFFFFF"
         android:textStyle="bold" />
 
