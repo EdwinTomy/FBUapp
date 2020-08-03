@@ -125,6 +125,7 @@ public class CreateUserActivity extends CameraApplication {
                     Toast.makeText(CreateUserActivity.this, "Success in sign up!",
                             Toast.LENGTH_SHORT).show();
                     savePhoto(user);
+                    goMainActivity();
                     return;
                 }
                 Toast.makeText(CreateUserActivity.this,
@@ -151,7 +152,6 @@ public class CreateUserActivity extends CameraApplication {
             user.saveInBackground();
             Log.i(TAG, "File not null");
             Toast.makeText(CreateUserActivity.this, "Profile loaded", Toast.LENGTH_SHORT).show();
-            goMainActivity();
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.example.virtualresume.fragments;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
@@ -28,14 +28,10 @@ import com.example.virtualresume.adapters.EditAchievementsAdapter;
 import com.example.virtualresume.models.Achievement;
 import com.example.virtualresume.models.User;
 import com.example.virtualresume.utils.ItemSwiper;
-import com.example.virtualresume.utils.MyButtonClickListener;
-import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -44,6 +40,8 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -51,7 +49,7 @@ public class EditFragment extends ViewFragment {
 
     public static final String TAG = "EditFragment";
     public static final int EDIT_USER_DETAILS_ACTIVITY_REQUEST_CODE = 30;
-    public static final int EDIT_USER_ACHIEVEMENTS_ACTIVITY_REQUEST_CODE = 20;
+    public static final int CREATE_USER_ACHIEVEMENTS_ACTIVITY_REQUEST_CODE = 20;
 
     private ImageView userProfileImage;
     private TextView userHome;
@@ -118,7 +116,7 @@ public class EditFragment extends ViewFragment {
     //Go to Create Achievement Screen
     public void goToCreateAchievementActivity() {
         Intent intent = new Intent(getContext(), CreateAchievement.class);
-        startActivityForResult(intent, EDIT_USER_ACHIEVEMENTS_ACTIVITY_REQUEST_CODE);
+        startActivityForResult(intent, CREATE_USER_ACHIEVEMENTS_ACTIVITY_REQUEST_CODE);
     }
 
     //Go to Edit User Details Screen
@@ -134,6 +132,7 @@ public class EditFragment extends ViewFragment {
         Log.i(TAG, requestCode + " and " + resultCode);
         swipeContainer.setRefreshing(true);
 
+        Toast.makeText(getContext(), "Achievement uploading", Toast.LENGTH_SHORT).show();
         bindUserDetails();
         queryUserAchievements();
         userAchievementsAdapter.notifyDataSetChanged();

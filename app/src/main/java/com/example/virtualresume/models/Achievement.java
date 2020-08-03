@@ -11,7 +11,7 @@ import java.security.KeyFactory;
 import java.security.KeyStore;
 import java.util.Date;
 
-@Parcel(analyze = {Achievement.class})
+//@Parcel(analyze = {Achievement.class})
 @ParseClassName("Achievement")
 public class Achievement extends ParseObject {
 

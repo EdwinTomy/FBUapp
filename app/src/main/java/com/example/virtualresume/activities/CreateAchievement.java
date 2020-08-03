@@ -64,6 +64,8 @@ public class CreateAchievement extends CameraApplication {
         //Setting up template for existing achievement
         if(achievement != null)
             existingAchievementTemplate();
+        else
+            btnDeleteAchievement.setEnabled(false);
 
         //Taking a picture
         btnPicture.setOnClickListener(new View.OnClickListener() {

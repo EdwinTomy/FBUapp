@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">VirtualResume</string>
+    <string name="app_name">PassIt</string>
     <string name="sign_up">Sign up</string>
     <string name="log_in">Log in</string>
     <string name="password">password</string>
