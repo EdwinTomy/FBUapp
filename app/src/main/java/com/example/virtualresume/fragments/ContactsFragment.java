@@ -37,6 +37,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +94,7 @@ public class ContactsFragment extends Fragment {
         settingRecyclerView(view);
         queryUserContacts();
 
+        //Sliding mechanism
         itemSwiper = new ItemSwiper(getContext(), rvUserContacts, 200) {
             @Override
             public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<ItemSwiper.MyButton> buffer) {
@@ -153,17 +155,23 @@ public class ContactsFragment extends Fragment {
     //Delete or add contact
     private void deleteAddContact(int position){
         if(position != RecyclerView.NO_POSITION){
+            swipeContainer.setRefreshing(true);
             ParseObject user = allUserContacts.get(position);
             Log.i(TAG, user.getString(User.USER_KEY_USERNAME));
             ParseRelation<ParseObject> relation = User.getCurrentUser().getRelation(User.USER_KEY_CONTACTS);
-            if(isSearching)
+            if(isSearching) {
                 relation.remove(user);
-            else
+                allUserContacts.remove(position);
+                userContactsAdapter.notifyItemRemoved(position);
+                swipeContainer.setRefreshing(false);
+            }else{
                 relation.add(user);
-            try {
-                User.getCurrentUser().save();
-            } catch (ParseException e) {
-                e.printStackTrace();
+                User.getCurrentUser().saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        swipeContainer.setRefreshing(true);
+                    }
+                });
             }
         }
     }
@@ -281,7 +289,7 @@ public class ContactsFragment extends Fragment {
             queryFullName.whereContains(User.USER_KEY_FULLNAME, nameConstraint);
 
             //Compounding queries
-            List<ParseQuery<ParseObject>> queries = new ArrayList<ParseQuery<ParseObject>>();
+            List<ParseQuery<ParseObject>> queries = new ArrayList<>();
             queries.add(queryUsername);
             queries.add(queryFullName);
             query = ParseQuery.or(queries);
@@ -292,7 +300,7 @@ public class ContactsFragment extends Fragment {
         //Constraining users within distance entered
         if(proximityConstraint != null && !proximityConstraint.isEmpty()) {
             query.whereWithinKilometers(User.USER_KEY_HOME,
-                    User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME), Double.valueOf(proximityConstraint));
+                    User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME), Double.parseDouble(proximityConstraint));
         }
 
         //Sorting alphabetically or proximity
@@ -367,7 +375,7 @@ public class ContactsFragment extends Fragment {
     protected void queryAddableUsers() {
         //Creating and constraining query
         Log.i(TAG, "inside addable");
-        ParseQuery<ParseUser> query =  User.getQuery();
+        ParseQuery<ParseUser> query;
 
         //Compound querying for username and/or full name constraint matching from same input
         if(nameConstraint != null && !nameConstraint.isEmpty()) {
@@ -380,7 +388,7 @@ public class ContactsFragment extends Fragment {
             queryFullName.whereContains(User.USER_KEY_FULLNAME, nameConstraint);
 
             //Compounding queries
-            List<ParseQuery<ParseUser>> queries = new ArrayList<ParseQuery<ParseUser>>();
+            List<ParseQuery<ParseUser>> queries = new ArrayList<>();
             queries.add(queryUsername);
             queries.add(queryFullName);
             query = ParseQuery.or(queries);
@@ -391,7 +399,7 @@ public class ContactsFragment extends Fragment {
         //Constraining users within distance entered
         if(proximityConstraint != null && !proximityConstraint.isEmpty()) {
             query.whereWithinKilometers(User.USER_KEY_HOME,
-                    User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME), Double.valueOf(proximityConstraint));
+                    User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME), Double.parseDouble(proximityConstraint));
         }
 
         //Sorting alphabetically or proximity
@@ -423,65 +431,13 @@ public class ContactsFragment extends Fragment {
                         userAchievementsMatchField(user);
 
                     }
+
                 } else {
                     userContactsAdapter.notifyDataSetChanged();
                     swipeContainer.setRefreshing(false);
                 }
             }
         });
-    }
-
-
-    //Sorting and filtering based on user input for ParseObject
-    protected ParseQuery<ParseObject> filterQueryObject(ParseQuery<ParseObject> query){
-
-        //Compound querying for username and/or full name constraint matching from same input
-        if(nameConstraint != null) {
-            //Constraining to username matching nameConstraint
-            ParseQuery<ParseObject> queryUsername =
-                    User.getCurrentUser().getRelation(User.USER_KEY_CONTACTS).getQuery();
-            queryUsername.whereContains(User.USER_KEY_USERNAME, nameConstraint);
-
-            //Constraining to full name matching nameConstraint
-            ParseQuery<ParseObject> queryFullName =
-                    User.getCurrentUser().getRelation(User.USER_KEY_CONTACTS).getQuery();
-            queryFullName.whereContains(User.USER_KEY_FULLNAME, nameConstraint);
-
-            //Compounding queries
-            List<ParseQuery<ParseObject>> queries = new ArrayList<ParseQuery<ParseObject>>();
-            queries.add(queryUsername);
-            queries.add(queryFullName);
-            query = ParseQuery.or(queries);
-        } else {
-            query = User.getCurrentUser().getRelation(User.USER_KEY_CONTACTS).getQuery();
-        }
-
-        //Constraining users within distance entered
-        if(proximityConstraint != null) {
-            query.whereWithinKilometers(User.USER_KEY_HOME,
-                    User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME), Double.valueOf(proximityConstraint));
-        }
-
-        //Sorting
-        if(isSortedAlphabetically)
-            query.addAscendingOrder(User.USER_KEY_FULLNAME);
-        else
-            query.whereNear(User.USER_KEY_HOME, User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME));
-
-        return query;
-    }
-
-    //Sorting and filtering based on user input for ParseUser
-    protected void filterQueryUser(ParseQuery<ParseUser> query){
-        //Sorting
-        if(isSortedAlphabetically)
-            query.addAscendingOrder(User.USER_KEY_FULLNAME);
-        else
-            query.whereNear(User.USER_KEY_HOME, User.getCurrentUser().getParseGeoPoint(User.USER_KEY_HOME));
-
-        if(nameConstraint != null) {
-            query.whereContains("username", nameConstraint);
-        }
     }
 }
 

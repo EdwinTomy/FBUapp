@@ -1,6 +1,7 @@
 package com.example.virtualresume.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.virtualresume.R;
@@ -25,11 +27,17 @@ import com.example.virtualresume.activities.EditUserDetailsActivity;
 import com.example.virtualresume.adapters.EditAchievementsAdapter;
 import com.example.virtualresume.models.Achievement;
 import com.example.virtualresume.models.User;
+import com.example.virtualresume.utils.ItemSwiper;
+import com.example.virtualresume.utils.MyButtonClickListener;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
@@ -57,6 +65,7 @@ public class EditFragment extends ViewFragment {
     protected SwipeRefreshLayout swipeContainer;
     protected EditAchievementsAdapter userAchievementsAdapter;
     protected List<Achievement> allUserAchievements;
+    protected ItemSwiper itemSwiper;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
     public EditFragment() {}
@@ -123,6 +132,8 @@ public class EditFragment extends ViewFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         Log.i(TAG, requestCode + " and " + resultCode);
+        swipeContainer.setRefreshing(true);
+
         bindUserDetails();
         queryUserAchievements();
         userAchievementsAdapter.notifyDataSetChanged();
