@@ -4,5 +4,8 @@
     <item  android:state_enabled="true" android:drawable="@color/colorPrimaryDark" />
     <item  android:state_enabled="false" android:drawable="@color/lightAction" />
     <!-- Standard background color -->
-    <item android:drawable="@color/colorPrimaryDark" />
+    <item android:drawable="@color/colorPrimaryDark"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:includeFontPadding="false"/>
 </selector>

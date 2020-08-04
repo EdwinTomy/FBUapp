@@ -64,8 +64,10 @@ public class CreateAchievement extends CameraApplication {
         //Setting up template for existing achievement
         if(achievement != null)
             existingAchievementTemplate();
-        else
+        else {
             btnDeleteAchievement.setEnabled(false);
+            btnDeleteAchievement.setVisibility(View.GONE);
+        }
 
         //Taking a picture
         btnPicture.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +121,6 @@ public class CreateAchievement extends CameraApplication {
                 achievement.deleteInBackground(new DeleteCallback() {
                     @Override
                     public void done(ParseException e) {
-                        //goMainActivity();
                     }
                 });
                 finish();
@@ -154,7 +155,6 @@ public class CreateAchievement extends CameraApplication {
         achievement.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                //goMainActivity();
             }
         });
         finish();

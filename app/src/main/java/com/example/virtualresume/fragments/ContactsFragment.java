@@ -98,10 +98,10 @@ public class ContactsFragment extends Fragment {
         itemSwiper = new ItemSwiper(getContext(), rvUserContacts, 200) {
             @Override
             public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<ItemSwiper.MyButton> buffer) {
-                buffer.add(new MyButton(getContext(), "Delete", 30, 0, Color.parseColor("#FF4C30"), new MyButtonClickListener() {
+                buffer.add(new MyButton(getContext(),  "Delete", 30, R.drawable.instagram_user_filled_24,
+                        Color.parseColor("#254FF5"), new MyButtonClickListener() {
                     @Override
                     public void onClick(int position) {
-                        Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
                         deleteAddContact(position);
                     }
                 }));
