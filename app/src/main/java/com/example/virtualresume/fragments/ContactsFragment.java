@@ -166,13 +166,13 @@ public class ContactsFragment extends Fragment {
                 swipeContainer.setRefreshing(false);
             }else{
                 relation.add(user);
-                User.getCurrentUser().saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        swipeContainer.setRefreshing(true);
-                    }
-                });
             }
+            User.getCurrentUser().saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    swipeContainer.setRefreshing(false);
+                }
+            });
         }
     }
 

@@ -53,7 +53,7 @@ public abstract class CameraApplication extends AppCompatActivity {
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 // RESIZE BITMAP, see section below
                 // Load the taken image into a preview
-                imageView.setImageBitmap(takenImage);
+                imageView.setImageBitmap(Bitmap.createScaledBitmap(takenImage, 400, 400, false));
             } else {
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }

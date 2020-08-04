@@ -132,7 +132,6 @@ public class EditFragment extends ViewFragment {
         Log.i(TAG, requestCode + " and " + resultCode);
         swipeContainer.setRefreshing(true);
 
-        Toast.makeText(getContext(), "Achievement uploading", Toast.LENGTH_SHORT).show();
         bindUserDetails();
         queryUserAchievements();
         userAchievementsAdapter.notifyDataSetChanged();
