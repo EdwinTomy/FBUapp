@@ -1,13 +1,21 @@
 package com.example.virtualresume.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.PointFEvaluator;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.virtualresume.R;
@@ -25,7 +33,14 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etPassword;
     private Button btnLogin;
     private Button btnSignup;
+    private ImageView person1;
+    private ImageView person2;
+    private ImageView person3;
+    private ImageView idea1;
+    private ImageView idea2;
+    private ImageView idea3;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +80,28 @@ public class LoginActivity extends AppCompatActivity {
                 goCreateUserActivity();
             }
         });
+
+        //Animation
+        person1 = findViewById(R.id.ivLeftPerson);
+        person2 = findViewById(R.id.ivRightPerson);
+        person3 = findViewById(R.id.ivLeftPerson2);
+        idea1 = findViewById(R.id.ivIdea1);
+        idea2 = findViewById(R.id.ivIdea);
+        idea3 = findViewById(R.id.ivIdea2);
+
+        AnimatorSet motionXY = new AnimatorSet();
+        ObjectAnimator animation1 = ObjectAnimator.ofFloat(person1, "translationX", 450);
+        ObjectAnimator animation2 = ObjectAnimator.ofFloat(person2, "translationX", -450);
+        ObjectAnimator animation3 = ObjectAnimator.ofFloat(person3, "translationY", -450);
+
+        ObjectAnimator animationIdea1 = ObjectAnimator.ofFloat(idea1, "translationX", 500);
+        ObjectAnimator animationIdea2 = ObjectAnimator.ofFloat(idea2, "translationX", -500);
+        ObjectAnimator animationIdea3 = ObjectAnimator.ofFloat(idea3, "translationY", -500);
+
+        motionXY.playTogether(animation1, animation2, animation3, animationIdea1, animationIdea2, animationIdea3);
+        motionXY.setDuration(2000);
+
+        motionXY.start();
 
     }
 

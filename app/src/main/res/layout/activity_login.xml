@@ -10,14 +10,44 @@
     tools:context=".activities.LoginActivity">
 
     <ImageView
+        android:id="@+id/ivIdea2"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_above="@+id/ivLeftPerson2"
+        android:layout_marginStart="-40dp"
+        android:layout_marginBottom="-40dp"
+        android:layout_toEndOf="@+id/ivLeftPerson2"
+        app:srcCompat="@drawable/shiny_happy_people__6_" />
+
+    <ImageView
+        android:id="@+id/ivIdea1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/ivLeftPerson"
+        android:layout_marginStart="-30dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@+id/ivLeftPerson"
+        app:srcCompat="@drawable/shiny_happy_people__6_" />
+
+    <ImageView
+        android:id="@+id/ivIdea"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/ivRightPerson"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="-16dp"
+        android:layout_toStartOf="@+id/ivRightPerson"
+        app:srcCompat="@drawable/shiny_happy_people__6_" />
+
+    <ImageView
         android:id="@+id/ivLeftPerson2"
         android:layout_width="180dp"
         android:layout_height="180dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="-35dp"
-        android:layout_marginBottom="-28dp"
-        app:srcCompat="@drawable/shiny_happy_people__3_" />
+        android:layout_marginStart="80dp"
+        android:layout_marginBottom="-180dp"
+        app:srcCompat="@drawable/shiny_happy_people__5_" />
 
     <EditText
         android:id="@+id/etUsername"
@@ -123,9 +153,10 @@
         android:layout_height="180dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="-27dp"
-        android:layout_marginTop="318dp"
+        android:layout_marginStart="-177dp"
+        android:layout_marginTop="338dp"
         app:srcCompat="@drawable/shiny_happy_people__3_" />
+
 
     <ImageView
         android:id="@+id/ivRightPerson"
@@ -133,8 +164,8 @@
         android:layout_height="180dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="366dp"
-        android:layout_marginEnd="-49dp"
+        android:layout_marginTop="390dp"
+        android:layout_marginEnd="-190dp"
         app:srcCompat="@drawable/shiny_happy_people__2_" />
 
 </RelativeLayout>
