@@ -125,9 +125,6 @@ public class CreateUserActivity extends CameraApplication {
         client.get(GEOCODER_URL, params, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
-
-                        Toast.makeText(getApplicationContext(), "succccccesssss", Toast.LENGTH_LONG).show();
-
                         JSONObject jsonObject = json.jsonObject;
                         try {
                             JSONArray data = jsonObject.getJSONArray("data");
