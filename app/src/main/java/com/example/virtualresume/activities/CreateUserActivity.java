@@ -9,8 +9,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
+import com.codepath.asynchttpclient.AsyncHttpClient;
+import com.codepath.asynchttpclient.RequestParams;
+import com.codepath.asynchttpclient.callback.TextHttpResponseHandler;
 import com.example.virtualresume.R;
 import com.example.virtualresume.models.User;
 import com.example.virtualresume.utils.CameraApplication;
@@ -20,6 +21,8 @@ import com.parse.ParseGeoPoint;
 import com.parse.SignUpCallback;
 
 import java.io.File;
+
+import okhttp3.Headers;
 
 public class CreateUserActivity extends CameraApplication {
 
@@ -37,6 +40,8 @@ public class CreateUserActivity extends CameraApplication {
     private Button btnPicture;
     private Button btnCreate;
     private File photoFile;
+    private String responseFromGeo;
+    final private String GEOCODER_URL = "http://api.positionstack.com/v1/forward?access_key=db50b1be9f183ecfa3dbfb53faaa22c5";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +108,31 @@ public class CreateUserActivity extends CameraApplication {
                         photoFile);
             }
         });
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("limit", "1");
+        params.put("query", "Berlin, Germany");
+        params.put("fields", "latitude, longitude");
+        client.get(GEOCODER_URL, params, new TextHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Headers headers, String response) {
+                        // called when response HTTP status is "200 OK"
+                        Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                        Log.i(TAG, "Locatiooon:" + response);
+                        responseFromGeo = response;
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Headers headers, String errorResponse, Throwable t) {
+                        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                        Toast.makeText(getApplicationContext(), errorResponse, Toast.LENGTH_SHORT).show();
+                        Log.i(TAG, "Locatiooon:" + errorResponse);
+                    }
+                }
+        );
+
+        Log.i(TAG, "Locatiooon:" + responseFromGeo);
     }
 
     //Attempting to sign up after onClick
