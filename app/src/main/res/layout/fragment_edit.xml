@@ -30,7 +30,8 @@
         android:layout_alignBottom="@+id/cardProfile"
         android:layout_marginStart="0dp"
         android:layout_marginBottom="5dp"
-        android:text="Placeholder_Location"/>
+        android:text="Placeholder_Location"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/etUsername"

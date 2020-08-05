@@ -83,6 +83,7 @@ public class ContactProfileActivity extends AppCompatActivity {
         userFullName.setText(user.getString(User.USER_KEY_FULLNAME));
         userBio.setText(user.getString(User.USER_KEY_BIO));
         userUsername.setText(user.getString(User.USER_KEY_USERNAME));
+        userHome.setText(user.getString(User.USER_KEY_ADDRESS));
     }
 
     //Configuring the container

@@ -39,17 +39,22 @@ public class CreateUserActivity extends CameraApplication {
     private EditText usernameInput;
     private EditText passwordInput;
     private EditText bioInput;
-    private EditText latInput;
-    private EditText lonInput;
+    private EditText addressInput;
     private ImageView picture;
     private Button btnPicture;
     private Button btnCreate;
     private File photoFile;
-    private String responseFromGeo;
 
-    Double latitude;
-    Double longitude;
+    Double JSONlatitude;
+    Double JSONlongitude;
     final private String GEOCODER_URL = "http://api.positionstack.com/v1/forward?access_key=db50b1be9f183ecfa3dbfb53faaa22c5";
+
+    String firstName;
+    String username;
+    String lastName;
+    String password;
+    String address;
+    String bio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +66,7 @@ public class CreateUserActivity extends CameraApplication {
         usernameInput = findViewById(R.id.etUsername);
         passwordInput = findViewById(R.id.etPassword);
         bioInput = findViewById(R.id.etBio);
-        latInput = findViewById(R.id.etLat);
-        lonInput = findViewById(R.id.etLon);
+        addressInput = findViewById(R.id.etLat);
         picture = findViewById(R.id.ivProfileImage);
         btnPicture = findViewById(R.id.btnPicture);
         btnCreate = findViewById(R.id.btnEditProfile);
@@ -81,13 +85,12 @@ public class CreateUserActivity extends CameraApplication {
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String firstName = firstNameInput.getText().toString();
-                String username = usernameInput.getText().toString();
-                String lastName = lastNameInput.getText().toString();
-                String password = passwordInput.getText().toString();
-                Double latitude = Double.valueOf(latInput.getText().toString());
-                Double longitude = Double.valueOf(lonInput.getText().toString());
-                String bio = bioInput.getText().toString();
+                firstName = firstNameInput.getText().toString();
+                username = usernameInput.getText().toString();
+                lastName = lastNameInput.getText().toString();
+                password = passwordInput.getText().toString();
+                address = addressInput.getText().toString();
+                bio = bioInput.getText().toString();
 
                 if(firstName.isEmpty()){
                     Toast.makeText(CreateUserActivity.this, "Enter first name!",
@@ -101,64 +104,48 @@ public class CreateUserActivity extends CameraApplication {
                     return;
                 }
 
-                if(latitude == null){
-                    Toast.makeText(CreateUserActivity.this, "Enter latitude!",
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(longitude == null){
-                    Toast.makeText(CreateUserActivity.this, "Enter longitude!",
+                if(address.isEmpty()){
+                    Toast.makeText(CreateUserActivity.this, "Enter address name!",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                SignUpUser(username, password, lastName, firstName, bio, latitude, longitude,
-                        photoFile);
+                getCoordinates();
             }
         });
+    }
 
+    //Turning string address into coordinates
+    private void getCoordinates(){
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("limit", "1");
-        params.put("query", "Berlin, Germany");
+        params.put("query", address);
         params.put("fields", "latitude, longitude");
         client.get(GEOCODER_URL, params, new JsonHttpResponseHandler() {
-
-            /*
                     @Override
-                    public void onSuccess(int statusCode, Headers headers, String response) {
-                        // called when response HTTP status is "200 OK"
-                        Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
-                        Log.i(TAG, "Locatiooon:" + response);
-                        responseFromGeo = response;
-                    }*/
+                    public void onSuccess(int statusCode, Headers headers, JSON json) {
 
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                        Toast.makeText(getApplicationContext(), "succccccesssss", Toast.LENGTH_LONG).show();
 
-                Toast.makeText(getApplicationContext(), "succccccesssss", Toast.LENGTH_LONG).show();
+                        JSONObject jsonObject = json.jsonObject;
+                        try {
+                            JSONArray data = jsonObject.getJSONArray("data");
+                            //JSONArray results = data.getJSONArray("results");
+                            JSONObject location = data.getJSONObject(0);
+                            JSONlatitude = location.getDouble("latitude");
+                            JSONlongitude = location.getDouble("longitude");
 
-                JSONObject jsonObject = json.jsonObject;
-                try {
-                    //Creating the list of movies
-                    JSONArray data = jsonObject.getJSONArray("data");
-                    //JSONArray results = data.getJSONArray("results");
-                    JSONObject location = data.getJSONObject(0);
-                    latitude = location.getDouble("latitude");
-                    longitude = location.getDouble("latitude");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.e(TAG, "Hit JSON exception", e);
+                        }
 
-                    Toast.makeText(getApplicationContext(), latitude + "" + longitude, Toast.LENGTH_LONG).show();
-                    Log.i(TAG, "Locatiooon:" + latitude + "" + longitude);
+                        //Sign up user
+                        SignUpUser();
+                    }
 
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.e(TAG, "Hit JSON exception", e);
-                }
-
-            }
-
-            @Override
+                    @Override
                     public void onFailure(int statusCode, Headers headers, String errorResponse, Throwable t) {
                         // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                         Toast.makeText(getApplicationContext(), errorResponse, Toast.LENGTH_SHORT).show();
@@ -167,12 +154,12 @@ public class CreateUserActivity extends CameraApplication {
                 }
         );
 
-        Log.i(TAG, "Locatiooon:" + latitude + "" + longitude);
+        Log.i(TAG, "Location:  " + JSONlatitude + "" + JSONlongitude);
     }
 
+
     //Attempting to sign up after onClick
-    private void SignUpUser(String username, String password, String lastName, String firstName,
-                            String bio, Double latitude, Double longitude, File photoFile) {
+    private void SignUpUser() {
 
         Log.i(TAG, "Attempting to sign up user:" + username);
         final User user = new User();
@@ -181,7 +168,8 @@ public class CreateUserActivity extends CameraApplication {
         user.setPassword(password);
         user.setUserFullName(firstName + " " + lastName);
         user.setUserBio(bio);
-        user.setUserHome(new ParseGeoPoint(latitude, longitude));
+        user.setUserHome(new ParseGeoPoint(JSONlatitude, JSONlongitude));
+        user.setUserAddress(address);
         user.saveInBackground();
         //Invoke signUpInBackground
         user.signUpInBackground(new SignUpCallback() {

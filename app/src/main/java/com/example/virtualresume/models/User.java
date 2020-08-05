@@ -71,11 +71,11 @@ public class User extends ParseUser {
         put(USER_KEY_CONTACTS, contacts);
     }
 
-    public String getUserDistanceFrom() {
+    public String getUserAddress() {
         return getString(USER_KEY_ADDRESS);
     }
 
-    public void setUserDistanceFrom(String address){
+    public void setUserAddress(String address){
         put(USER_KEY_ADDRESS, address);
     }
 }

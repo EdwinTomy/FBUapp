@@ -13,8 +13,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:hint="full name" />
 
     <EditText
@@ -35,21 +37,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/etBio"
         android:layout_alignStart="@+id/etBio"
+        android:layout_alignEnd="@+id/etBio"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
-        android:hint="latitude"
-        android:inputType="numberDecimal" />
-
-    <EditText
-        android:id="@+id/etLon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/etLat"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="0dp"
-        android:layout_toEndOf="@+id/etLat"
-        android:hint="longitude"
-        android:inputType="numberDecimal" />
+        android:layout_marginEnd="0dp"
+        android:hint="city, country" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardProfile"
