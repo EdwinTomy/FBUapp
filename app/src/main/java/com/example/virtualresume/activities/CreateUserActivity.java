@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.RequestParams;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.codepath.asynchttpclient.callback.TextHttpResponseHandler;
 import com.example.virtualresume.R;
 import com.example.virtualresume.models.User;
@@ -19,6 +20,10 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.SignUpCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 
@@ -41,6 +46,9 @@ public class CreateUserActivity extends CameraApplication {
     private Button btnCreate;
     private File photoFile;
     private String responseFromGeo;
+
+    Double latitude;
+    Double longitude;
     final private String GEOCODER_URL = "http://api.positionstack.com/v1/forward?access_key=db50b1be9f183ecfa3dbfb53faaa22c5";
 
     @Override
@@ -114,16 +122,43 @@ public class CreateUserActivity extends CameraApplication {
         params.put("limit", "1");
         params.put("query", "Berlin, Germany");
         params.put("fields", "latitude, longitude");
-        client.get(GEOCODER_URL, params, new TextHttpResponseHandler() {
+        client.get(GEOCODER_URL, params, new JsonHttpResponseHandler() {
+
+            /*
                     @Override
                     public void onSuccess(int statusCode, Headers headers, String response) {
                         // called when response HTTP status is "200 OK"
                         Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
                         Log.i(TAG, "Locatiooon:" + response);
                         responseFromGeo = response;
-                    }
+                    }*/
 
-                    @Override
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+
+                Toast.makeText(getApplicationContext(), "succccccesssss", Toast.LENGTH_LONG).show();
+
+                JSONObject jsonObject = json.jsonObject;
+                try {
+                    //Creating the list of movies
+                    JSONArray data = jsonObject.getJSONArray("data");
+                    //JSONArray results = data.getJSONArray("results");
+                    JSONObject location = data.getJSONObject(0);
+                    latitude = location.getDouble("latitude");
+                    longitude = location.getDouble("latitude");
+
+                    Toast.makeText(getApplicationContext(), latitude + "" + longitude, Toast.LENGTH_LONG).show();
+                    Log.i(TAG, "Locatiooon:" + latitude + "" + longitude);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "Hit JSON exception", e);
+                }
+
+            }
+
+            @Override
                     public void onFailure(int statusCode, Headers headers, String errorResponse, Throwable t) {
                         // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                         Toast.makeText(getApplicationContext(), errorResponse, Toast.LENGTH_SHORT).show();
@@ -132,7 +167,7 @@ public class CreateUserActivity extends CameraApplication {
                 }
         );
 
-        Log.i(TAG, "Locatiooon:" + responseFromGeo);
+        Log.i(TAG, "Locatiooon:" + latitude + "" + longitude);
     }
 
     //Attempting to sign up after onClick
