@@ -46,7 +46,6 @@ public class AddableUsersAdapter extends UsersAdapter {
         relation.add(user);
         try {
             User.getCurrentUser().save();
-            Toast.makeText(context, "Added", Toast.LENGTH_SHORT).show();
         } catch (ParseException e) {
             e.printStackTrace();
         }

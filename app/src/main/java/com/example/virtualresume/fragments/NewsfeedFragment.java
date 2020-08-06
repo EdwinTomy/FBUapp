@@ -13,12 +13,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.virtualresume.R;
 import com.example.virtualresume.adapters.AchievementsAdapter;
 import com.example.virtualresume.adapters.UsersAdapter;
 import com.example.virtualresume.models.Achievement;
 import com.example.virtualresume.models.User;
+import com.example.virtualresume.utils.EndlessRecyclerViewScrollListener;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -40,9 +42,10 @@ public class NewsfeedFragment extends Fragment {
     protected List<Achievement> allContactsAchievements;
     protected UsersAdapter userContactsAdapter;
     protected List<ParseObject> allUserContacts;
-    final protected int POST_LIMIT = 20;
-    protected int postsLimit = 20;
+    final protected int POST_LIMIT = 3;
+    protected int postsLimit = 3;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     public NewsfeedFragment() {}
 
@@ -64,7 +67,20 @@ public class NewsfeedFragment extends Fragment {
 
         //Filling the RecyclerView with the query of user Achievements
         settingRecyclerView(view);
-        queryUserContacts(POST_LIMIT);
+
+        //Endless scrolling
+        rvContactsAchievements.setLayoutManager(linearLayoutManager);
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                postsLimit += 10;
+                queryUserContacts();
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvContactsAchievements.addOnScrollListener(scrollListener);
+
+        queryUserContacts();
     }
 
     //Configuring the container
@@ -80,7 +96,7 @@ public class NewsfeedFragment extends Fragment {
             @Override
             public void onRefresh() {
                 Log.i(TAG, "Loading in");
-                queryUserContacts(POST_LIMIT);
+                queryUserContacts();
                 postsLimit = POST_LIMIT;
             }
         });
@@ -98,7 +114,7 @@ public class NewsfeedFragment extends Fragment {
     }
 
     //Retrieving achievements of contacts
-    protected void queryContactsAchievements(int postsLimit) {
+    protected void queryContactsAchievements() {
         //Creating and constraining query
         ParseQuery<Achievement> query = ParseQuery.getQuery(Achievement.class);
         query.include(Achievement.ACHIEVEMENT_KEY_USER);
@@ -126,7 +142,7 @@ public class NewsfeedFragment extends Fragment {
     }
 
     //Retrieving contacts of current user
-    protected void queryUserContacts(final int postsLimit) {
+    protected void queryUserContacts() {
         //Creating and constraining query
         ParseQuery<ParseObject> query = User.getCurrentUser().getRelation(User.USER_KEY_CONTACTS).getQuery();
         query.addAscendingOrder(User.USER_KEY_FULLNAME);
@@ -145,7 +161,7 @@ public class NewsfeedFragment extends Fragment {
                 allUserContacts.clear();
                 allUserContacts.addAll(users);
                 userContactsAdapter.notifyDataSetChanged();
-                queryContactsAchievements(postsLimit);
+                queryContactsAchievements();
             }
         });
     }

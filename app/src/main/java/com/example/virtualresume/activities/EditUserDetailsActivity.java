@@ -97,8 +97,6 @@ public class EditUserDetailsActivity extends CameraApplication {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
 
-                        Toast.makeText(getApplicationContext(), "succccccesssss", Toast.LENGTH_LONG).show();
-
                         JSONObject jsonObject = json.jsonObject;
                         try {
                             JSONArray data = jsonObject.getJSONArray("data");

@@ -175,11 +175,4 @@ public class CreateAchievement extends CameraApplication {
         });
         finish();
     }
-
-    //Navigate to MainActivity
-    private void goMainActivity() {
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
-        finish();
-    }
 }
