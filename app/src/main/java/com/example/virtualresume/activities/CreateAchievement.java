@@ -121,6 +121,7 @@ public class CreateAchievement extends CameraApplication {
                 achievement.deleteInBackground(new DeleteCallback() {
                     @Override
                     public void done(ParseException e) {
+                        finish();
                     }
                 });
                 finish();
@@ -155,6 +156,7 @@ public class CreateAchievement extends CameraApplication {
         achievement.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
+                finish();
             }
         });
         finish();
@@ -171,6 +173,7 @@ public class CreateAchievement extends CameraApplication {
         achievement.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
+                finish();
             }
         });
         finish();

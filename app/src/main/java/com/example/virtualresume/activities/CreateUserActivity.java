@@ -145,7 +145,6 @@ public class CreateUserActivity extends CameraApplication {
                     @Override
                     public void onFailure(int statusCode, Headers headers, String errorResponse, Throwable t) {
                         // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                        Toast.makeText(getApplicationContext(), errorResponse, Toast.LENGTH_SHORT).show();
                         Log.i(TAG, "Locatiooon:" + errorResponse);
                     }
                 }

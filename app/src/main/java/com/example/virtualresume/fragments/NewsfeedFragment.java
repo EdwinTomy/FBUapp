@@ -42,8 +42,8 @@ public class NewsfeedFragment extends Fragment {
     protected List<Achievement> allContactsAchievements;
     protected UsersAdapter userContactsAdapter;
     protected List<ParseObject> allUserContacts;
-    final protected int POST_LIMIT = 3;
-    protected int postsLimit = 3;
+    final protected int POST_LIMIT = 4;
+    protected int postsLimit = 4;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
     private EndlessRecyclerViewScrollListener scrollListener;
 
@@ -73,6 +73,7 @@ public class NewsfeedFragment extends Fragment {
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                Log.i(TAG, "Loading in");
                 postsLimit += 10;
                 queryUserContacts();
             }
@@ -95,9 +96,9 @@ public class NewsfeedFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.i(TAG, "Loading in");
-                queryUserContacts();
+                Log.i(TAG, "Refreshing in");
                 postsLimit = POST_LIMIT;
+                queryUserContacts();
             }
         });
     }
