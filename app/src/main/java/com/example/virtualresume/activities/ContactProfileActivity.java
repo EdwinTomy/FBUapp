@@ -82,7 +82,7 @@ public class ContactProfileActivity extends AppCompatActivity {
         //Name, username and bio of user
         userFullName.setText(user.getString(User.USER_KEY_FULLNAME));
         userBio.setText(user.getString(User.USER_KEY_BIO));
-        userUsername.setText(user.getString(User.USER_KEY_USERNAME));
+        userUsername.setText("@" + user.getString(User.USER_KEY_USERNAME));
         userHome.setText(user.getString(User.USER_KEY_ADDRESS));
     }
 
