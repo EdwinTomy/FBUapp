@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.virtualresume.R;
 import com.example.virtualresume.fragments.ContactsFragment;
@@ -80,7 +79,6 @@ public class MainActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //Menu item clicked
         if(item.getItemId() == R.id.logout){
-            Toast.makeText(this, TAG, Toast.LENGTH_SHORT).show();
             ParseUser.logOut();
             ParseUser currentUser = ParseUser.getCurrentUser();
             //Navigate to Login Screen

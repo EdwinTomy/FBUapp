@@ -39,7 +39,7 @@
         android:layout_alignStart="@+id/etDescription"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
-        android:hint="field"
+        android:hint="tags"
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="55dp" />
 
