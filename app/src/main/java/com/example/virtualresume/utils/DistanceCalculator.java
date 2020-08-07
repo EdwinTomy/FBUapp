@@ -13,12 +13,12 @@ public final class DistanceCalculator {
         this.contactHome = contactHome;
     }
 
-    protected double calculateDistanceKilometer(ParseGeoPoint userHome, ParseGeoPoint contactHome){
+    public double calculateDistanceKilometer(){
 
         double userHomeLatitudeRad = Math.toRadians(userHome.getLatitude());
         double userHomeLongitudeRad = Math.toRadians(userHome.getLongitude());
-        double contactHomeLatitudeRad = Math.toRadians(userHome.getLatitude());
-        double contactHomeLongitudeRad = Math.toRadians(userHome.getLongitude());
+        double contactHomeLatitudeRad = Math.toRadians(contactHome.getLatitude());
+        double contactHomeLongitudeRad = Math.toRadians(contactHome.getLongitude());
 
         double latitudeDistance = contactHomeLatitudeRad - userHomeLatitudeRad;
         double longitudeDistance = contactHomeLongitudeRad - userHomeLongitudeRad;

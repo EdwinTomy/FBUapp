@@ -3,6 +3,8 @@ package com.example.virtualresume;
 import com.example.virtualresume.activities.LoginActivity;
 import com.example.virtualresume.models.Achievement;
 import com.example.virtualresume.models.User;
+import com.example.virtualresume.utils.DistanceCalculator;
+import com.parse.ParseGeoPoint;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,5 +59,15 @@ public class ExampleUnitTest {
         achievement.setAchievementField(field);
 
         assertEquals(field, achievement.getAchievementField());
+    }
+
+    @Test
+    public void distanceCal(){
+        ParseGeoPoint ciudadJuarez = new ParseGeoPoint(31.69, -106.42);
+        ParseGeoPoint  menloPark = new ParseGeoPoint(37.45, -122.18);
+        DistanceCalculator distanceCalculator = new DistanceCalculator(ciudadJuarez, menloPark);
+        int distance = (int) distanceCalculator.calculateDistanceKilometer();
+
+        assertEquals(1576, distance);
     }
 }
